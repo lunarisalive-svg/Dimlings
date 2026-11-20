@@ -227,7 +227,7 @@ function newState(){
   addLog('Three small lights woke up in the moss. They do not know what you are yet.');
   initEcon();
 }
-function initFaith(c){c.hp=1;c.sick=0;c.water=.9;c.faith=.5;c.spouse=0;c.kids=[];c.par=[];c.job='';c.kidT=rnd(120,220)*KS;c.fam='';c.grown=true;c.want=Math.random()<.5?'leave':'stay';c.hope=0}
+function initFaith(c){c.hp=1;c.sick=0;c.water=.9;c.faith=.5;c.spouse=0;c.kids=[];c.par=[];c.job='';c.kidT=rnd(120,300);c.fam='';c.grown=true;c.want=Math.random()<.5?'leave':'stay';c.hope=0}
 function mkC(x,y,par){
   const c={id:S.nid++,name:cap(mkWord()),x,y,tx:x,ty:y,food:.8,energy:.9,joy:.5,hue:ri(0,4),age:0,state:'idle',t:rnd(1,4),lex:{},face:1,tid:0,g:0};
   initFaith(c);initCare(c,par);
@@ -347,12 +347,18 @@ function arrive(c){
 }
 function update(c,dt){
   c.age+=dt;careUpdate(c,dt);
-  c.food=clamp(c.food-dt*.006,0,1);
-  c.water=clamp((c.water===undefined?.8:c.water)-dt*.007*(S.weather==='heat'?1.5:1),0,1);
+  c.food=clamp(c.food-dt*.006*(c.age<ADULT?.6:1),0,1); // little ones eat less
+  c.water=clamp((c.water===undefined?.8:c.water)-dt*.007*(S.weather==='heat'?1.5:1)*(c.age<ADULT?.6:1),0,1);
   c.energy=clamp(c.energy-(c.state==='sleep'?-.03:.005)*dt,0,1);
   const tgt=clamp(.42+(c.food>.5?.18:-.2)+(c.energy>.3?.08:-.18)+(S.b.some(b=>b.t==='hut')?.08:0)-(c.sick>0?.35:0)-(S.gloom||0)-(c.want==='leave'&&!S.b.some(b=>b.t==='window')?.12:0)+.12*((c.faith===undefined?.5:c.faith)-.5)+(c.spouse?.06+(code('wed')?.04:0):0)+(S.feast?.25:0)+(code('honor')&&c.age>=ELDER?.1:0)+(law('curfew')?-.03:0)+(law('work')?-.04:0)+(law('tithe')?-.02:0)+(law('ration')?.03:0)+(c.water>.5?.04:-.15)+careMood(c),0,1);
   c.joy=clamp(c.joy+(tgt-c.joy)*dt*.06,0,1);
-  if(c.sick>0){c.sick-=dt;c.hp-=dt*.0015*(S.docN?.4:1);S.cr.forEach(o=>{if(!(o.sick>0)&&dist(o,c)<14&&Math.random()<dt*.006*(S.docN?(law('quarantine')?.15:.35):1))o.sick=90});if(c.sick<=0&&Math.random()<.5)addLog(c.name+' is better. They are very tired.')}
+  if(c.imm>0)c.imm-=dt; // those who have just recovered cannot catch it again for a while, so a crowded colony gets a wave of sickness, not a permanent one
+  if(c.sick>0){
+    c.sick-=dt;if(c.sick<=0)c.imm=600;c.hp-=dt*.0015*(S.docN?.4:1);
+    c.spT=(c.spT||0)+dt; // spreading is checked about once a second, which keeps big colonies cheap
+    if(c.spT>=1){const sd=c.spT;c.spT=0;S.cr.forEach(o=>{if(!(o.sick>0)&&!(o.imm>0)&&dist(o,c)<14&&Math.random()<sd*.006*(S.docN?(law('quarantine')?.15:.35):1))o.sick=90})}
+    if(c.sick<=0&&Math.random()<.5)addLog(c.name+' is better. They are very tired.')
+  }
   if(c.water<.03)c.hp-=dt*.004;
   if(c.food<.03)c.hp-=dt*.003;else if(c.food>.4)c.hp=Math.min(1,c.hp+dt*(c.sick>0?.0012:.004));
   if(c.want==='leave'&&c.state!=='sleep'){
@@ -437,7 +443,7 @@ function stayerBuild(instant){
   let k=null,gift=false;
   if(!n('garden')&&S.time>120){k='garden';gift=true}
   else if(S.cr.length>=popCap()-1&&can('hut',1.5))k='hut';
-  else if(n('garden')<Math.max(2,Math.ceil(S.cr.length/8))&&can('garden',1.5))k='garden';
+  else if(n('garden')<Math.max(2,Math.ceil(S.cr.length/5))&&can('garden',1.5))k='garden';
   else if(S.cr.length>10&&n('granary')<Math.floor(S.cr.length/12)&&can('granary',1.5))k='granary';
   else if(!n('shrine')&&can('shrine',1.5))k='shrine';
   else if(tier()>=2&&!n('spire')&&S.glow>=BUILD.spire.c)k='spire';
@@ -562,7 +568,10 @@ function step(dt){
   if(dnum!==S.day){S.day=dnum;dawn();firewood()}
   const gard=S.b.filter(b=>b.t==='garden').length;
   S.foodStock=Math.min(14,S.foodStock+(S.blight>0?0:dt*(1/7+gard*.12)));
-  if(!(S.blight>0)&&gard&&Math.random()<dt*.05*gard&&S.foods.length<8){const q=gardenPt();spawnFood(q.x,q.y)}
+  // gardens yield in proportion to the mouths they serve, so a colony that keeps breeding can keep eating
+  if(!(S.blight>0)&&gard&&Math.random()<dt*(.05*gard+S.cr.length*.009)&&S.foods.length<8+Math.floor(S.cr.length*.5)){const q=gardenPt();spawnFood(q.x,q.y)}
+  // they forage on their own: the stores fill in proportion to the mouths, a little short of what they eat (farmers, gardens and fishers close the gap)
+  if(!(S.blight>0))S.granary=Math.min(stockCap(),S.granary+dt*S.cr.length*.0075*(S.weather==='heat'?.6:1));
   econTick(dt);heatTick(dt);
   S.cr.forEach(c=>update(c,dt));
   S.gloom=Math.max(0,(S.gloom||0)-dt*.002);S.blight=Math.max(0,(S.blight||0)-dt);S.storm=Math.max(0,(S.storm||0)-dt);
@@ -604,6 +613,7 @@ function catchUp(real){
   awayJoy(sec);
   const n=Math.min(240,Math.ceil(real/30)),dt=sec/n,ldt=real/n,g0=S.glow,b0=S.cr.length,born0=S.born||0,dead0=S.deaths||0,c0=S.culture,d0=S.day;
   let bq=0;const nbuild=Math.min(40,8+Math.floor(real/86400)*2);
+  ui.bdt=sec/n; // breeding clock while away: same pace as live, over the same capped window as the rest of the away-simulation
   for(let i=0;i<n;i++){
     S.time+=ldt;
     const pop=S.cr.length;
@@ -616,6 +626,7 @@ function catchUp(real){
     for(let k=0;k<2;k++){const a=pick(S.cr),b=pick(S.cr);if(a!==b){const q=pick(Object.keys(a.lex));if(q&&(!b.lex[q]||Math.random()<.3))b.lex[q]=a.lex[q]}}
     unlockCustoms();
   }
+  ui.bdt=0;
   if(S.b.some(b=>b.t==='window')){let k=Math.max(1,Math.floor(sec/3600));S.cr.filter(c=>c.want==='leave'&&c.hope>.4).forEach(c=>{if(k>0&&Math.random()<Math.min(.8,sec/3600*.4)){k--;depart(c)}})}
   
   for(let i=0;i<Math.min(2,Math.floor(sec/3600));i++)if(Math.random()<.45)offscreenBad();
@@ -709,7 +720,7 @@ function marry(a,b){
   const ch=S.b.some(x=>x.t==='church'),pr=S.cr.find(c=>c.job==='priest');
   addLog(ch&&pr?pr.name+' married '+a.name+' and '+b.name+' at the church, in the name of the Big One.':a.name+' and '+b.name+' joined hands under the open sky.');
   if(ch){a.faith=clamp(a.faith+.05,0,1);b.faith=clamp(b.faith+.05,0,1)}
-  a.kidT=b.kidT=rnd(24,48)*KS;coin('wed');sayAny(a,['wed','kin']);
+  a.kidT=b.kidT=rnd(120,300);coin('wed');sayAny(a,['wed','kin']);
 }
 function born(a,b){
   const c=mkC(a.x+rnd(-4,4),a.y+rnd(-3,3));
@@ -717,7 +728,7 @@ function born(a,b){
   const ks=Array.from(new Set(Object.keys(a.lex).concat(Object.keys(b.lex))));
   for(let i=0;i<3&&ks.length;i++){const k=pick(ks);c.lex[k]=(Math.random()<.5&&a.lex[k])?a.lex[k]:(b.lex[k]||a.lex[k])}
   initCare(c,a,b);c.faith=.4;c.pw=[a.want,b.want];c.want=pick(c.pw);
-  a.kids.push(c.id);b.kids.push(c.id);S.cr.push(c);S.born=(S.born||0)+1;
+  a.kids.push(c.id);b.kids.push(c.id);S.cr.push(c);S.born=(S.born||0)+1;S.added=(S.added||0)+1;
   addLog('A child was born to '+a.name+' and '+b.name+'. They named them '+c.name+(S.cust.naming?'. The whole colony said it back.':'.'));
   if(S.cust.naming)S.culture+=3;
   return c;
@@ -821,16 +832,19 @@ function lifeTick(dt,off){
     const b=free.filter(o=>o!==a&&!o.spouse&&!kin(a,o)&&(off||dist(a,o)<60)&&relOf(a,o)>-30).sort((x,y)=>relOf(a,y)-relOf(a,x))[0];
     if(b&&Math.random()<(off?.5:dt*.02))marry(a,b);
   }
-  const room=S.cr.length<popCap();
+  // Breeding runs in minutes, not days, and nothing caps it: no housing limit, no food gate, no litter limit.
+  // While you were away it runs on the same clock (capped at the 3 hours the rest of the away-simulation uses).
+  const bdt=off?(ui.bdt||dt):dt;
   S.cr.forEach(a=>{
     if(!a.spouse||a.id>a.spouse)return;
     const b=byId(a.spouse);if(!b){a.spouse=0;return}
-    a.kidT=(a.kidT||150*KS)-dt*(code('wed')?1.25:1);
+    a.kidT=Math.min(a.kidT||KID_HI,KID_HI)-bdt*(code('wed')?1.25:1); // older saves had day-long timers: clamp them
     if(a.kidT<=0){
-      a.kidT=rnd(40,80)*KS*(.8+.4*Math.min(1,S.cr.length/60))*(S.cr.length<12?.65:1);
-      if(room&&a.kids.length<5&&a.joy>.3&&b.joy>.3&&S.granary>=Math.max(3,Math.min(S.cr.length*.4,14))&&a.age<LIFE*.8&&b.age<LIFE*.8)born(a,b);
+      a.kidT=kidWait();
+      if(a.age<LIFE*.85&&b.age<LIFE*.85)born(a,b);
     }
   });
+  paceTick(bdt,off);
   if(!off){
     S.cr.filter(c=>!c.grown).forEach(c=>{
       const ts=c.par.map(byId).filter(p=>p&&dist(p,c)<70);
@@ -3401,6 +3415,46 @@ if(typeof document!=='undefined'){
   window.addEventListener('pagehide',()=>{skyClose()});
 }
 
+/* ---------- Pace: the colony never stops growing ----------
+   Couples breed on a minutes clock (no housing, food or litter limit), and a floor guarantees that
+   at least one new Dimling arrives every PACE seconds, live or away. The floor prefers a birth from the
+   couple with the fewest children; failing that two unattached adults wed and have one; failing that a light
+   wakes in the moss. Housing still matters to the builders (they keep raising huts), it just never blocks a birth. */
+const PACE=200,KID_HI=1200;
+const kidWait=()=>rnd(480,960)*(S.cr.length<12?.65:1);
+function wakeLight(quiet){
+  const q=rpt(110,70),c=mkC(q.x,q.y);
+  c.age=ADULT+rnd(0,2*LD);c.grown=true;c.joy=.7;
+  S.cr.push(c);S.added=(S.added||0)+1;S.bornAt=S.time;
+  if(!quiet)addLog('A new light woke up in the moss. Nobody knows whose it is.');
+  return c;
+}
+function paceBirth(quiet){
+  const ok=c=>c.age>=ADULT&&c.age<LIFE*.85;
+  let best=null,bk=1e9;
+  S.cr.forEach(a=>{
+    if(!a.spouse||a.id>a.spouse||!ok(a))return;
+    const b=byId(a.spouse);if(!b||!ok(b))return;
+    const k=a.kids.length+Math.random();
+    if(k<bk){bk=k;best=[a,b]}
+  });
+  if(best){born(best[0],best[1]);return 'born'}
+  const free=S.cr.filter(c=>ok(c)&&!c.spouse);
+  for(const a of free){
+    const b=free.find(o=>o!==a&&!kin(a,o));
+    if(b){marry(a,b);born(a,b);return 'wed'}
+  }
+  wakeLight(quiet);return 'light';
+}
+function paceTick(dt,off){
+  if(S.paceSeen!==S.added){S.paceSeen=S.added;S.pace=0} // a natural birth or arrival restarts the clock
+  S.pace=(S.pace||0)+dt;
+  let k=0;
+  while(S.pace>=PACE&&k++<2000){
+    S.pace-=PACE;paceBirth(off&&k>3);S.paceSeen=S.added;
+  }
+}
+
 const KEY='dimlings.v1';
 let dbDoc=null,lastDb=0,dbBusy=false,hiddenAt=0,buildSig='';
 async function initDb(){
@@ -3429,7 +3483,7 @@ async function saveAll(force){
 }
 function updateMeters(){
   $('mGlow').textContent=Math.floor(S.glow);
-  $('mPop').textContent=S.cr.length+'/'+popCap();
+  $('mPop').textContent=S.cr.length;
   $('mCul').textContent=Math.floor(S.culture);
   $('mAtt').textContent=Math.round(S.attn*100)+'%';
   $('foodN').textContent=Math.floor(S.foodStock);
