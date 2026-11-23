@@ -198,7 +198,10 @@ const CUSTOMS=[
 ];
 const COLORS=['#72c493','#f0c46a','#e8837c','#7fb8d8','#d9d2bd'];
 let S=null;
-const rnd=(a,b)=>a+Math.random()*(b-a),ri=(a,b)=>Math.floor(rnd(a,b+1)),pick=a=>a[ri(0,a.length-1)],clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+/* Seeded random: every roll the simulation makes comes from one stream kept in S.rs, so the same seed gives the same colony.
+   (Drawing code that only changes how things look keeps using Math.random.) */
+function R(){let t=(S.rn=(S.rn+0x6D2B79F5)|0);t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}
+const rnd=(a,b)=>a+R()*(b-a),ri=(a,b)=>Math.floor(rnd(a,b+1)),pick=a=>a[ri(0,a.length-1)],clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const mkWord=()=>pick(SYL)+pick(SYL);
 const cap=w=>w[0].toUpperCase()+w.slice(1);
 const fmt=w=>w.length>=4&&!w.includes('-')&&w.length<=4?w.slice(0,2)+'-'+w.slice(2):w;
@@ -211,13 +214,13 @@ function isNight(){const p=phase();return p>.72&&p<.95}
 function light(){const p=phase();return p<.6?1:p<.75?1-(p-.6)/.15*.7:p<.95?.3:.3+(p-.95)/.05*.7}
 function popCap(){let n=6;for(const b of S.b){if(b.t==='hut')n+=4;else if(b.t==='house')n+=10}return n}
 
-function newState(){
-  S={v:1,t:Date.now(),time:DAY*.02,day:0,nid:1,glow:5,culture:0,attn:0,foodStock:6,foods:[],b:[],cr:[],
+function newState(seed){
+  S={v:1,sv:2,rn:(seed===undefined?(Date.now()^0x5bd1e995)>>>0:seed>>>0)|0,t:Date.now(),time:DAY*.02,day:0,nid:1,glow:5,culture:0,attn:0,foodStock:6,foods:[],b:[],cr:[],
      concepts:{food:1,rest:1,kin:1,light:1,song:1,outside:1},seen:{},cust:{},log:[],visits:1,taught:'',asked:0,lastSing:0,lastEerie:0,lastBirth:0,lastBuild:0,left:0,w:240,wv:2,gloom:0,blight:0,storm:0,lastBad:0,nextBad:200,graves:[],kills:0,deaths:0,granary:6,laws:[],code:[],feast:false,nextLaw:150,born:0,lifeV:2,book:null,pond:.8,weather:'clear',wT:90,sky:[],sign:null,petition:null,petT:120,signAt:-99,hush:0,lastInterp:''};
   const base={};Object.keys(S.concepts).forEach(k=>base[k]=mkWord());
   for(let i=0;i<3;i++){
     const c=mkC(rnd(100,140)+OX,rnd(GY+30,GY+70)+OY);
-    Object.keys(base).forEach(k=>{c.lex[k]=(i===0||Math.random()<.5)?base[k]:mutate(base[k])});
+    Object.keys(base).forEach(k=>{c.lex[k]=(i===0||R()<.5)?base[k]:mutate(base[k])});
     if(i===0)c.want='stay';if(i===1)c.want='leave';
     c.age=LD*rnd(3,6);
     S.cr.push(c);
@@ -225,9 +228,9 @@ function newState(){
   addLog('Each of them feels the same pull. Something is on the other side of the sky.');
   S.founders=S.cr.map(c=>c.name);
   addLog('Three small lights woke up in the moss. They do not know what you are yet.');
-  initEcon();
+  initEcon();resetSim();
 }
-function initFaith(c){c.hp=1;c.sick=0;c.water=.9;c.faith=.5;c.spouse=0;c.kids=[];c.par=[];c.job='';c.kidT=rnd(120,300);c.fam='';c.grown=true;c.want=Math.random()<.5?'leave':'stay';c.hope=0}
+function initFaith(c){c.hp=1;c.sick=0;c.water=.9;c.faith=.5;c.spouse=0;c.kids=[];c.par=[];c.job='';c.kidT=rnd(120,300);c.fam='';c.grown=true;c.want=R()<.5?'leave':'stay';c.hope=0}
 function mkC(x,y,par){
   const c={id:S.nid++,name:cap(mkWord()),x,y,tx:x,ty:y,food:.8,energy:.9,joy:.5,hue:ri(0,4),age:0,state:'idle',t:rnd(1,4),lex:{},face:1,tid:0,g:0};
   initFaith(c);initCare(c,par);
@@ -254,7 +257,7 @@ function coin(k){
 function say(c,k,force){
   if(S.hush>S.time)return;
   const w=c.lex[k];if(!w||ui.bubbles.length>5&&!force)return;
-  let word=Math.random()<.04?mutate(w):w;
+  let word=R()<.04?mutate(w):w;
   if(word!==w){c.lex[k]=word}
   ui.hooks.bubble&&ui.hooks.bubble(c,word,k);
   S.seen[k]=(S.seen[k]||0)+1;
@@ -264,14 +267,14 @@ function talk(a,b){
   const k=pick(ks),w=a.lex[k];
   say(a,k);
   const pw=.12+.3*((a.st||0)>(b.st||0)?1:0)+(relOf(a,b)>=40?.1:0);
-  if(!b.lex[k]||Math.random()<pw){
-    if(b.lex[k]&&Math.random()<.04){const k2=pick(Object.keys(b.lex));if(k2!==k)b.lex[k2]=w}else b.lex[k]=w;
+  if(!b.lex[k]||R()<pw){
+    if(b.lex[k]&&R()<.04){const k2=pick(Object.keys(b.lex));if(k2!==k)b.lex[k2]=w}else b.lex[k]=w;
   }
-  if(relOf(a,b)>=40&&Math.random()<.3){const k2=pick(Object.keys(a.lex));if(k2!==k&&ui.hooks.bubble)ui.hooks.bubble(a,w+' '+a.lex[k2],k)}
-  if(a.want&&b.want&&a.want!==b.want&&Math.random()<.3){
+  if(relOf(a,b)>=40&&R()<.3){const k2=pick(Object.keys(a.lex));if(k2!==k&&ui.hooks.bubble)ui.hooks.bubble(a,w+' '+a.lex[k2],k)}
+  if(a.want&&b.want&&a.want!==b.want&&R()<.3){
     a.joy=clamp(a.joy-.15,0,1);b.joy=clamp(b.joy-.15,0,1);
-    if(Math.random()<.25)addLog(a.name+' and '+b.name+' argued about whether there is an outside.');
-    if(Math.random()<.05&&!code('life'))(Math.random()<.5?a:b).hp-=.2;
+    if(R()<.25)addLog(a.name+' and '+b.name+' argued about whether there is an outside.');
+    if(R()<.05&&!code('life'))(R()<.5?a:b).hp-=.2;
     return;
   }
   S.culture+=.25;a.joy=clamp(a.joy+.08,0,1);b.joy=clamp(b.joy+.08,0,1);a.soc=clamp(a.soc+.22,0,1);b.soc=clamp(b.soc+.22,0,1);
@@ -301,23 +304,23 @@ function think(c){
   if(c.age<ADULT&&childThink(c))return;
   if(S.feast){const hp=homePt();go(c,hp.x+rnd(-26,26),hp.y+rnd(-10,14));c.state='dance';c.t=rnd(3,6);return}
   if(siteThink(c))return;
-  if(c.job&&Math.random()<.7&&jobThink(c))return;
-  if(c.want==='leave'&&Math.random()<.5){
+  if(c.job&&R()<.7&&jobThink(c))return;
+  if(c.want==='leave'&&R()<.5){
     const wn=S.b.find(b=>b.t==='window');
     if(wn)go(c,wn.x+rnd(-7,7),wn.y+10);else go(c,W-5,rnd(GY+6,H-8));
     c.state='yearn';c.t=10;return;
   }
-  if(c.want==='stay'&&Math.random()<.5){
+  if(c.want==='stay'&&R()<.5){
     const tg=S.b.length?pick(S.b):null;
     if(tg)go(c,tg.x+rnd(-6,6),tg.y+rnd(4,8));else{const q=wanderPt(c);go(c,q.x,q.y)}
     c.state='work';c.t=10;return;
   }
-  if(S.cust.watching&&S.attn>.35&&onScreen(c,10)&&Math.random()<.3){go(c,c.x+rnd(-6,6),viewBottom()-3);c.state='watch';c.t=rnd(4,8);return}
+  if(S.cust.watching&&S.attn>.35&&onScreen(c,10)&&R()<.3){go(c,c.x+rnd(-6,6),viewBottom()-3);c.state='watch';c.t=rnd(4,8);return}
   const w=S.b.find(b=>b.t==='window');
-  if(w&&Math.random()<.35){go(c,w.x+rnd(-8,8),w.y+9);c.state='watch';c.t=rnd(5,9);return}
+  if(w&&R()<.35){go(c,w.x+rnd(-8,8),w.y+9);c.state='watch';c.t=rnd(5,9);return}
   const sh=S.b.find(b=>b.t==='shrine');
-  if(sh&&Math.random()<.25){go(c,sh.x+rnd(-6,6),sh.y+6);c.state='toShrine';c.t=8;return}
-  if(Math.random()<.5&&S.cr.length>1){
+  if(sh&&R()<.25){go(c,sh.x+rnd(-6,6),sh.y+6);c.state='toShrine';c.t=8;return}
+  if(R()<.5&&S.cr.length>1){
     const o=nearest(S.cr.filter(x=>x!==c&&x.state!=='sleep'),c);
     if(o){c.tid=o.id;go(c,o.x+rnd(-4,4),o.y+rnd(-2,2));c.state='toTalk';c.t=8;return}
   }
@@ -329,7 +332,7 @@ function arrive(c){
   if(/^(toGranary|toPond|j_\w+|dance)$/.test(c.state)){jobArrive(c);return}
   if(c.state==='toFood'){
     const i=S.foods.findIndex(f=>f.id===c.tid);
-    if(i>=0){const f=S.foods[i];S.foods.splice(i,1);c.food=clamp(c.food+.5,0,1);const fav=f.k===c.pf;c.joy=clamp(c.joy+(fav?.22:.1),0,1);if(f.by==='you'){c.mm.fed++;opin(c,fav?.035:.02)}if(fav&&Math.random()<.3)emote(c,'heart');if(Math.random()<.5)say(c,'food')}
+    if(i>=0){const f=S.foods[i];S.foods.splice(i,1);c.food=clamp(c.food+.5,0,1);const fav=f.k===c.pf;c.joy=clamp(c.joy+(fav?.22:.1),0,1);if(f.by==='you'){c.mm.fed++;opin(c,fav?.035:.02)}if(fav&&R()<.3)emote(c,'heart');if(R()<.5)say(c,'food')}
     c.state='idle';c.t=rnd(1,3);
   }else if(c.state==='toRest'){c.state='sleep';c.t=0}
   else if(c.state==='toTalk'){
@@ -341,7 +344,7 @@ function arrive(c){
   }else if(c.state==='yearn'){
     c.state='hold';c.t=rnd(6,10);sayAny(c,['outside','door']);
   }else if(c.state==='work'){
-    c.state='hold';c.t=rnd(5,9);S.culture+=.3;c.joy=clamp(c.joy+.05,0,1);if(Math.random()<.4)sayAny(c,['home','song','kin']);
+    c.state='hold';c.t=rnd(5,9);S.culture+=.3;c.joy=clamp(c.joy+.05,0,1);if(R()<.4)sayAny(c,['home','song','kin']);
   }else if(c.state==='watch'){c.t=Math.max(c.t,2);c.state='hold';}
   else{c.state='idle';c.t=rnd(1,4)}
 }
@@ -356,8 +359,8 @@ function update(c,dt){
   if(c.sick>0){
     c.sick-=dt;if(c.sick<=0)c.imm=600;c.hp-=dt*.0015*(S.docN?.4:1);
     c.spT=(c.spT||0)+dt; // spreading is checked about once a second, which keeps big colonies cheap
-    if(c.spT>=1){const sd=c.spT;c.spT=0;S.cr.forEach(o=>{if(!(o.sick>0)&&!(o.imm>0)&&dist(o,c)<14&&Math.random()<sd*.006*(S.docN?(law('quarantine')?.15:.35):1))o.sick=90})}
-    if(c.sick<=0&&Math.random()<.5)addLog(c.name+' is better. They are very tired.')
+    if(c.spT>=1){const sd=c.spT;c.spT=0;S.cr.forEach(o=>{if(!(o.sick>0)&&!(o.imm>0)&&dist(o,c)<14&&R()<sd*.006*(S.docN?(law('quarantine')?.15:.35):1))o.sick=90})}
+    if(c.sick<=0&&R()<.5)addLog(c.name+' is better. They are very tired.')
   }
   if(c.water<.03)c.hp-=dt*.004;
   if(c.food<.03)c.hp-=dt*.003;else if(c.food>.4)c.hp=Math.min(1,c.hp+dt*(c.sick>0?.0012:.004));
@@ -427,7 +430,7 @@ function depart(c){
 function askStay(c){
   pl('askedStay');
   const p=clamp(.6-c.hope*.5-(S.kills||0)*.05,.05,.6);
-  if(Math.random()<p){c.want='stay';c.hope=0;addLog(c.name+' looked at you for a long time, then agreed to stay. They said they would try to stop wondering.',true);return true}
+  if(R()<p){c.want='stay';c.hope=0;addLog(c.name+' looked at you for a long time, then agreed to stay. They said they would try to stop wondering.',true);return true}
   c.hope=Math.min(1,c.hope+.15);
   addLog(c.name+' shook their head. They are not sure you can keep them here.',true);
   return false;
@@ -512,16 +515,16 @@ function badEvent(kind){
     const v=S.cr.filter(c=>!(c.sick>0));
     if(v.length){const c=pick(v);c.sick=90;up(.08);addLog(c.name+' has gone grey and slow. It looks like it spreads.',true)}
   }else if(kind==='fire'){
-    const bs=S.b.filter(b=>b.t!=='spire'||Math.random()<.3);
+    const bs=S.b.filter(b=>b.t!=='spire'||R()<.3);
     if(bs.length){const b=pick(bs);S.b=S.b.filter(x=>x!==b);up(.15);S.cr.forEach(c=>{c.joy=clamp(c.joy-.15,0,1)});addLog('A fire took the '+BUILD[b.t].n.toLowerCase()+'. They stood and watched it burn.',true)}
   }
 }
 function offscreenBad(){
-  const r=Math.random(),pop=S.cr.length;
+  const r=R(),pop=S.cr.length;
   const care=S.b.filter(b=>b.t==='clinic').length*2+S.cr.filter(c=>c.job==='doctor').length+(T('medicine')?1:0);
   if(r<.2&&S.b.length>4)badEvent('fire');
   else if(r<.5&&pop>5){
-    if(Math.random()<.5/(1+care)){const w=S.cr.filter(c=>c.age>=ELDER||c.joy<.3);die(pick(w.length?w:S.cr),'plague')}
+    if(R()<.5/(1+care)){const w=S.cr.filter(c=>c.age>=ELDER||c.joy<.3);die(pick(w.length?w:S.cr),'plague')}
     else addLog('A grey sickness went through while you were away. They nursed each other and everyone got up again.',true);
   }else{S.gloom=Math.min(.6,(S.gloom||0)+.2);addLog('Bad weather and a bad stretch of food passed while you were away. They are quieter now.',true)}
 }
@@ -539,7 +542,7 @@ function birth(){
 function dawn(){
   const n=S.cr.length;
   if(S.cust.dawnsong){
-    S.cr.forEach(c=>{c.joy=clamp(c.joy+.2,0,1);if(Math.random()<.4)say(c,'song')});
+    S.cr.forEach(c=>{c.joy=clamp(c.joy+.2,0,1);if(R()<.4)say(c,'song')});
     S.culture+=n*.4;
     addLog('The sun came up and they sang. You could not hear it, but you knew.');
   }
@@ -569,7 +572,7 @@ function step(dt){
   const gard=S.b.filter(b=>b.t==='garden').length;
   S.foodStock=Math.min(14,S.foodStock+(S.blight>0?0:dt*(1/7+gard*.12)));
   // gardens yield in proportion to the mouths they serve, so a colony that keeps breeding can keep eating
-  if(!(S.blight>0)&&gard&&Math.random()<dt*(.05*gard+S.cr.length*.009)&&S.foods.length<8+Math.floor(S.cr.length*.5)){const q=gardenPt();spawnFood(q.x,q.y)}
+  if(!(S.blight>0)&&gard&&R()<dt*(.05*gard+S.cr.length*.009)&&S.foods.length<8+Math.floor(S.cr.length*.5)){const q=gardenPt();spawnFood(q.x,q.y)}
   // they forage on their own: the stores fill in proportion to the mouths, a little short of what they eat (farmers, gardens and fishers close the gap)
   if(!(S.blight>0))S.granary=Math.min(stockCap(),S.granary+dt*S.cr.length*.0075*(S.weather==='heat'?.6:1));
   econTick(dt);heatTick(dt);
@@ -584,7 +587,7 @@ function step(dt){
     else lv.forEach(c=>{c.leaving=false;c.hope=.9});
   }
   S.lastBuild=(S.lastBuild||0)+dt;
-  if(S.lastBuild>20){S.lastBuild=0;if(Math.random()<.7)stayerBuild();siteTick()}
+  if(S.lastBuild>20){S.lastBuild=0;if(R()<.7)stayerBuild();siteTick()}
   let g=0;S.cr.forEach(c=>{g+=c.g;c.g=0});S.glow+=g;
   const sh=S.b.filter(b=>b.t==='shrine'||b.t==='spire').length;
   S.culture+=dt*sh*.02*S.cr.length*.2;
@@ -594,7 +597,7 @@ function step(dt){
   feastTick();
   weatherTick(dt);
   S.lastEerie+=dt;
-  if(S.lastEerie>85+Math.random()*60){S.lastEerie=0;eerie()}
+  if(S.lastEerie>85+R()*60){S.lastEerie=0;eerie()}
   ui.ck=(ui.ck||0)+dt;
   if(ui.ck>2){ui.ck=0;unlockCustoms()}
 }
@@ -623,13 +626,13 @@ function catchUp(real){
     lifeTick(ldt,true);
     bookTick();
     S.granary=clamp(S.granary+((S.cr.filter(c=>c.job==='farmer').length*.06+S.cr.filter(c=>c.job==='fisher').length*.05)-S.cr.length*.008)*dt,2,stockCap());
-    for(let k=0;k<2;k++){const a=pick(S.cr),b=pick(S.cr);if(a!==b){const q=pick(Object.keys(a.lex));if(q&&(!b.lex[q]||Math.random()<.3))b.lex[q]=a.lex[q]}}
+    for(let k=0;k<2;k++){const a=pick(S.cr),b=pick(S.cr);if(a!==b){const q=pick(Object.keys(a.lex));if(q&&(!b.lex[q]||R()<.3))b.lex[q]=a.lex[q]}}
     unlockCustoms();
   }
   ui.bdt=0;
-  if(S.b.some(b=>b.t==='window')){let k=Math.max(1,Math.floor(sec/3600));S.cr.filter(c=>c.want==='leave'&&c.hope>.4).forEach(c=>{if(k>0&&Math.random()<Math.min(.8,sec/3600*.4)){k--;depart(c)}})}
+  if(S.b.some(b=>b.t==='window')){let k=Math.max(1,Math.floor(sec/3600));S.cr.filter(c=>c.want==='leave'&&c.hope>.4).forEach(c=>{if(k>0&&R()<Math.min(.8,sec/3600*.4)){k--;depart(c)}})}
   
-  for(let i=0;i<Math.min(2,Math.floor(sec/3600));i++)if(Math.random()<.45)offscreenBad();
+  for(let i=0;i<Math.min(2,Math.floor(sec/3600));i++)if(R()<.45)offscreenBad();
   const days=Math.floor(S.time/DAY)-d0;S.day=Math.floor(S.time/DAY);
   if(S.cust.offering&&days>0)S.glow+=Math.min(days,12)*S.cr.length*2;
   S.pond=clamp(S.pond+rnd(-.1,.25),.35,1);S.weather='clear';S.wT=60;S.petition=null;
@@ -726,7 +729,7 @@ function born(a,b){
   const c=mkC(a.x+rnd(-4,4),a.y+rnd(-3,3));
   S.bornAt=S.time;c.par=[a.id,b.id];c.fam=a.fam||a.name;c.age=0;c.joy=.9;c.grown=false;c.hue=pick([a.hue,b.hue]);
   const ks=Array.from(new Set(Object.keys(a.lex).concat(Object.keys(b.lex))));
-  for(let i=0;i<3&&ks.length;i++){const k=pick(ks);c.lex[k]=(Math.random()<.5&&a.lex[k])?a.lex[k]:(b.lex[k]||a.lex[k])}
+  for(let i=0;i<3&&ks.length;i++){const k=pick(ks);c.lex[k]=(R()<.5&&a.lex[k])?a.lex[k]:(b.lex[k]||a.lex[k])}
   initCare(c,a,b);c.faith=.4;c.pw=[a.want,b.want];c.want=pick(c.pw);
   a.kids.push(c.id);b.kids.push(c.id);S.cr.push(c);S.born=(S.born||0)+1;S.added=(S.added||0)+1;
   addLog('A child was born to '+a.name+' and '+b.name+'. They named them '+c.name+(S.cust.naming?'. The whole colony said it back.':'.'));
@@ -736,9 +739,9 @@ function born(a,b){
 function grow(c){
   const ps=c.par.map(byId).filter(Boolean),src=ps.length?pick(ps):null;
   if(src){
-    Object.keys(src.lex).forEach(k=>{if(!c.lex[k]&&Math.random()<.85)c.lex[k]=src.lex[k]});
+    Object.keys(src.lex).forEach(k=>{if(!c.lex[k]&&R()<.85)c.lex[k]=src.lex[k]});
     c.faith=clamp((c.faith+src.faith)/2+rnd(-.1,.1),0,1);
-    const rebel=Math.random()<.22;
+    const rebel=R()<.22;
     c.want=rebel?(src.want==='leave'?'stay':'leave'):src.want;
     addLog(c.name+' is grown. They were taught '+Object.keys(c.lex).length+' words. They believe what '+src.name+' believes'+(rebel?', almost. They chose differently.':'.'));
   }
@@ -746,7 +749,7 @@ function grow(c){
 }
 function childThink(c){
   const p=c.par.map(byId).filter(Boolean)[0];
-  if(p&&Math.random()<.7){go(c,p.x+rnd(-8,8),p.y+rnd(-5,5));c.state='wander';c.t=6;return true}
+  if(p&&R()<.7){go(c,p.x+rnd(-8,8),p.y+rnd(-5,5));c.state='wander';c.t=6;return true}
   return false;
 }
 function jobThink(c){
@@ -777,9 +780,9 @@ function jobArrive(c){
   if(econArrive(c)||lakeArrive(c))return;
   const s=c.state;
   if(s==='toPond'){
-    if(shoreE(c.x,c.y)<2.2){c.water=clamp(c.water+.7,0,1);c.joy=clamp(c.joy+.04,0,1);if(Math.random()<.12)sayAny(c,['swim','light'])}
+    if(shoreE(c.x,c.y)<2.2){c.water=clamp(c.water+.7,0,1);c.joy=clamp(c.joy+.04,0,1);if(R()<.12)sayAny(c,['swim','light'])}
     else if(S.pond>.03){c.water=clamp(c.water+.6,0,1);S.pond=Math.max(0,S.pond-.005);c.joy=clamp(c.joy+.03,0,1)}
-    else if(Math.random()<.4)sayAny(c,['you']);
+    else if(R()<.4)sayAny(c,['you']);
     c.state='idle';c.t=rnd(1,3);
   }else if(s==='toGranary'){
     if(S.granary>=.5){S.granary-=.5;c.food=clamp(c.food+(S.feast||code('share')?.5:.35),0,1);c.joy=clamp(c.joy+.05,0,1)}
@@ -798,11 +801,11 @@ function jobArrive(c){
     c.state='idle';c.t=2;
   }else if(s==='j_deliver'){
     const o=byId(c.tid);
-    if(o&&dist(o,c)<16){o.food=clamp(o.food+(code('share')?.7:.6),0,1);o.joy=clamp(o.joy+.05,0,1);if(Math.random()<.4)sayAny(c,['food','kin'])}
+    if(o&&dist(o,c)<16){o.food=clamp(o.food+(code('share')?.7:.6),0,1);o.joy=clamp(o.joy+.05,0,1);if(R()<.4)sayAny(c,['food','kin'])}
     else S.granary=Math.min(stockCap(),S.granary+.6);
     c.carry=false;c.state='idle';c.t=rnd(1,3);
   }else if(s==='j_pray'){
-    S.cr.forEach(o=>{o.faith=clamp(o.faith+.004,0,1)});S.glow+=.15;sayAny(c,['you','song']);if(S.book&&Math.random()<.12)readVerse(c);
+    S.cr.forEach(o=>{o.faith=clamp(o.faith+.004,0,1)});S.glow+=.15;sayAny(c,['you','song']);if(S.book&&R()<.12)readVerse(c);
     c.state='hold';c.t=rnd(5,8);
   }else if(s==='j_heal'){
     const o=byId(c.tid);
@@ -811,14 +814,14 @@ function jobArrive(c){
       o.sick=Math.max(0,o.sick-35*(T('medicine')?1.6:1));o.hp=Math.min(1,o.hp+.12*(T('medicine')?1.5:1));o.joy=clamp(o.joy+.04,0,1);
       S.treated=(S.treated||0)+1;
       if(was&&o.sick<=0){addLog(c.name+' treated '+o.name+', and the grey left them.');S.culture+=1}
-      if(Math.random()<.3)sayAny(c,['kin','rest']);
+      if(R()<.3)sayAny(c,['kin','rest']);
     }
     c.state='hold';c.t=rnd(3,5);
   }else if(s==='j_govern'){
-    S.council=(S.council||0)+1;c.state='hold';c.t=rnd(5,9);if(Math.random()<.2)sayAny(c,['law','you']);
+    S.council=(S.council||0)+1;c.state='hold';c.t=rnd(5,9);if(R()<.2)sayAny(c,['law','you']);
   }else if(s==='dance'){
     c.state='hold';c.t=rnd(2,4);c.joy=clamp(c.joy+.04,0,1);S.culture+=.1;
-    if(Math.random()<.35)sayAny(c,['song','kin']);
+    if(R()<.35)sayAny(c,['song','kin']);
   }
 }
 function lifeTick(dt,off){
@@ -830,7 +833,7 @@ function lifeTick(dt,off){
   for(const a of free){
     if(a.spouse)continue;
     const b=free.filter(o=>o!==a&&!o.spouse&&!kin(a,o)&&(off||dist(a,o)<60)&&relOf(a,o)>-30).sort((x,y)=>relOf(a,y)-relOf(a,x))[0];
-    if(b&&Math.random()<(off?.5:dt*.02))marry(a,b);
+    if(b&&R()<(off?.5:dt*.02))marry(a,b);
   }
   // Breeding runs in minutes, not days, and nothing caps it: no housing limit, no food gate, no litter limit.
   // While you were away it runs on the same clock (capped at the 3 hours the rest of the away-simulation uses).
@@ -849,12 +852,12 @@ function lifeTick(dt,off){
     S.cr.filter(c=>!c.grown).forEach(c=>{
       const ts=c.par.map(byId).filter(p=>p&&dist(p,c)<70);
       if(code('honor'))S.cr.forEach(e=>{if(e.age>=ELDER&&dist(e,c)<70)ts.push(e)});
-      if(!ts.length||Math.random()>dt/(code('honor')?9:14))return;
+      if(!ts.length||R()>dt/(code('honor')?9:14))return;
       const t=pick(ts),miss=Object.keys(t.lex).filter(k=>!c.lex[k]);
       if(miss.length){
         const k=pick(miss);c.lex[k]=t.lex[k];say(t,k);setTimeout(()=>say(c,k,true),800);
         c.taught=(c.taught||0)+1;
-        if(c.taught===1||Math.random()<.12)addLog(t.name+' taught '+c.name+' a new word.');
+        if(c.taught===1||R()<.12)addLog(t.name+' taught '+c.name+' a new word.');
       }
       c.faith=clamp(c.faith+(t.faith-c.faith)*.1,0,1);
     });
@@ -909,7 +912,7 @@ function socTick(dt){
       }
     }
     const avg=S.cr.reduce((a,c)=>a+c.joy,0)/S.cr.length;
-    if(L.length&&avg<.33&&Math.random()<.08){
+    if(L.length&&avg<.33&&R()<.08){
       const hard=L.find(l=>!l.blessed&&(l.k==='work'||l.k==='curfew'||l.k==='tithe'))||L.find(l=>!l.blessed);
       if(hard){S.laws=L.filter(l=>l!==hard);(S.banned=S.banned||{})[hard.k]=S.day+8;addLog('The council repealed a law because the people were too unhappy: '+hard.t)}
     }
@@ -919,15 +922,15 @@ function socTick(dt){
       const sinners=S.cr.filter(c=>c.want==='leave'&&c.age>=ADULT);
       if(sinners.length){
         const v=pick(sinners),g=pick(govs);
-        if(Math.random()<.7){v.hope=Math.max(0,v.hope-.25);v.joy=clamp(v.joy-.2,0,1);addLog(g.name+' rebuked '+v.name+' before everyone for speaking of the outside.',true)}
+        if(R()<.7){v.hope=Math.max(0,v.hope-.25);v.joy=clamp(v.joy-.2,0,1);addLog(g.name+' rebuked '+v.name+' before everyone for speaking of the outside.',true)}
         else if(S.b.some(b=>b.t==='window')&&S.cr.length>3){v.leaving=true;addLog(g.name+' sent '+v.name+' to the window. "Go, then," they said.',true)}
         else{v.hope=Math.max(0,v.hope-.4);addLog(g.name+' locked '+v.name+' in a hut for three nights.',true)}
       }
     }
   }
-  if(S.b.some(b=>b.t==='church')&&Math.random()<dt/70){
+  if(S.b.some(b=>b.t==='church')&&R()<dt/70){
     const c=pick(S.cr),w=c.sick>0?'ask the Big One to lift the grey':c.food<.4?'ask the Big One for food':(c.want==='leave'?'ask to be shown the door':(c.spouse?'thank the Big One for '+(byId(c.spouse)||{name:'their family'}).name:'thank the Big One for being alive'));
-    sayAny(c,['you']);if(Math.random()<.5)addLog(c.name+' prays. They '+w+'.');
+    sayAny(c,['you']);if(R()<.5)addLog(c.name+' prays. They '+w+'.');
   }
 }
 function bless(){
@@ -983,11 +986,11 @@ function setWeather(w,dur){
 function weatherTick(dt){
   S.wT-=dt;
   if(S.wT<=0){
-    let r=Math.random(),pick2='clear';
+    let r=R(),pick2='clear';
     for(const [k,p] of WNEXT[S.weather]){r-=p;if(r<=0){pick2=k;break}}
     if(pick2===S.weather)pick2=S.weather==='clear'?'cloud':'clear';
     setWeather(pick2);
-    if(pick2==='rain'&&S.time>500&&Math.random()<.1)badEvent('storm');
+    if(pick2==='rain'&&S.time>500&&R()<.1)badEvent('storm');
   }
   const wells=S.b.filter(b=>b.t==='well').length;
   let d=.004+wells*.002-.0005;
@@ -1011,7 +1014,7 @@ function sendSign(k){
   const pr=S.cr.find(c=>c.job==='priest')||S.cr.find(c=>c.job==='gov')||pick(S.cr);
   const avgF=S.cr.reduce((a,c)=>a+c.faith,0)/S.cr.length,list=INTERP[k];
   let it=pick(list);
-  if(avgF<.3&&Math.random()<.5)it=list.find(x=>!x[1])||it;
+  if(avgF<.3&&R()<.5)it=list.find(x=>!x[1])||it;
   const good=it[1];
   S.lastInterp=pr.name+' said it meant '+it[0];
   addLog(pr.name+' saw it in the sky. They said it meant '+it[0],true);
@@ -1034,7 +1037,7 @@ function petitionTick(dt){
   }
   S.petT=(S.petT||120)-dt;
   if(S.petT>0||S.cr.length<2)return;
-  if(!S.b.some(b=>b.t==='church')&&Math.random()<.7)return;
+  if(!S.b.some(b=>b.t==='church')&&R()<.7)return;
   S.petT=rnd(120,220);
   const o=[],lv=S.cr.filter(c=>c.want==='leave'&&c.age>=ADULT);
   if(lv.length)o.push({k:'outside',who:pick(lv),q:'asks: "What is on the other side?"'});
@@ -1055,7 +1058,7 @@ function answerPetition(a){
   let msg='';
   if(p.k==='outside'&&who){
     if(L){who.hope=Math.min(1,who.hope+.3);who.joy=clamp(who.joy+.1,0,1);msg=who.name+' took it as yes. They did not speak for a long time.'}
-    else if(D){who.hope=0;if(Math.random()<.5)who.want='stay';msg=who.name+' took it as no. They went back to work, quieter.'}
+    else if(D){who.hope=0;if(R()<.5)who.want='stay';msg=who.name+' took it as no. They went back to work, quieter.'}
     else{who.hope=Math.min(1,who.hope+.1);who.joy=clamp(who.joy-.1,0,1);msg=who.name+' took the silence as maybe.'}
   }else if(p.k==='rain'){
     if(L){setWeather('rain',100);msg='The rain came. They said it was an answer.'}
@@ -1182,7 +1185,7 @@ function readVerse(c){
   const v=pick(vs);
   S.cr.forEach(o=>{if(o!==c&&dist(o,c)<60){o.faith=clamp(o.faith+.006,0,1);o.joy=clamp(o.joy+.02,0,1)}});
   S.culture+=.4;sayAny(c,['you','song']);
-  if(Math.random()<.3)addLog(c.name+' read aloud from '+BOOK[k].t+': “'+v+'”');
+  if(R()<.3)addLog(c.name+' read aloud from '+BOOK[k].t+': “'+v+'”');
 }
 function feastReading(){
   if(!canRead())return;
@@ -1265,12 +1268,12 @@ function initCare(c,pa,pb){
   c.clean=rnd(.6,.95);c.fun=rnd(.4,.8);c.soc=rnd(.4,.8);c.cur=rnd(.1,.5);
   const t={};
   TRAITS.forEach(k=>{
-    let v=Math.random();
+    let v=R();
     if(pa&&pa.tr){const m=pb&&pb.tr?(pa.tr[k]+pb.tr[k])/2:pa.tr[k];v=clamp(m*.65+v*.35+rnd(-.08,.08),0,1)}
     t[k]=v;
   });
   c.tr=t;c.sh=ri(0,3);c.tone=rnd(-.18,.18);
-  c.pf=pa&&Math.random()<.6?(pa.pf||pick(FOODK)):pick(FOODK);
+  c.pf=pa&&R()<.6?(pa.pf||pick(FOODK)):pick(FOODK);
   c.mm={fed:0,neglect:0,washed:0,petted:0,harmed:0,helped:0,lost:0,played:0};
   c.op=0;
 }
@@ -1305,7 +1308,7 @@ function careUpdate(c,dt){
   c.clean=clamp(c.clean-dt*.0022*(working?1.4:1)*(1.3-tr.tidy*.6)*(S.weather==='rain'?1.3:1),0,1);
   if(!sl){c.fun=clamp(c.fun-dt*.0026,0,1);c.cur=clamp(c.cur+dt*.0022*(.4+tr.curious),0,1)}
   c.soc=clamp(c.soc-dt*(sl?.0008:.0028)*(.5+tr.social),0,1);
-  if(c.clean<.12&&!(c.sick>0)&&Math.random()<dt*.0006){c.sick=90;if(Math.random()<.5)addLog(c.name+' has been dirty for too long and has gone grey.')}
+  if(c.clean<.12&&!(c.sick>0)&&R()<dt*.0006){c.sick=90;if(R()<.5)addLog(c.name+' has been dirty for too long and has gone grey.')}
   if(c.food<.08||c.water<.08){c.mm.neglect+=dt/10;opin(c,-dt*.0008);pl('hungryS',dt)}
   else if(c.joy>.6&&c.food>.4)opin(c,dt*.00008);
   c.faith=clamp(c.faith+((.5+(c.op||0)*.3)-c.faith)*dt*.0006,0,1);
@@ -1330,17 +1333,17 @@ function careThink(c){
     if(bh){go(c,bh.x+rnd(-3,3),bh.y+6);c.state='toWash';c.t=14;return true}
     if(tr.tidy>.5&&S.pond>.1){const wp=waterPt(c);go(c,wp.x,wp.y);c.state='toWash';c.t=14;return true}
   }
-  if(c.fun<.3&&Math.random()<.7){
+  if(c.fun<.3&&R()<.7){
     const pg=nearest(S.b.filter(b=>b.t==='play'),c);
     if(pg)go(c,pg.x+rnd(-8,8),pg.y+rnd(2,8));
     else{const pal=nearest(S.cr.filter(o=>o!==c&&o.state!=='sleep'),c);if(pal)go(c,pal.x+rnd(-5,5),pal.y+rnd(-3,3));else{const q=wanderPt(c);go(c,q.x,q.y)}}
     c.state='toPlay';c.t=12;return true;
   }
-  if(c.soc<.3&&S.cr.length>1&&Math.random()<.7){
+  if(c.soc<.3&&S.cr.length>1&&R()<.7){
     const o=nearest(S.cr.filter(x=>x!==c&&x.state!=='sleep'),c);
     if(o){c.tid=o.id;go(c,o.x+rnd(-4,4),o.y+rnd(-2,2));c.state='toTalk';c.t=8;return true}
   }
-  if(c.cur>.7&&Math.random()<.45+tr.curious*.3){
+  if(c.cur>.7&&R()<.45+tr.curious*.3){
     const opts=S.b.slice();S.graves&&S.graves.length&&opts.push(pick(S.graves));
     opts.push({x:PX,y:PY,pond:1});
     if(S.areas)Object.keys(AREAS).forEach(k=>{if(!S.areas[k]&&(S.culture>12||S.cr.length>=6)){const a=AREAS[k];const p={x:(a.x0+a.x1)/2,y:(a.y0+a.y1)/2,area:k};opts.push(p,p,p)}});
@@ -1369,8 +1372,8 @@ function careArrive(c){
     c.cur=0;c.joy=clamp(c.joy+.05,0,1);S.culture+=.35;
     if(c.ex&&c.ex.indexOf('area:')===0){discoverArea(c.ex.slice(5),c);c.state='look';c.t=rnd(3,6);return}
     if(c.ex==='edge'){pl('edgeLooks');emote(c,'q',3.4);sayAny(c,['outside','watch','door'])}
-    else{emote(c,'q',2.4);if(Math.random()<.3)sayAny(c,['home','kin','song'])}
-    if(Math.random()<.04&&S.time-(S.lastExp||-999)>90){
+    else{emote(c,'q',2.4);if(R()<.3)sayAny(c,['home','kin','song'])}
+    if(R()<.04&&S.time-(S.lastExp||-999)>90){
       S.lastExp=S.time;
       addLog(c.name+(c.ex==='edge'?' stood at the bottom of the world and looked out for a long time.':c.ex==='pond'?' watched their own reflection until it moved on its own.':c.ex==='grave'?' sat by a grave and did not say anything.':' studied the '+(BUILD[c.ex]?BUILD[c.ex].n.toLowerCase():'thing')+' from every side.'),c.ex==='edge');
     }
@@ -1557,17 +1560,30 @@ function lockText(k){
 }
 function payBuild(k){const b=BUILD[k];S.glow-=b.c;if(b.r)for(const r in b.r)S.res[r]-=b.r[r]}
 function pondR(){const lv=Math.max(S.pond,.5);return {rx:8+16*lv,ry:4+8*lv}}
+/* Obstacles are rasterised into a one-pixel-per-cell map when they change, so asking "is this point blocked?"
+   (which routing does thousands of times a second in a big colony) is a single array read instead of a scan of every building, tree and rock. */
+const BM=new Uint8Array(W*H);
 function rebuildOB(){
   OB=[];
   S.b.forEach(b=>{const f=FOOT[b.t];if(f)OB.push({x0:b.x-f,x1:b.x+f,y0:b.y-2,y1:b.y+3})});
   (S.sites||[]).forEach(b=>{const f=FOOT[b.t];if(f)OB.push({x0:b.x-f,x1:b.x+f,y0:b.y-2,y1:b.y+3})});
   OB.push({x0:MTN.x0,x1:MTN.x1,y0:MTN.y0,y1:MTN.y1});
   S.nodes.forEach(n=>{if(liveNode(n)&&n.k!=='gem'){const h=NODEK[n.k].hw;OB.push({x0:n.x-h,x1:n.x+h,y0:n.y-1,y1:n.y+1})}else if(liveNode(n)){OB.push({x0:n.x-2,x1:n.x+2,y0:n.y-1,y1:n.y+1})}});
+  fillBM();
+}
+function fillBM(){
+  BM.fill(0);
+  for(let i=0;i<OB.length;i++){
+    const o=OB[i],xa=Math.max(0,Math.floor(o.x0)),xb=Math.min(W-1,Math.ceil(o.x1)-1),ya=Math.max(0,Math.floor(o.y0)),yb=Math.min(H-1,Math.ceil(o.y1)-1);
+    for(let y=ya;y<=yb;y++){const r=y*W;for(let x=xa;x<=xb;x++)BM[r+x]=1}
+  }
+  const ya=Math.max(0,Math.floor(LK.y-LK.ry)),yb=Math.min(H-1,Math.ceil(LK.y+LK.ry)),xa=Math.max(0,Math.floor(LK.x-LK.rx)),xb=Math.min(W-1,Math.ceil(LK.x+LK.rx));
+  for(let y=ya;y<=yb;y++)for(let x=xa;x<=xb;x++){const dx=(x+.5-LK.x)/(LK.rx*.9+.8),dy=(y+.5-LK.y)/(LK.ry*.85+.8);if(dx*dx+dy*dy<1)BM[y*W+x]=1}
 }
 function blocked(x,y){
-  for(let i=0;i<OB.length;i++){const o=OB[i];if(x>o.x0&&x<o.x1&&y>o.y0&&y<o.y1)return true}
-  if(lakeBlocked(x,y))return true;
-  const p=pondR(),dx=(x-PX)/(p.rx*.8),dy=(y-PY)/(p.ry*.7);
+  const ix=x|0,iy=y|0;
+  if(ix>=0&&ix<W&&iy>=0&&iy<H&&BM[iy*W+ix]===1)return true;
+  const lv=S.pond>.5?S.pond:.5,dx=(x-PX)/((8+16*lv)*.8),dy=(y-PY)/((4+8*lv)*.7);
   return dx*dx+dy*dy<1;
 }
 function freePt(x,y){
@@ -1679,7 +1695,7 @@ function econArrive(c){
       if(res==='wood'&&T('axes'))y*=1.5;if(res==='stone'&&T('picks'))y*=1.5;
       if(T('carts'))y*=2;if(c.press>S.time)y*=2;
       n.hp-=1;c.carry=res;c.cq=Math.round(y);
-      if(n.hp<=0){n.dead=S.time;if(S.nodeLog!==n.k&&Math.random()<.3){S.nodeLog=n.k}}
+      if(n.hp<=0){n.dead=S.time;if(S.nodeLog!==n.k&&R()<.3){S.nodeLog=n.k}}
       const d=dropPt();go(c,d.x+rnd(-5,5),d.y+rnd(0,4));c.state='j_stash';c.t=16;
     }else{c.state='idle';c.t=rnd(1,2)}
     return true;
@@ -1737,7 +1753,7 @@ function econTick(dt){
   const mills=nbuild('mill');
   if(mills&&T('automation')){S.millT=(S.millT||0)+x;if(S.millT>=8){S.millT=0;for(let i=0;i<mills;i++)if(S.res.wood>=6){S.res.wood-=6;addRes('plank',4)}}}
   const orch=nbuild('orchard');
-  if(orch&&!(S.blight>0)){S.foodStock=Math.min(14,S.foodStock+x*orch*.22);if(Math.random()<x*.04*orch&&S.foods.length<10){const q=gardenPt();spawnFood(q.x,q.y,'nut')}}
+  if(orch&&!(S.blight>0)){S.foodStock=Math.min(14,S.foodStock+x*orch*.22);if(R()<x*.04*orch&&S.foods.length<10){const q=gardenPt();spawnFood(q.x,q.y,'nut')}}
   S.firewood=(S.firewood||0)+x;
   S.warm=S.warm||0;
 }
@@ -1769,7 +1785,7 @@ function econCatchUp(sec){
     const mills=nbuild('mill');
     if(mills&&T('automation')){for(let k=0;k<Math.floor(chunk/8)*mills&&S.res.wood>=6;k++){S.res.wood-=6;addRes('plank',4)}}
     researchTick(chunk);
-    S.nodes.forEach(nd=>{if(nd.hp<=0&&Math.random()<.4)nd.hp=NODEK[nd.k].hp});
+    S.nodes.forEach(nd=>{if(nd.hp<=0&&R()<.4)nd.hp=NODEK[nd.k].hp});
   }
   const days=Math.floor(sec/DAY);
   for(let d=0;d<Math.min(days,6);d++)if(S.cr.length>=10&&S.res.wood<Math.floor(S.cr.length/10)){S.cold=(S.cold||0)+1}
@@ -1809,18 +1825,18 @@ function calcStanding(c){
   return age*2+(c.job==='gov'?3:c.job==='priest'?2.5:c.job==='doctor'?2:0)+f*.8+(c.kids?c.kids.length*.5:0)+(c.tr?c.tr.bold*1.2+c.tr.social*.8:0)+(c.age>=ELDER?1:0);
 }
 function interact(a,b,quiet){
-  const s=compat(a,b)-.68,d=s*12+(Math.random()-.5)*3;
+  const s=compat(a,b)-.68,d=s*12+(R()-.5)*3;
   bond(a,b,d);
   const r=relOf(a,b);
-  if(d>0){a.soc=clamp(a.soc+.08,0,1);b.soc=clamp(b.soc+.08,0,1);if(!quiet&&r>=40&&Math.random()<.25)emote(a,'heart',2)}
+  if(d>0){a.soc=clamp(a.soc+.08,0,1);b.soc=clamp(b.soc+.08,0,1);if(!quiet&&r>=40&&R()<.25)emote(a,'heart',2)}
   else if(r<=-30&&!quiet){
-    if(Math.random()<.3){emote(a,'bang',1.8);emote(b,'sweat',1.8);a.joy=clamp(a.joy-.04,0,1);b.joy=clamp(b.joy-.04,0,1)}
-    if(a.state!=='sleep'&&Math.random()<.35){go(b,b.x+(b.x-a.x)*3+rnd(-4,4),b.y+(b.y-a.y)*3);b.state='wander';b.t=4}
-    if(a.tr.bold>.6&&b.tr.bold>.6&&Math.random()<.04){a.hp=clamp(a.hp-.06,0,1);b.hp=clamp(b.hp-.06,0,1);addLog(a.name+' and '+b.name+' came to blows.')}
+    if(R()<.3){emote(a,'bang',1.8);emote(b,'sweat',1.8);a.joy=clamp(a.joy-.04,0,1);b.joy=clamp(b.joy-.04,0,1)}
+    if(a.state!=='sleep'&&R()<.35){go(b,b.x+(b.x-a.x)*3+rnd(-4,4),b.y+(b.y-a.y)*3);b.state='wander';b.t=4}
+    if(a.tr.bold>.6&&b.tr.bold>.6&&R()<.04){a.hp=clamp(a.hp-.06,0,1);b.hp=clamp(b.hp-.06,0,1);addLog(a.name+' and '+b.name+' came to blows.')}
   }
   const pa=a.st||0,pb=b.st||0,k=r>20?.05:.025;
   if(pa>pb+.5){b.op=clamp((b.op||0)+((a.op||0)-(b.op||0))*k,-1,1)}else if(pb>pa+.5){a.op=clamp((a.op||0)+((b.op||0)-(a.op||0))*k,-1,1)}
-  if(!quiet&&Math.random()<.3)talk(a,b);
+  if(!quiet&&R()<.3)talk(a,b);
 }
 function gridOf(){const g=new Map();for(const c of S.cr){const k=((c.x/16)|0)*100+((c.y/16)|0);const l=g.get(k);if(l)l.push(c);else g.set(k,[c])}return g}
 function nearbyOne(c,g){
@@ -1850,7 +1866,7 @@ function gatherTick(){
   grp.forEach(m=>{go(m,px+rnd(-8,8),py+rnd(-3,5));m.state='toPlay';m.t=14});
   for(let i=0;i<grp.length;i++)for(let j=i+1;j<grp.length;j++)bond(grp[i],grp[j],2);
   S.culture+=grp.length*.3;
-  if(Math.random()<.3)addLog(c.name+' and '+(grp.length-1)+' of their friends gathered to '+(sh?'sing at the '+BUILD[sh.t].n.toLowerCase():'play together')+'.');
+  if(R()<.3)addLog(c.name+' and '+(grp.length-1)+' of their friends gathered to '+(sh?'sing at the '+BUILD[sh.t].n.toLowerCase():'play together')+'.');
   coin('song');
 }
 function langTick(){
@@ -1869,16 +1885,16 @@ function langTick(){
   ks.forEach(k=>{const d=dominant(k);if(d.w&&d.share>=.35){if(top[d.w]&&top[d.w]!==k){const id=[top[d.w],k].sort().join('|');if(!S.drift[id]){S.drift[id]=1;addLog('The word "'+fmt(d.w)+'" now means both '+(CONCEPTS[top[d.w]]||top[d.w])+' and '+(CONCEPTS[k]||k)+'. Nobody seems troubled.')}}else top[d.w]=k}});
   // innovation: someone invents a better word and may carry it
   const inv=S.cr.filter(c=>c.tr&&c.tr.curious>.55&&c.tr.social>.4&&Object.keys(c.lex).length>3);
-  if(inv.length&&Math.random()<.5){const c=pick(inv),k=pick(Object.keys(c.lex));c.lex[k]=mkWord();c.st+=.2;const f=nearest(S.cr.filter(o=>o!==c&&relOf(c,o)>=20),c);if(f)f.lex[k]=c.lex[k]}
+  if(inv.length&&R()<.5){const c=pick(inv),k=pick(Object.keys(c.lex));c.lex[k]=mkWord();c.st+=.2;const f=nearest(S.cr.filter(o=>o!==c&&relOf(c,o)>=20),c);if(f)f.lex[k]=c.lex[k]}
   // compound words
-  if(Math.random()<.4&&S.cr.length>=6){
+  if(R()<.4&&S.cr.length>=6){
     const opts=Object.keys(COMPOUND).filter(key=>{const p=key.split('+');return !S.concepts[key]&&S.concepts[p[0]]&&S.concepts[p[1]]&&dominant(p[0]).share>=.3&&dominant(p[1]).share>=.3});
     if(opts.length){
       const key=pick(opts),p=key.split('+');
       const mk=S.cr.filter(c=>c.lex[p[0]]&&c.lex[p[1]]);
       if(mk.length){
         const c=pick(mk),A=c.lex[p[0]].split('-'),B=c.lex[p[1]].split('-');
-        const w=A[0]+'-'+B[B.length-1]+(Math.random()<.5?'-'+B[0]:'');
+        const w=A[0]+'-'+B[B.length-1]+(R()<.5?'-'+B[0]:'');
         registerCompound(key,COMPOUND[key]);c.lex[key]=w;
         addLog(c.name+' put "'+fmt(c.lex[p[0]])+'" and "'+fmt(c.lex[p[1]])+'" together and made "'+fmt(w)+'". It might mean '+COMPOUND[key]+'.',key==='watch+you'||key==='door+watch'||key==='think+outside');
         const f=nearest(S.cr.filter(o=>o!==c),c);if(f)f.lex[key]=w;
@@ -1890,7 +1906,7 @@ function bondTick(){
   const n=S.cr.length;if(n<2)return;
   const g=gridOf(),p=Math.min(1,40/n);
   for(const c of S.cr){
-    if(c.state==='sleep'||Math.random()>p)continue;
+    if(c.state==='sleep'||R()>p)continue;
     const o=nearbyOne(c,g);if(o)interact(c,o);
   }
   S.stT=(S.stT||0)+5;if(S.stT>=20){S.stT=0;updateStanding()}
@@ -1990,7 +2006,7 @@ function assessTick(){
   }
   // collective responses to how they are treated
   const r=regard();
-  if(S.cr.length>=10&&r<-.3&&S.time>(S.strikeT||0)+900&&Math.random()<.02){
+  if(S.cr.length>=10&&r<-.3&&S.time>(S.strikeT||0)+900&&R()<.02){
     S.strikeT=S.time+150;
     addLog('They stopped working. Nobody argued about it. It was as if they had agreed on it somewhere you could not see.',true);
   }
@@ -2070,7 +2086,7 @@ function wallTick(){
     return;
   }
   // everything unlocked has been seen: only occasional quiet ones remain
-  if(Math.random()<.25){const c=awake();if(c){stareAt(c,6);addLog(c.name+' watched you for a while, then went back to what they were doing.',true)}}
+  if(R()<.25){const c=awake();if(c){stareAt(c,6);addLog(c.name+' watched you for a while, then went back to what they were doing.',true)}}
   S.wallNext=S.time+rnd(600,1100);
 }
 function onReturn(real){
@@ -2097,7 +2113,7 @@ function habitTick(){
   S.habitNext=S.time+rnd(240,420);
   const cs=S.cr.filter(c=>c.state!=='sleep'&&(c.state==='idle'||c.state==='wander')).slice(0,5);
   cs.forEach(c=>{go(c,S.habit.x+rnd(-8,8),S.habit.y+rnd(-5,5));c.state='toHabit';c.t=14});
-  if(cs.length&&Math.random()<.4)addLog('Some of them are waiting where you always feed.');
+  if(cs.length&&R()<.4)addLog('Some of them are waiting where you always feed.');
 }
 function knowCheck(c){
   c.mm.tapped=(c.mm.tapped||0)+1;
@@ -2120,7 +2136,7 @@ function drawFx(){
   const f=ui.fx;if(!f)return;
   f.t-=1/60;if(f.t<=0){ui.fx=null;return}
   const k=f.t/f.d;
-  for(let i=0;i<7;i++){const y=Math.floor(Math.random()*VH),h=2+Math.floor(Math.random()*5),dx=Math.round((Math.random()-.5)*14*k);cx.drawImage(cv,0,y,VW,h,dx,y,VW,h)}
+  for(let i=0;i<7;i++){const y=Math.floor(R()*VH),h=2+Math.floor(R()*5),dx=Math.round((R()-.5)*14*k);cx.drawImage(cv,0,y,VW,h,dx,y,VW,h)}
   cx.globalAlpha=.1*k;cx.fillStyle='#b496ff';cx.fillRect(0,0,VW,VH);cx.globalAlpha=1;
 }
 function pressWork(c){
@@ -2234,6 +2250,47 @@ function drawPond(t,l){
   cx.globalAlpha=1;
   cx.fillStyle=mix('#1c3326','#4a7d52',l);for(let i=0;i<7;i++){const a=i*0.9+1,ex=px+Math.round(Math.cos(a)*(rx+2)),ey=py+Math.round(Math.sin(a)*(ry+1));cx.fillRect(ex,ey-2,1,3)}
 }
+/* Rain: deterministic streaks that fall and slant, splashes where they land, ripples on the pond and lake.
+   Intensity eases in and out (ui.rk) so a rain sign visibly builds, and the Rain sign itself adds a downpour for its five seconds. */
+const rh=n=>{const s=Math.sin(n*127.1+311.7)*43758.5453;return s-Math.floor(s)};
+function drawRain(t,l,vx,vy,on){
+  const dt=Math.min(.2,Math.max(0,t-(ui.rt||t)));ui.rt=t;
+  const burst=S.sign&&S.sign.k==='rain'?.9:0,tg=on||S.storm>0?1+burst+(S.storm>0?.5:0):0;
+  ui.rk=(ui.rk||0)+(tg-(ui.rk||0))*Math.min(1,dt*(tg>(ui.rk||0)?1.6:.7));
+  const k=ui.rk;if(k<.02)return;
+  const n=Math.floor(150*k),near=mixc(l);
+  // sheets of drops: two depths, the far ones thinner and slower
+  for(let i=0;i<n;i++){
+    const far=i%3===0,v=(far?70:120)+rh(i*3.1)*50,len=far?3:5;
+    const y=((t*v+rh(i*1.7)*(VH+len))%(VH+len)),x=((rh(i*.37)*(VW+40)-y*.28-t*4)%(VW+40)+VW+40)%(VW+40)-20;
+    cx.globalAlpha=(far?.42:.7)*Math.min(1,k);cx.fillStyle=far?near[0]:near[1];
+    cx.fillRect(vx+Math.round(x),vy+Math.round(y)-len,1,len);
+    if(!far){cx.globalAlpha*=.6;cx.fillRect(vx+Math.round(x)+1,vy+Math.round(y)-len-1,1,1)}
+  }
+  // splashes on the ground
+  cx.fillStyle=near[1];
+  const sn=Math.floor(60*Math.min(1.4,k));
+  for(let i=0;i<sn;i++){
+    const ph=(t*1.9+rh(i*5.3))%1,px=vx+Math.floor(rh(i*2.9+7)*VW),py=vy+Math.floor(rh(i*4.1+3)*VH);
+    if(py<GY+3||ph>.4)continue;
+    const r=1+Math.floor(ph*5);cx.globalAlpha=(.7-ph*1.6)*Math.min(1,k);
+    cx.fillRect(px-r,py,1,1);cx.fillRect(px+r,py,1,1);if(ph<.2)cx.fillRect(px,py-1,1,1);
+  }
+  // rings on the pond and the lake
+  const ring=(cxp,cyp,rx,ry,cnt,seed)=>{
+    for(let i=0;i<cnt;i++){
+      const ph=(t*1.1+rh(i*6.7+seed))%1,a=rh(i*8.3+seed)*6.283,d=Math.sqrt(rh(i*2.3+seed));
+      const x=cxp+Math.cos(a)*rx*d*.85,y=cyp+Math.sin(a)*ry*d*.85,r=1+ph*4;
+      cx.globalAlpha=(.85-ph)*.8*Math.min(1,k);
+      for(let q=0;q<8;q++){const b=q*.7854;cx.fillRect(Math.round(x+Math.cos(b)*r*1.6),Math.round(y+Math.sin(b)*r*.7),1,1)}
+    }
+  };
+  cx.fillStyle='#e6f4ff';
+  if(S.pond>.03)ring(Math.round(PX),Math.round(PY),8+16*S.pond,4+8*S.pond,Math.floor(10*Math.min(1,k)),11);
+  if(typeof LK!=='undefined'&&LK.x+LK.rx>vx&&LK.x-LK.rx<vx+VW&&LK.y+LK.ry>vy&&LK.y-LK.ry<vy+VH)ring(LK.x,LK.y,LK.rx,LK.ry,Math.floor(18*Math.min(1,k)),29);
+  cx.globalAlpha=1;
+}
+const mixc=l=>l>.5?['#a9c8f2','#d6e8ff']:['#7f9fd0','#b8d0f5'];
 function drawWeather(t,l,vx,vy){
   const w=S.weather;
   if(w==='cloud'||w==='rain'){
@@ -2242,7 +2299,7 @@ function drawWeather(t,l,vx,vy){
       for(let i=0;i<12;i++){const bx=((t*3+i*61)%(W+40))-20,by=5+((i*13)%(GY-14));cx.fillRect(bx,by,16,3);cx.fillRect(bx+3,by-2,9,2)}}
     cx.globalAlpha=1;
   }
-  if(w==='rain'){cx.fillStyle='#9ec1ff';cx.globalAlpha=.45;for(let i=0;i<70;i++)cx.fillRect(vx+Math.floor(Math.random()*VW),vy+Math.floor(Math.random()*VH),1,2);cx.globalAlpha=1}
+  drawRain(t,l,vx,vy,w==='rain'?1:0);
   if(w==='heat'){cx.fillStyle='#ffb04a';cx.globalAlpha=(.09+.04*Math.sin(t))*(.3+l*.7);cx.fillRect(vx,vy,VW,VH);cx.globalAlpha=1;cx.fillStyle='#fff1b0';cx.fillRect(vx+VW-34,vy+6,7,7)}
   if(w==='fog'){cx.fillStyle='#cfd8d8';cx.globalAlpha=.3;cx.fillRect(0,GY-4,W,H-GY+4);cx.globalAlpha=.12;cx.fillRect(vx,vy,VW,VH);cx.globalAlpha=1}
   const g=S.sign;
@@ -2297,7 +2354,6 @@ function render(t){
   }
   if(S.storm>0){
     cx.fillStyle='#0a1020';cx.globalAlpha=.35;cx.fillRect(vx,vy,VW,VH);
-    cx.fillStyle='#9ec1ff';cx.globalAlpha=.55;for(let i=0;i<90;i++)cx.fillRect(vx+Math.floor(Math.random()*VW),vy+Math.floor(Math.random()*VH),1,3);
     if(Math.random()<.015){cx.fillStyle='#fff';cx.globalAlpha=.3;cx.fillRect(vx,vy,VW,VH)}
     cx.globalAlpha=1;
   }
@@ -2442,13 +2498,13 @@ function worldTap(e){
   const sb=S.b.filter(b=>Math.abs(p.x-b.x)<=(FOOT[b.t]||6)&&p.y>b.y-14&&p.y<b.y+5).sort((a,b)=>dist(a,p)-dist(b,p))[0];
   if(sb){ui.sel=0;ui.selB=bid(sb);ui.killB=0;ui.isig='';inspect();return}
   ui.sel=0;ui.selB=0;ui.killC=0;inspect();
-  if(S.foodStock>=1&&p.y>GY+2){S.foodStock-=1;{const hn=nearest(S.cr.filter(o=>o.food<.7),p);spawnFood(p.x,p.y,hn&&dist(hn,p)<50?hn.pf:null,'you')}pl('tapFed');habitTap(p);S.cr.forEach(o=>{if(o.food<.7&&Math.random()<.6&&o.state!=='sleep')o.t=0})}
+  if(S.foodStock>=1&&p.y>GY+2){S.foodStock-=1;{const hn=nearest(S.cr.filter(o=>o.food<.7),p);spawnFood(p.x,p.y,hn&&dist(hn,p)<50?hn.pf:null,'you')}pl('tapFed');habitTap(p);S.cr.forEach(o=>{if(o.food<.7&&R()<.6&&o.state!=='sleep')o.t=0})}
 }
 $('bSing').onclick=()=>{
   if(S.time-S.lastSing<20)return;
   S.lastSing=S.time;
   const m=S.b.find(b=>b.t==='shrine');
-  S.cr.forEach(c=>{go(c,(m?m.x:cam.x+VW/2)+rnd(-24,24),(m?m.y:cam.y+VH*.6)+rnd(4,18));c.state='wander';c.t=6;c.joy=clamp(c.joy+.25,0,1);if(Math.random()<.5)say(c,'song')});
+  S.cr.forEach(c=>{go(c,(m?m.x:cam.x+VW/2)+rnd(-24,24),(m?m.y:cam.y+VH*.6)+rnd(4,18));c.state='wander';c.t=6;c.joy=clamp(c.joy+.25,0,1);if(R()<.5)say(c,'song')});
   S.culture+=2+S.cr.length*.3;
   addLog('You sang. They gathered around the sound.');
 };
@@ -2469,7 +2525,7 @@ $('teach').onsubmit=e=>{
   $('teachIn').value='';S.taught=w;
   const had=!!S.concepts.you;
   S.concepts.you=1;
-  S.cr.forEach(c=>{if(!c.lex.you||Math.random()<.6)c.lex.you=w});
+  S.cr.forEach(c=>{if(!c.lex.you||R()<.6)c.lex.you=w});
   S.culture+=1;
   addLog('You said "'+w+'". They repeated it back, carefully. '+(had?'It replaced their word for you.':'It is now their word for you.'),true);
   S.cr.slice(0,3).forEach((c,i)=>setTimeout(()=>say(c,'you',true),500*i+300));
@@ -2644,7 +2700,7 @@ function placeBuild(){
   const why=canBuild(k);if(why||!spotFree(p.x,p.y,FOOT[k]||5,k)){ui.pendOk=false;setMode();return}
   payBuild(k);
   S.b.push({t:k,x:Math.round(p.x),y:Math.round(p.y),id:S.bid++});clearNodesAt(p.x,p.y,FOOT[k]||5);rebuildOB();
-  S.cr.forEach(c=>{if(c.state!=='sleep'&&Math.random()<.2){c.cur=Math.max(c.cur,.9)}});
+  S.cr.forEach(c=>{if(c.state!=='sleep'&&R()<.2){c.cur=Math.max(c.cur,.9)}});
   addLog('You built a '+BUILD[k].n.toLowerCase()+'. '+pick(S.cr).name+' went to look at it right away.');
   coin('build');pl('built');if(/^(clinic|bath|play|slide|board|campfire)$/.test(k))pl('comfortBuilt');
   assignJobs();
@@ -2801,7 +2857,7 @@ function lakeShore(x,y){ // a point just outside the walkable edge of the lake, 
   const a=Math.atan2((y-LK.y)/(LK.ry*.85),(x-LK.x)/(LK.rx*.9));
   return {x:LK.x+Math.cos(a)*LK.rx*.9*1.05,y:LK.y+Math.sin(a)*LK.ry*.85*1.05};
 }
-function lakePt(){const a=rnd(0,6.283),r=Math.sqrt(Math.random());return {x:LK.x+Math.cos(a)*LK.rx*.78*r,y:LK.y+Math.sin(a)*LK.ry*.72*r}}
+function lakePt(){const a=rnd(0,6.283),r=Math.sqrt(R());return {x:LK.x+Math.cos(a)*LK.rx*.78*r,y:LK.y+Math.sin(a)*LK.ry*.72*r}}
 const ellF=(x,y,rx,ry,col)=>{cx.fillStyle=col;x=Math.round(x);y=Math.round(y);rx=Math.round(rx);ry=Math.round(ry);for(let dy=-ry;dy<=ry;dy++){const hw=Math.round(rx*Math.sqrt(1-(dy*dy)/(ry*ry)));cx.fillRect(x-hw,y+dy,2*hw+1,1)}};
 const REEDS=Array.from({length:22},(_,i)=>{const a=i/22*6.283+((i*37)%5)*.1;return [Math.round(LK.x+Math.cos(a)*(LK.rx+1)),Math.round(LK.y+Math.sin(a)*(LK.ry+1)),i%3]});
 const PADS=Array.from({length:7},(_,i)=>{const a=i*.9+.3;return [Math.round(LK.x+Math.cos(a)*LK.rx*.62),Math.round(LK.y+Math.sin(a)*LK.ry*.55),i%2]});
@@ -2910,7 +2966,7 @@ function toShore(c){ // swim to dry land just outside the walkable edge (never i
 }
 function lakeTarget(c){
   if(c.zi&&!c.zd)return {x:ISL.x+rnd(-2,2),y:ISL.y+rnd(-1,1),k:1};
-  if(Math.random()<.18)return {x:FALL.x+rnd(-4,4),y:FALL.y1+7+rnd(0,2),k:2};
+  if(R()<.18)return {x:FALL.x+rnd(-4,4),y:FALL.y1+7+rnd(0,2),k:2};
   for(let i=0;i<6;i++){const p=lakePt();if(Math.hypot(p.x-c.x,p.y-c.y)>10&&!(Math.abs(p.x-ISL.x)<ISL.rx+3&&Math.abs(p.y-ISL.y)<ISL.ry+3)){p.k=0;return p}}
   const p=lakePt();p.k=0;return p;
 }
@@ -2921,22 +2977,22 @@ function lakeThink(c){
   const tr=c.tr;if(!tr||c.sick>0)return false;
   const ph=phase(),dusk=(ph>.58&&ph<.72)||(isNight()&&c.energy>=.75);
   const fires=S.b.filter(b=>b.t==='campfire');
-  if(fires.length&&dusk&&Math.random()<.4+(c.soc<.5?.25:0)){
+  if(fires.length&&dusk&&R()<.4+(c.soc<.5?.25:0)){
     const f=nearest(fires,c);c.tid=bid(f);go(c,f.x+rnd(-9,9),f.y+rnd(2,7));c.state='toFire';c.t=14;return true;
   }
   if(isNight()||S.storm>0||S.weather==='fog'||c.age<LD*.5)return false;
   const cc=colonyC(),d=Math.hypot(LK.x-cc.x,(LK.y-cc.y)*1.4),near=clamp(1.25-d/320,.25,1);
   const docks=S.b.filter(b=>b.t==='dock'),jumps=S.b.filter(b=>b.t==='slide'||b.t==='board'),bath=S.b.some(b=>b.t==='bath');
-  if(docks.length&&c.age>=ADULT&&(c.food<.6||c.fun<.5)&&Math.random()<.28){const b=nearest(docks,c);c.tid=bid(b);go(c,b.x+rnd(-6,6),b.y+4);c.state='j_fish';c.t=14;return true}
+  if(docks.length&&c.age>=ADULT&&(c.food<.6||c.fun<.5)&&R()<.28){const b=nearest(docks,c);c.tid=bid(b);go(c,b.x+rnd(-6,6),b.y+4);c.state='j_fish';c.t=14;return true}
   const hot=S.weather==='heat';
   const p=.06+(c.fun<.55?.22:0)+(c.clean<.4?(bath?.05:.35):0)+(hot?.25:0)+tr.bold*.06+(c.age<ADULT?.1:0)+(jumps.length?.12:0);
-  if(Math.random()>p*near)return false;
-  if(jumps.length&&Math.random()<.7){
+  if(R()>p*near)return false;
+  if(jumps.length&&R()<.7){
     const j=nearest(jumps,c);
     c.tid=bid(j);go(c,j.x+rnd(-3,3),j.y+4);c.state='toSlide';c.t=16;return true;
   }
   const q=lakeShore(c.x,c.y);
-  c.zi=(c.cur>.55&&c.age>=ADULT&&Math.random()<.35+tr.curious*.4)?1:0;c.zd=0;
+  c.zi=(c.cur>.55&&c.age>=ADULT&&R()<.35+tr.curious*.4)?1:0;c.zd=0;
   go(c,q.x+rnd(-3,3),q.y+rnd(-1,2));c.state='toSwim';c.t=16;return true;
 }
 function fishThink(c){
@@ -2955,13 +3011,13 @@ function lakeArrive(c){
       c.zr=1;emote(c,'heart',2);coin('fire');
       const o=S.cr.find(x=>x!==c&&dist(x,c)<20&&(x.zr||x.state==='toFire'));
       if(o){talk(c,o);if(ui.hooks.bond)ui.hooks.bond(c,o,2)}
-      if(Math.random()<.5)sayAny(c,['fire','song','kin']);
-      if(S.time-(S.lastStory||-999)>140&&Math.random()<.12){
+      if(R()<.5)sayAny(c,['fire','song','kin']);
+      if(S.time-(S.lastStory||-999)>140&&R()<.12){
         S.lastStory=S.time;
         const st=pick(['the first morning','the day the sky opened','the ones who left','the Big One']);
         addLog(c.name+' told the story of '+st+' by the fire. Everyone told it back a little differently.',st==='the Big One'&&S.attn>.3);
       }
-      if(S.attn>.45&&Math.random()<.05){stareAt(c,4);return true}
+      if(S.attn>.45&&R()<.05){stareAt(c,4);return true}
       c.state='hold';c.t=rnd(7,15);
     }else{c.state='idle';c.t=rnd(1,2)}
     return true;
@@ -2976,7 +3032,7 @@ function lakeArrive(c){
   if(s==='swim'){
     c.fun=clamp(c.fun+.16,0,1);c.joy=clamp(c.joy+.04,0,1);c.water=clamp(c.water+.08,0,1);
     const o=S.cr.find(x=>x!==c&&x.sw&&dist(x,c)<14);
-    if(o){c.soc=clamp(c.soc+.18,0,1);o.soc=clamp(o.soc+.18,0,1);if(ui.hooks.bond)ui.hooks.bond(c,o,2);if(Math.random()<.2)talk(c,o)}
+    if(o){c.soc=clamp(c.soc+.18,0,1);o.soc=clamp(o.soc+.18,0,1);if(ui.hooks.bond)ui.hooks.bond(c,o,2);if(R()<.2)talk(c,o)}
     if(c.zt===1){
       c.zi=0;c.zd=1;c.state='isle';c.t=rnd(5,9);c.cur=0;c.food=clamp(c.food+.2,0,1);c.fun=clamp(c.fun+.25,0,1);S.culture+=.6;S.isl=(S.isl||0)+1;emote(c,'q',3);
       if(!S.islFound){S.islFound=1;addLog(c.name+' swam all the way to the little island and stood on it. From there the whole colony looked small. They stayed a long time.',true)}
@@ -2986,7 +3042,7 @@ function lakeArrive(c){
       c.clean=1;c.joy=clamp(c.joy+.1,0,1);emote(c,'sparkle',2.6);
       if(!S.fallSeen){S.fallSeen=1;addLog(c.name+' swam under the falling water and stood in it. It was loud and cold and they did not want to leave.')}
     }
-    if(Math.random()<.035&&S.time-(S.lastDive||-999)>40){
+    if(R()<.035&&S.time-(S.lastDive||-999)>40){
       S.lastDive=S.time;S.res.gems=Math.min(resCap(),(S.res.gems||0)+1);S.dives=(S.dives||0)+1;emote(c,'sparkle',2.6);
       if(!S.diveLog){S.diveLog=1;addLog(c.name+' dove to the bottom of the lake and came up holding something blue.')}
     }
@@ -3005,9 +3061,9 @@ function lakeArrive(c){
     const b=S.b.find(x=>x.id===c.tid);
     if(!b||dist(b,c)>20){c.state='idle';c.t=rnd(1,2);return true}
     const fisher=c.job==='fisher';
-    if(Math.random()<(S.weather==='rain'?.9:.72)*(fisher?1.1:.75)){
+    if(R()<(S.weather==='rain'?.9:.72)*(fisher?1.1:.75)){
       S.granary=Math.min(stockCap(),S.granary+(fisher?1.1:.6)*(T('carts')?1.3:1));S.fished=(S.fished||0)+1;
-      c.food=clamp(c.food+.08,0,1);emote(c,'food',2.2);coin('fish');if(Math.random()<.3)sayAny(c,['fish','food']);
+      c.food=clamp(c.food+.08,0,1);emote(c,'food',2.2);coin('fish');if(R()<.3)sayAny(c,['fish','food']);
     }else emote(c,'bored',1.6);
     c.fun=clamp(c.fun+.12,0,1);c.joy=clamp(c.joy+.03,0,1);S.culture+=.04;
     c.zf=1;c.state='hold';c.t=rnd(5,9);return true;
@@ -3030,7 +3086,7 @@ function lakeUpdate(c,dt){
   if(s==='climb'){
     c.t-=dt;c.zu=Math.min(SLH[c.zk]||8,(c.zu||0)+dt*8);c.tx=c.x;c.ty=c.y;
     if(c.t<=0){
-      if(c.tr.bold<.3&&Math.random()<.22){c.zu=0;c.state='idle';c.t=rnd(2,4);emote(c,'sweat',2.4);c.fun=clamp(c.fun+.1,0,1);return true}
+      if(c.tr.bold<.3&&R()<.22){c.zu=0;c.state='idle';c.t=rnd(2,4);emote(c,'sweat',2.4);c.fun=clamp(c.fun+.1,0,1);return true}
       const h=SLH[c.zk]||8,e=lakeToward(c.zbx,c.zby,.8);
       c.zx=c.zbx;c.zy=c.zby-h+1;c.zex=e.x;c.zey=e.y;c.zp=0;c.zu=0;c.state='slide';c.x=c.zx;c.y=c.zy;emote(c,'bang',1.4);
     }
@@ -3147,7 +3203,7 @@ function siteTick(){
 }
 function siteThink(c){
   const ss=S.sites;if(!ss||!ss.length||c.age<ADULT||c.sick>0||c.leaving||c.job==='doctor'||c.job==='priest')return false;
-  if(Math.random()>(c.want==='stay'?.85:.3))return false;
+  if(R()>(c.want==='stay'?.85:.3))return false;
   const s=nearest(ss,c);if(!s)return false;
   if(S.cr.reduce((a,o)=>a+(o.state==='j_build'&&o.tid===s.id?1:0),0)>=6)return false;
   const f=FOOT[s.t]||5;
@@ -3157,7 +3213,7 @@ function siteArrive(c){
   const s=(S.sites||[]).find(x=>x.id===c.tid);
   if(s&&dist(s,c)<(FOOT[s.t]||5)+18){
     s.prog+=1;c.zb=1;S.culture+=.03;c.joy=clamp(c.joy+.01,0,1);pl('built');
-    if(Math.random()<.08)sayAny(c,['build','home','kin']);
+    if(R()<.08)sayAny(c,['build','home','kin']);
     if(s.prog>=s.need){completeSite(s);c.zb=0}
   }
   c.state='hold';c.t=rnd(1.2,2.2);return true;
@@ -3435,7 +3491,7 @@ function paceBirth(quiet){
   S.cr.forEach(a=>{
     if(!a.spouse||a.id>a.spouse||!ok(a))return;
     const b=byId(a.spouse);if(!b||!ok(b))return;
-    const k=a.kids.length+Math.random();
+    const k=a.kids.length+R();
     if(k<bk){bk=k;best=[a,b]}
   });
   if(best){born(best[0],best[1]);return 'born'}
@@ -3453,6 +3509,13 @@ function paceTick(dt,off){
   while(S.pace>=PACE&&k++<2000){
     S.pace-=PACE;paceBirth(off&&k>3);S.paceSeen=S.added;
   }
+}
+
+/* Anything the simulation keeps outside S that would make two runs from one seed differ is reset here. */
+function resetSim(){
+  fid=1;_cc={x:OX+120,y:OY+95,t:-9};econT=0;rebuildOB();
+  ui.lt=ui.st=ui.ck=ui.bdt=0;ui.tick=0;
+  for(const k in EM)delete EM[k];for(const k in PETT)delete PETT[k];SPL.length=0;splLast=0;
 }
 
 const KEY='dimlings.v1';
@@ -3545,7 +3608,7 @@ setInterval(()=>{if(S&&!document.hidden)saveAll(false)},10000);
     S.cr.forEach(lakeReset);S.visits=(best.visits||1)+1;
     S.foods=S.foods||[];fid=S.foods.reduce((m,f)=>Math.max(m,f.id),0)+1;
     S.log=S.log||[];S.left=S.left||0;S.lastBuild=S.lastBuild||0;S.sites=S.sites||[];
-    ['outside'].forEach(k=>{if(!S.concepts[k]){S.concepts[k]=1;const w=mkWord();S.cr.forEach(c=>{c.lex[k]=Math.random()<.7?w:mutate(w)})}});
+    ['outside'].forEach(k=>{if(!S.concepts[k]){S.concepts[k]=1;const w=mkWord();S.cr.forEach(c=>{c.lex[k]=R()<.7?w:mutate(w)})}});
     delete S.concepts.before;if(S.seen)delete S.seen.before;S.cr.forEach(c=>{delete c.lex.before;delete c.old;delete c.fl});
     S.cr.forEach((c,i)=>{if(!c.want){initFaith(c);if(i===0)c.want='stay';if(i===1)c.want='leave'}});
     if(!best.wnodes&&hadNodes){S.wnodes=0;addWorldNodes()}rebuildOB();
