@@ -22,7 +22,11 @@ h1{font:700 28px/1 var(--display);letter-spacing:.02em;margin:0;color:var(--glow
 #stage.glitch #world{transform:translateX(2px);filter:hue-rotate(40deg) saturate(1.6)}
 #mode{position:absolute;z-index:3;left:8px;top:8px;right:8px;font:500 11px var(--mono);background:var(--glow);color:#1b1405;padding:3px 7px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}#mode[hidden]{display:none}#mode button{min-height:26px;padding:2px 8px;font-size:11px;background:#1b1405;color:var(--glow);border:0}#mode span{flex:1}
 #wmsg{position:absolute;left:0;right:0;bottom:24%;text-align:center;font:500 13px var(--mono);letter-spacing:.08em;color:var(--eerie);text-shadow:0 0 6px #000,0 0 2px #000;pointer-events:none;padding:0 12px}#wmsg[hidden]{display:none}
-details.more{flex-basis:100%}details.more summary{cursor:pointer;color:var(--mute);font:500 11px var(--mono);padding:6px 0}details.more button{margin:2px 4px 2px 0}
+details.gn{flex-basis:100%;margin:6px 0}details.gn summary{cursor:pointer;color:var(--mute);font:500 11px var(--mono);padding:6px 0}details.gn .bars{margin:4px 0 8px}
+details.more{flex-basis:100%}
+#expBar{margin:6px 0;padding:6px 10px;border:1px dashed var(--eerie);border-radius:8px;color:#d8ccff;font:500 12px var(--mono)}#bProt.on{background:var(--panel2);border-color:var(--moss)}table.cmp{border-collapse:collapse;font:12px var(--mono);width:100%}table.cmp th,table.cmp td{padding:4px 6px;text-align:right;border-top:1px solid var(--line)}table.cmp th:first-child,table.cmp td:first-child{text-align:left}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.chips button{font:500 12px var(--body);padding:5px 10px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--mute)}.chips button.on{background:var(--panel2);color:var(--ink);border-color:var(--mute)}.chips small{opacity:.7}
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;margin:4px 0}.trend{display:grid;grid-template-columns:86px 1fr 44px 56px;gap:8px;align-items:center;font-size:13px;padding:3px 0}.trend b{font:500 12px var(--mono)}.gbar{display:grid;grid-template-columns:56px 1fr 34px;gap:8px;align-items:center;font-size:13px;margin:3px 0}.gbar i{display:block;height:8px;background:var(--moss);border-radius:2px}.gbar b{font:500 12px var(--mono);text-align:right}details.more summary{cursor:pointer;color:var(--mute);font:500 11px var(--mono);padding:6px 0}details.more button{margin:2px 4px 2px 0}
 #quick{position:absolute;left:6px;right:6px;top:6px;display:flex;gap:4px;align-items:center;background:rgba(14,19,22,.9);border:1px solid var(--line);padding:3px 4px 3px 8px;z-index:2}#quick .qn{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15}#quick b{font:700 14px var(--display);color:var(--moss);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#quick i{font:500 10px var(--mono);color:var(--mute);font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#quick button{min-height:32px;padding:2px 7px;font-size:12px}#quick .mi{display:none}@media (max-width:370px){#quick{gap:3px;padding-left:6px}#quick button{padding:2px 5px;font-size:11px;min-height:30px}#quick .mw{display:none}#quick .mi{display:inline}}
 #mode:not([hidden])~#quick,#toast:not([hidden])~#quick{display:none}
 #haz{top:auto!important;bottom:58px;right:6px}
@@ -97,12 +101,13 @@ td.w{font-family:var(--mono);color:var(--glow);white-space:nowrap}
 @keyframes eyep{50%{opacity:.25}}
 #move{margin:10px 0 0}#move summary{cursor:pointer;font:500 12px var(--mono);color:var(--mute);padding:6px 0}
 #move textarea{width:100%;background:var(--panel);border:1px solid var(--line);color:var(--ink);font:11px var(--mono);padding:8px;resize:vertical}
+#bSnd{min-height:28px;min-width:34px;padding:2px 8px;font:600 13px var(--mono);border-radius:0;margin-left:6px}#bSnd.off{opacity:.55}#sndVol{width:min(220px,60vw);vertical-align:middle;accent-color:var(--glow)}#spd{display:flex;gap:2px;margin-left:auto}#spd button{min-height:28px;padding:2px 8px;font:600 11px var(--mono);border-radius:0}#spd button.on{background:var(--glow);color:#1b1405}.slotrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:4px 0;font:500 11px var(--mono);color:var(--mute)}.slotrow.cur{color:var(--fg,#e8efe9)}.slotrow button{min-height:30px;padding:4px 8px;font-size:11px}#newCol select{background:var(--panel2);color:inherit;border:1px solid var(--line);padding:6px;min-height:34px}
 #move .mrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
 @media (max-width:480px){#meters{grid-template-columns:repeat(4,1fr);gap:4px}.m{padding:5px 6px}.m b{font-size:15px}.m span{font-size:9px;letter-spacing:.03em}}
 @media (prefers-reduced-motion:reduce){.bub{animation:none}#vig{transition:none}}
 </style>
 <main id="app">
-<header><h1>Dimlings</h1><div id="clock" class="mono">Day 1 · dawn</div></header>
+<header><h1>Dimlings</h1><div id="spd" role="group" aria-label="World speed"><button data-s="1" class="on" aria-label="Normal speed">1×</button><button data-s="10" aria-label="Ten times speed">10×</button><button data-s="100" aria-label="One hundred times speed">100×</button></div><button id="bSnd" aria-label="Sound">♪</button><div id="clock" class="mono">Day 1 · dawn</div></header>
 <div id="stage">
 <canvas id="world" width="240" height="160" aria-label="A small world of glowing creatures"></canvas>
 <div id="haz" hidden></div><div id="bubbles"></div><div id="vig"></div><div id="mode" hidden><span id="modeT"></span><button id="mOk" hidden>Place</button><button id="mNo">Cancel</button></div><div id="resbar"></div><div id="wmsg" hidden></div><button id="eye" hidden><i></i>They can see you ✕</button>
@@ -117,9 +122,11 @@ td.w{font-family:var(--mono);color:var(--glow);white-space:nowrap}
 <div class="m"><span>Noticing</span><b id="mAtt">0%</b></div>
 </section>
 <p class="mono split" id="split"></p>
+<div id="expBar" hidden></div>
 <section id="bar">
 <button id="bFood"><span id="bFoodT">Tap world to feed</span> (<span id="foodN">0</span>)</button>
 <button id="bSing">Sing</button>
+<button id="bProt"><span id="bProtT">Protect</span> (12)</button>
 <button id="bEyes" hidden>Let them see you</button>
 <button id="bHelp" hidden></button>
 <form id="teach" autocomplete="off"><input id="teachIn" maxlength="12" placeholder="Teach them a word" aria-label="Teach them a word"><button type="submit">Say it</button></form>
@@ -132,12 +139,14 @@ td.w{font-family:var(--mono);color:var(--glow);white-space:nowrap}
 <button role="tab" aria-selected="false" data-t="customs">Customs</button>
 <button role="tab" aria-selected="false" data-t="signs">Signs</button>
 <button role="tab" aria-selected="false" data-t="society">Society</button>
+<button role="tab" aria-selected="false" data-t="census">Census</button>
 <button role="tab" aria-selected="false" data-t="book">Book</button>
 <button role="tab" aria-selected="false" data-t="mirror" id="tabMirror" hidden>Mirror</button>
 <button role="tab" aria-selected="false" data-t="works">Works</button>
 <button role="tab" aria-selected="false" data-t="build">Build</button>
 </nav>
-<section id="p-log" class="panel"><ul class="log" id="logList"></ul></section>
+<section id="p-log" class="panel"><div class="chips" id="logF"></div><ul class="log" id="logList"></ul></section>
+<section id="p-census" class="panel" hidden></section>
 <section id="p-words" class="panel" hidden><div class="tblwrap"><table><thead><tr><th>Their word</th><th>Agree</th><th>You think it means</th></tr></thead><tbody id="wordRows"></tbody></table></div></section>
 <section id="p-customs" class="panel" hidden><div id="custList"></div></section>
 <section id="p-signs" class="panel" hidden></section>
@@ -147,7 +156,8 @@ td.w{font-family:var(--mono);color:var(--glow);white-space:nowrap}
 <section id="p-mirror" class="panel" hidden></section>
 <section id="p-build" class="panel" hidden><div class="bgrid" id="buildGrid"></div></section>
 <p class="foot" id="saveNote">Your colony keeps living between visits.</p>
-<details id="move"><summary>Back up or move your colony</summary><p class="foot">Copy a save code to keep a backup, or to carry this colony into another copy of the game. Loading a code replaces the colony on the device you load it on.</p><textarea id="impTa" rows="3" spellcheck="false" aria-label="Save code" placeholder="Paste a save code here to load it"></textarea><div class="mrow"><button id="bExp">Copy save code</button><button id="bImp">Load save code</button></div><p class="foot" id="moveMsg" aria-live="polite"></p></details>
+<details id="sndBox"><summary>Sound</summary><p class="foot" id="sndNote"></p><label class="foot">Volume <input id="sndVol" type="range" min="0" max="100" step="1" aria-label="Volume"></label> <span class="mono" id="sndPct"></span><div class="mrow"><button id="sndMute">Mute</button><button id="sndTest">Play a test chime</button></div></details>
+<details id="move"><summary>Colonies, backup and moving</summary><div id="slots"></div><div id="newCol" hidden><p class="foot" id="newHead"></p><label class="foot">Kind <select id="newKind"><option value="">A real colony</option><option value="exp">An experiment (its own rules, for watching evolution)</option></select></label><div id="expOpts" hidden><label class="foot">Mutation <select id="expMut"></select></label> <label class="foot">Pressure <select id="expPres"></select></label> <label class="foot">Population <select id="expPop"></select></label></div><label class="foot">Lifespan <select id="newLife"></select></label><div class="mrow"><button id="newGo">Begin</button><button id="newNo">Cancel</button></div><p class="foot" id="newMsg"></p></div><p class="foot">Copy a save code to keep a backup, or to carry this colony into another copy of the game. Loading a code replaces the colony on the device you load it on.</p><textarea id="impTa" rows="3" spellcheck="false" aria-label="Save code" placeholder="Paste a save code here to load it"></textarea><div class="mrow"><button id="bExp">Copy save code</button><button id="bImp">Load save code</button></div><p class="foot" id="moveMsg" aria-live="polite"></p></details>
 </main>
 <script>
 'use strict';
@@ -239,7 +249,7 @@ function mkC(x,y,par){
   return c;
 }
 function sayAny(c,ks){const a=ks.filter(k=>c.lex[k]);if(a.length)say(c,pick(a))}
-function addLog(text,eerie){S.log.unshift({d:S.day+1,t:text,e:!!eerie});if(S.log.length>80)S.log.length=80;ui.dirtyLog=true}
+function addLog(text,eerie,cat){S.log.unshift({d:S.day+1,t:text,e:!!eerie,c:cat||''});if(S.log.length>160)S.log.length=160;ui.dirtyLog=true}
 const ui={dirtyLog:true,sel:0,bubbles:[],build:null,hooks:{}};
 
 function dominant(k){
@@ -284,7 +294,7 @@ const nearest=(arr,p)=>arr.reduce((m,o)=>!m||dist(o,p)<dist(m,p)?o:m,null);
 function go(c,x,y){c.tx=clamp(x,6,W-6);c.ty=clamp(y,GY+6,H-6);c.wp=null;if(OB.length&&blocked(c.tx,c.ty)){const q=freePt(c.tx,c.ty);c.tx=q.x;c.ty=q.y}}
 
 function think(c){
-  const night=isNight();
+  c.act='';const night=isNight();
   if(c.water<.2){const wp=waterPt(c);go(c,wp.x,wp.y);c.state='toPond';c.t=14;return}
   if(c.food<.15){
     if(S.foods.length){const f=nearest(S.foods,c);if(dist(f,c)<60){c.tid=f.id;go(c,f.x,f.y);c.state='toFood';c.t=12;return}}
@@ -300,6 +310,7 @@ function think(c){
     if(S.granary>=.5&&(c.age<ADULT||c.food<.3||S.feast||!S.cr.some(o=>o.job==='courier'&&o!==c))){const hp=homePt();go(c,hp.x+rnd(-6,6),hp.y+rnd(-2,4));c.state='toGranary';c.t=14;return}
   }
   if(c.water<.5){const wp=waterPt(c);go(c,wp.x,wp.y);c.state='toPond';c.t=14;return}
+  if(decide(c))return;
   if(careThink(c))return;
   if(c.age<ADULT&&childThink(c))return;
   if(S.feast){const hp=homePt();go(c,hp.x+rnd(-26,26),hp.y+rnd(-10,14));c.state='dance';c.t=rnd(3,6);return}
@@ -324,15 +335,16 @@ function think(c){
     const o=nearest(S.cr.filter(x=>x!==c&&x.state!=='sleep'),c);
     if(o){c.tid=o.id;go(c,o.x+rnd(-4,4),o.y+rnd(-2,2));c.state='toTalk';c.t=8;return}
   }
-  {const q=wanderPt(c);go(c,q.x,q.y)}c.state='wander';c.t=8;
+  {const q=memWander(c);go(c,q.x,q.y)}c.state='wander';c.t=8;
 }
 function arrive(c){
+  if(c.act&&actArrive(c,c.act))return;
   if(/^(toSwim|swim|swimOut|toSlide|toFire)$/.test(c.state)&&lakeArrive(c))return;
   if(/^(toWash|toPlay|explore|toEdge|toHabit|toLook)$/.test(c.state)){careArrive(c);return}
   if(/^(toGranary|toPond|j_\w+|dance)$/.test(c.state)){jobArrive(c);return}
   if(c.state==='toFood'){
     const i=S.foods.findIndex(f=>f.id===c.tid);
-    if(i>=0){const f=S.foods[i];S.foods.splice(i,1);c.food=clamp(c.food+.5,0,1);const fav=f.k===c.pf;c.joy=clamp(c.joy+(fav?.22:.1),0,1);if(f.by==='you'){c.mm.fed++;opin(c,fav?.035:.02)}if(fav&&R()<.3)emote(c,'heart');if(R()<.5)say(c,'food')}
+    if(i>=0){const f=S.foods[i];S.foods.splice(i,1);c.food=clamp(c.food+.5,0,1);const fav=f.k===c.pf;c.joy=clamp(c.joy+(fav?.22:.1),0,1);remember(c,'food',c.x,c.y,fav?.6:.4);if(f.by==='you'){c.mm.fed++;opin(c,fav?.035:.02);remember(c,'hand',c.x,c.y,.5)}if(fav&&R()<.3)emote(c,'heart');if(R()<.5)say(c,'food')}
     c.state='idle';c.t=rnd(1,3);
   }else if(c.state==='toRest'){c.state='sleep';c.t=0}
   else if(c.state==='toTalk'){
@@ -349,17 +361,17 @@ function arrive(c){
   else{c.state='idle';c.t=rnd(1,4)}
 }
 function update(c,dt){
-  c.age+=dt;careUpdate(c,dt);
-  c.food=clamp(c.food-dt*.006*(c.age<ADULT?.6:1),0,1); // little ones eat less
-  c.water=clamp((c.water===undefined?.8:c.water)-dt*.007*(S.weather==='heat'?1.5:1)*(c.age<ADULT?.6:1),0,1);
-  c.energy=clamp(c.energy-(c.state==='sleep'?-.03:.005)*dt,0,1);
-  const tgt=clamp(.42+(c.food>.5?.18:-.2)+(c.energy>.3?.08:-.18)+(S.b.some(b=>b.t==='hut')?.08:0)-(c.sick>0?.35:0)-(S.gloom||0)-(c.want==='leave'&&!S.b.some(b=>b.t==='window')?.12:0)+.12*((c.faith===undefined?.5:c.faith)-.5)+(c.spouse?.06+(code('wed')?.04:0):0)+(S.feast?.25:0)+(code('honor')&&c.age>=ELDER?.1:0)+(law('curfew')?-.03:0)+(law('work')?-.04:0)+(law('tithe')?-.02:0)+(law('ration')?.03:0)+(c.water>.5?.04:-.15)+careMood(c),0,1);
+  c.age+=dt;careUpdate(c,dt);needsUpdate(c,dt);
+  c.food=clamp(c.food-dt*.006*(c.age<ADULT?.6:1)*drainF(c),0,1); // little ones eat less
+  c.water=clamp((c.water===undefined?.8:c.water)-dt*.007*(S.weather==='heat'?1.5:1)*(c.age<ADULT?.6:1)*drainF(c),0,1);
+  c.energy=clamp(c.energy-(c.state==='sleep'?-.03:.005*drainF(c))*dt,0,1);
+  const tgt=clamp(.42+(c.food>.5?.18:-.2)+(c.energy>.3?.08:-.18)+(S.b.some(b=>b.t==='hut')?.08:0)-(c.sick>0?.35:0)-(S.gloom||0)-(c.want==='leave'&&!S.b.some(b=>b.t==='window')?.12:0)+.12*((c.faith===undefined?.5:c.faith)-.5)+(c.spouse?.06+(code('wed')?.04:0):0)+(S.feast?.25:0)+(code('honor')&&c.age>=ELDER?.1:0)+(law('curfew')?-.03:0)+(law('work')?-.04:0)+(law('tithe')?-.02:0)+(law('ration')?.03:0)+(c.water>.5?.04:-.15)+careMood(c)+needMood(c),0,1);
   c.joy=clamp(c.joy+(tgt-c.joy)*dt*.06,0,1);
   if(c.imm>0)c.imm-=dt; // those who have just recovered cannot catch it again for a while, so a crowded colony gets a wave of sickness, not a permanent one
   if(c.sick>0){
     c.sick-=dt;if(c.sick<=0)c.imm=600;c.hp-=dt*.0015*(S.docN?.4:1);
     c.spT=(c.spT||0)+dt; // spreading is checked about once a second, which keeps big colonies cheap
-    if(c.spT>=1){const sd=c.spT;c.spT=0;S.cr.forEach(o=>{if(!(o.sick>0)&&!(o.imm>0)&&dist(o,c)<14&&R()<sd*.006*(S.docN?(law('quarantine')?.15:.35):1))o.sick=90})}
+    if(c.spT>=1){const sd=c.spT;c.spT=0;S.cr.forEach(o=>{if(!(o.sick>0)&&!(o.imm>0)&&dist(o,c)<14&&R()<sd*.006*tolF(o)*(S.docN?(law('quarantine')?.15:.35):1))o.sick=90})}
     if(c.sick<=0&&R()<.5)addLog(c.name+' is better. They are very tired.')
   }
   if(c.water<.03)c.hp-=dt*.004;
@@ -383,7 +395,7 @@ function update(c,dt){
   const fd=Math.hypot(c.tx-c.x,c.ty-c.y);
   if(fd>.8&&c.state!=='hold'&&c.state!=='idle'&&c.state!=='play'&&c.state!=='look'){
     let dx=gx-c.x,dy=gy-c.y,d=Math.hypot(dx,dy)||1e-6;
-    const sp=(c.state==='toFood'?14:c.sw?6:9)*dt*(c.sick>0?.5:1)*(c.age>=ELDER?.6:1);
+    const sp=(c.state==='toFood'?14:c.sw?6:9)*dt*(c.sick>0?.5:1)*(c.age>=ELDER?.6:1)*spdF(c);
     let v=Math.min(d,sp),nx=c.x+dx/d*v,ny=c.y+dy/d*v;
     if(!c.sw&&OB.length&&blocked(nx,ny)&&!blocked(c.x,c.y)){
       const wp=detour(c,gx,gy);
@@ -510,10 +522,12 @@ function badEvent(kind){
   else if(kind==='storm'){
     S.storm=25;up(.15);addLog('A storm came in off the edge of the world.',true);
     const huts=S.b.filter(b=>b.t==='hut');
-    S.cr.forEach(c=>{const h=nearest(huts,c);if(h&&dist(h,c)<90){go(c,h.x,h.y+5);c.state='toRest';c.t=8}else{c.hp-=.25;c.joy=clamp(c.joy-.2,0,1)}});
+    S.cr.forEach(c=>{const h=nearest(huts,c);const zs=zoneAt(c);if(h&&dist(h,c)<90){go(c,h.x,h.y+5);c.state='toRest';c.t=8}else if(zs&&zs.k==='safe'){c.joy=clamp(c.joy+.02,0,1)}else{c.hp-=.25;c.joy=clamp(c.joy-.2,0,1);remember(c,'fright',c.x,c.y,-.7);c.sf=clamp((c.sf||.6)-.3,0,1)}});
+    for(let i=0;i<2;i++){const v=pick(S.cr);if(v)addZone('danger',v.x,v.y,16,6)}
+    addLog('Lightning struck out on the moss. They are keeping away from where it landed.',true,'social');
   }else if(kind==='plague'){
     const v=S.cr.filter(c=>!(c.sick>0));
-    if(v.length){const c=pick(v);c.sick=90;up(.08);addLog(c.name+' has gone grey and slow. It looks like it spreads.',true)}
+    if(v.length){const c=pick(v);c.sick=90;up(.08);addZone('danger',c.x,c.y,20,5);addLog(c.name+' has gone grey and slow. It looks like it spreads.',true)}
   }else if(kind==='fire'){
     const bs=S.b.filter(b=>b.t!=='spire'||R()<.3);
     if(bs.length){const b=pick(bs);S.b=S.b.filter(x=>x!==b);up(.15);S.cr.forEach(c=>{c.joy=clamp(c.joy-.15,0,1)});addLog('A fire took the '+BUILD[b.t].n.toLowerCase()+'. They stood and watched it burn.',true)}
@@ -659,7 +673,9 @@ function loadStr(str){
 
 /* ---------- Society: lifespans, families, jobs, church, laws, feast ---------- */
 /* A Dimling lives 90 real days. LD is one fifteenth of a life; childhood is 2 LD, elderhood starts at 11 LD. KS scales breeding timers to match. */
-const RD=86400,LIFE=90*RD,LD=LIFE/15,ADULT=2*LD,ELDER=11*LD,KS=LD/DAY;
+const RD=86400;let LIFE=90*RD,LD=LIFE/15,ADULT=2*LD,ELDER=11*LD,KS=LD/DAY;
+/* A colony's lifespan in days (default 90). Everything about ageing is a fraction of it, so a shorter life means faster generations. */
+function setLifeDays(d){d=Math.max(.25,+d||90);LIFE=d*RD;LD=LIFE/15;ADULT=2*LD;ELDER=11*LD;KS=LD/DAY}
 const COMMANDS={
   share:{n:'Share your food',d:'Couriers deliver in full and nothing is wasted.'},
   life:{n:'Do not kill',d:'Quarrels never turn deadly. If you kill, they will remember it was you.'},
@@ -723,14 +739,14 @@ function marry(a,b){
   const ch=S.b.some(x=>x.t==='church'),pr=S.cr.find(c=>c.job==='priest');
   addLog(ch&&pr?pr.name+' married '+a.name+' and '+b.name+' at the church, in the name of the Big One.':a.name+' and '+b.name+' joined hands under the open sky.');
   if(ch){a.faith=clamp(a.faith+.05,0,1);b.faith=clamp(b.faith+.05,0,1)}
-  a.kidT=b.kidT=rnd(120,300);coin('wed');sayAny(a,['wed','kin']);
+  a.kidT=b.kidT=rnd(120,300);a.rd=b.rd=r2(.5+R()*.2);a.court=b.court=0;coin('wed');sayAny(a,['wed','kin']);
 }
 function born(a,b){
   const c=mkC(a.x+rnd(-4,4),a.y+rnd(-3,3));
-  S.bornAt=S.time;c.par=[a.id,b.id];c.fam=a.fam||a.name;c.age=0;c.joy=.9;c.grown=false;c.hue=pick([a.hue,b.hue]);
+  S.bornAt=S.time;a.rd=b.rd=0;c.par=[a.id,b.id];c.fam=a.fam||a.name;c.age=0;c.joy=.9;c.grown=false;c.hue=pick([a.hue,b.hue]);if(R()<.08*(S.mut||1))c.hue=ri(0,4);
   const ks=Array.from(new Set(Object.keys(a.lex).concat(Object.keys(b.lex))));
   for(let i=0;i<3&&ks.length;i++){const k=pick(ks);c.lex[k]=(R()<.5&&a.lex[k])?a.lex[k]:(b.lex[k]||a.lex[k])}
-  initCare(c,a,b);c.faith=.4;c.pw=[a.want,b.want];c.want=pick(c.pw);
+  initCare(c,a,b);mutCheck(c,a,b);c.faith=.4;c.pw=[a.want,b.want];c.want=pick(c.pw);
   a.kids.push(c.id);b.kids.push(c.id);S.cr.push(c);S.born=(S.born||0)+1;S.added=(S.added||0)+1;
   addLog('A child was born to '+a.name+' and '+b.name+'. They named them '+c.name+(S.cust.naming?'. The whole colony said it back.':'.'));
   if(S.cust.naming)S.culture+=3;
@@ -745,7 +761,7 @@ function grow(c){
     c.want=rebel?(src.want==='leave'?'stay':'leave'):src.want;
     addLog(c.name+' is grown. They were taught '+Object.keys(c.lex).length+' words. They believe what '+src.name+' believes'+(rebel?', almost. They chose differently.':'.'));
   }
-  c.hope=0;S.culture+=1;
+  c.hope=0;S.culture+=1;c.rd=r2(rnd(.1,.4));
 }
 function childThink(c){
   const p=c.par.map(byId).filter(Boolean)[0];
@@ -780,12 +796,12 @@ function jobArrive(c){
   if(econArrive(c)||lakeArrive(c))return;
   const s=c.state;
   if(s==='toPond'){
-    if(shoreE(c.x,c.y)<2.2){c.water=clamp(c.water+.7,0,1);c.joy=clamp(c.joy+.04,0,1);if(R()<.12)sayAny(c,['swim','light'])}
+    remember(c,'water',c.x,c.y,.3);if(shoreE(c.x,c.y)<2.2){c.water=clamp(c.water+.7,0,1);c.joy=clamp(c.joy+.04,0,1);if(R()<.12)sayAny(c,['swim','light'])}
     else if(S.pond>.03){c.water=clamp(c.water+.6,0,1);S.pond=Math.max(0,S.pond-.005);c.joy=clamp(c.joy+.03,0,1)}
     else if(R()<.4)sayAny(c,['you']);
     c.state='idle';c.t=rnd(1,3);
   }else if(s==='toGranary'){
-    if(S.granary>=.5){S.granary-=.5;c.food=clamp(c.food+(S.feast||code('share')?.5:.35),0,1);c.joy=clamp(c.joy+.05,0,1)}
+    if(S.granary>=.5){S.granary-=.5;c.food=clamp(c.food+(S.feast||code('share')?.5:.35),0,1);c.joy=clamp(c.joy+.05,0,1);remember(c,'food',c.x,c.y,.3)}
     c.state='idle';c.t=rnd(1,3);
   }else if(s==='j_farm'){
     const gm=(S.b.some(b=>(b.t==='garden'||b.t==='orchard')&&dist(b,c)<16)?2:1)*(T('irrig')?1.4:1);
@@ -829,11 +845,16 @@ function lifeTick(dt,off){
   if(off)S.cr.forEach(c=>{c.age+=dt});
   S.cr.filter(c=>c.age>=LIFE).forEach(c=>{if(S.cr.length>2)die(c,'age')});
   S.cr.forEach(c=>{if(!c.grown&&c.age>=ADULT){c.grown=true;grow(c)}});
+  buildNB();
   const free=S.cr.filter(c=>c.age>=ADULT&&c.age<LIFE*.85&&!c.spouse&&c.joy>.3);
   for(const a of free){
     if(a.spouse)continue;
-    const b=free.filter(o=>o!==a&&!o.spouse&&!kin(a,o)&&(off||dist(a,o)<60)&&relOf(a,o)>-30).sort((x,y)=>relOf(a,y)-relOf(a,x))[0];
-    if(b&&R()<(off?.5:dt*.02))marry(a,b);
+    if(a.court){const o=byId(a.court);if(o&&!o.spouse&&o.age>=ADULT&&o.age<LIFE*.85&&o.joy>.3&&!kin(a,o)&&relOf(a,o)>=15&&dist(a,o)<60&&R()<(off?.5:dt*.04)){marry(a,o);continue}}
+    if(R()>=(off?.5:dt*.02*(.6+(a.rd||0))))continue; // roll first, then search: most of the time nobody is looking
+    const pool=off?free:nearby(a,60);
+    let b=null,bs=-1e9;
+    for(const o of pool){if(o===a||o.spouse||o.age<ADULT||o.age>=LIFE*.85||o.joy<=.3||kin(a,o))continue;if(!off&&dist(a,o)>=60)continue;const r=relOf(a,o);if(r>-30&&r>bs){bs=r;b=o}}
+    if(b)marry(a,b);
   }
   // Breeding runs in minutes, not days, and nothing caps it: no housing limit, no food gate, no litter limit.
   // While you were away it runs on the same clock (capped at the 3 hours the rest of the away-simulation uses).
@@ -841,12 +862,9 @@ function lifeTick(dt,off){
   S.cr.forEach(a=>{
     if(!a.spouse||a.id>a.spouse)return;
     const b=byId(a.spouse);if(!b){a.spouse=0;return}
-    a.kidT=Math.min(a.kidT||KID_HI,KID_HI)-bdt*(code('wed')?1.25:1); // older saves had day-long timers: clamp them
-    if(a.kidT<=0){
-      a.kidT=kidWait();
-      if(a.age<LIFE*.85&&b.age<LIFE*.85)born(a,b);
-    }
+    if(driveTick(a,b,bdt)&&a.age<LIFE*.85&&b.age<LIFE*.85)born(a,b); // the couple's shared drive replaces the old child timer
   });
+  if(off)S.cr.forEach(c=>{if(!c.spouse&&c.age>=ADULT)c.rd=Math.min(1,(c.rd||0)+bdt/900*.6)});
   paceTick(bdt,off);
   if(!off){
     S.cr.filter(c=>!c.grown).forEach(c=>{
@@ -1275,7 +1293,7 @@ function initCare(c,pa,pb){
   c.tr=t;c.sh=ri(0,3);c.tone=rnd(-.18,.18);
   c.pf=pa&&R()<.6?(pa.pf||pick(FOODK)):pick(FOODK);
   c.mm={fed:0,neglect:0,washed:0,petted:0,harmed:0,helped:0,lost:0,played:0};
-  c.op=0;
+  c.op=0;initGenes(c,pa,pb);initNeeds(c);
 }
 function traitWords(c){
   const a=[];
@@ -1359,13 +1377,13 @@ function careArrive(c){
   if(s==='toHabit'){c.fw=2;c.state='hold';c.t=rnd(10,20);return}
   if(s==='toLook'){const k=ui.sky;c.fw=k?3:0;c.state='hold';c.t=k?Math.max(2,k.dur-(k.e||0)+1):.5;return}
   if(s==='toWash'){
-    c.clean=1;c.joy=clamp(c.joy+.1,0,1);S.pond=Math.max(0,S.pond-.004);emote(c,'sparkle',2.6);coin('clean');
+    remember(c,'wash',c.x,c.y,.5);c.clean=1;c.joy=clamp(c.joy+.1,0,1);S.pond=Math.max(0,S.pond-.004);emote(c,'sparkle',2.6);coin('clean');
     const o=S.cr.find(x=>x!==c&&dist(x,c)<10&&x.state==='toWash');if(o){c.soc=clamp(c.soc+.2,0,1)}
     c.state='idle';c.t=rnd(2,4);
   }else if(s==='toPlay'){
     const pg=S.b.some(b=>b.t==='play'&&dist(b,c)<18);
     const pal=S.cr.find(o=>o!==c&&dist(o,c)<13&&o.state!=='sleep'&&o.age>=ADULT===c.age>=ADULT);
-    c.fun=clamp(c.fun+(pg?.8:.4),0,1);c.joy=clamp(c.joy+.1,0,1);
+    remember(c,'play',c.x,c.y,pg?.6:.3);c.fun=clamp(c.fun+(pg?.8:.4),0,1);c.joy=clamp(c.joy+.1,0,1);
     if(pal){pal.fun=clamp(pal.fun+.3,0,1);pal.soc=clamp(pal.soc+.3,0,1);c.soc=clamp(c.soc+.3,0,1);if(ui.hooks.bond)ui.hooks.bond(c,pal,3)}
     emote(c,'note',2.4);S.culture+=.15;coin('play');c.state='play';c.t=rnd(2.5,4.5);
   }else if(s==='explore'){
@@ -1385,8 +1403,8 @@ function witnessLoss(c,why){
   S.cr.forEach(o=>{
     if(o===c)return;
     if(!o.mm)initCare(o);
-    if(kin.has(o.id)){o.mm.lost++;o.joy=clamp(o.joy-.2,0,1);if(why==='you'){o.mm.harmed++;opin(o,-.45)}}
-    else if(why==='you'){opin(o,-.08*(1+o.tr.kind))}
+    if(kin.has(o.id)){o.mm.lost++;o.joy=clamp(o.joy-.2,0,1);remember(o,'loss',c.x,c.y,-.8);o.sf=clamp((o.sf||.6)-.15,0,1);if(why==='you'){o.mm.harmed++;opin(o,-.45)}}
+    else if(why==='you'){opin(o,-.08*(1+o.tr.kind));remember(o,'fright',c.x,c.y,-.6);o.sf=clamp((o.sf||.6)-.12,0,1)}
   });
   if(why==='you')pl('killed');
 }
@@ -1398,6 +1416,7 @@ function careCatchUp(real){
     c.clean=bath?Math.max(c.clean,.7):clamp(c.clean-h*.22*(1.3-c.tr.tidy*.6)*.6,.25,1);
     c.fun=play?Math.max(c.fun,.6):clamp(c.fun-h*.18,.05,1);
     c.soc=clamp(c.soc-h*.05,.1,1);
+    if(c.sf!==undefined){c.sf+=(.6-c.sf)*.5;c.cm+=(.6-c.cm)*.5}
     if(h>8&&!bath&&c.clean<.15){c.mm.neglect++;opin(c,-.04)}
     if(h>24){opin(c,-.02*(1-(S.cust&&S.cust.waiting?.5:0)))}
   });
@@ -2183,45 +2202,46 @@ function drawEm(c,x,y){
 }
 function drawCreature(c,t,l){
   const sl=c.state==='sleep',sick=c.sick>0,col=sick?'#8aa37c':shade(c.hue,c.tone||0);
-  const kid=c.age<ADULT,spr=kid?SPRK:SPR,h=spr.length,er=kid?1:2,big=S.cr.length>120;
-  const hop=(c.state==='dance'||c.state==='play')?Math.round(Math.abs(Math.sin(t*8+c.id))*2):0;
+  const kid=c.age<ADULT,sq=squashOf(c,t),G=bodyOf(c,kid,sq),w=G.w,h=G.h,er=G.er,mc=G.mc,big=S.cr.length>120;
+  const hop=((c.state==='dance'||c.state==='play')?Math.round(Math.abs(Math.sin(t*8+c.id))*2):0)+sigHop(c,t);
   const bob=c.walk?Math.round(Math.sin(t*10+c.id)):(sl?0:(Math.sin(t*1.6+c.id*2)>.93?1:0));
   const wet=c.sw&&c.state!=='slide'&&lakeBlocked(c.x,c.y)&&!onIsle(c.x,c.y);
-  const x=Math.round(c.x)-2,y=Math.round(c.y)-h+1+bob-hop+(sl?1:0)-Math.round(c.zu||0)+(wet||c.zr?1:0);
-  if(!big){const a=.03+c.joy*.07;cx.fillStyle=col;cx.globalAlpha=a*(2-l);cx.fillRect(x-1,y-1,7,h+2);cx.globalAlpha=1}
-  if(!wet&&c.state!=='slide'){cx.fillStyle='#000';cx.globalAlpha=.25;cx.fillRect(x+1,Math.round(c.y)+1,3,1);cx.globalAlpha=1}
+  const x=Math.round(c.x)-mc+sigBody(c,t),y=Math.round(c.y)-h+1+bob-hop+(sl?1:0)-Math.round(c.zu||0)+(wet||c.zr?1:0);
+  if(!big){const a=.03+c.joy*.07;cx.fillStyle=col;cx.globalAlpha=a*(2-l);cx.fillRect(x-1,y-1,w+2,h+2);cx.globalAlpha=1}
+  if(!wet&&c.state!=='slide'){cx.fillStyle='#000';cx.globalAlpha=.25;cx.fillRect(x+1,Math.round(c.y)+1,Math.max(1,w-2),1);cx.globalAlpha=1}
   const near=c.state==='watch'||c.state==='hold'||c.state==='dance';
   const blink=((t*.8+c.id*1.37)%5)<.14;
   const sh=c.sh||0;
   cx.fillStyle=col;
-  if(sh===1){cx.fillRect(x,y-1,1,1);cx.fillRect(x+4,y-1,1,1)}
-  else if(sh===2){cx.fillRect(x+2,y-1,1,1);cx.fillRect(x+2,y-2,1,1);cx.fillStyle='#fff3c8';cx.fillRect(x+2,y-3,1,1)}
-  else if(sh===3){cx.fillRect(x+2,y-1,1,1)}
-  spr.forEach((row,j)=>{for(let i=0;i<5;i++){
-    const ch=row[i];if(ch==='.')continue;
-    cx.fillStyle=ch==='f'?'#10181b':ch==='e'?((sl||blink)?col:near?'#fff':'#10181b'):col;
-    cx.fillRect(x+i,y+j,1,1);
-  }});
-  if(c.fw&&!sl){const pu=c.fw===3?er-1:er;cx.fillStyle='#fff';cx.fillRect(x+1,y+er-1,1,2);cx.fillRect(x+3,y+er-1,1,2);cx.fillStyle='#10181b';cx.fillRect(x+1,y+pu,1,1);cx.fillRect(x+3,y+pu,1,1)}
-  else if(near&&!sl){cx.fillStyle='#10181b';cx.fillRect(x+1,y+er+1,1,1);cx.fillRect(x+3,y+er+1,1,1)}
+  if(sh===1){cx.fillRect(x,y-1,1,1);cx.fillRect(x+w-1,y-1,1,1)}
+  else if(sh===2){cx.fillRect(x+mc,y-1,1,1);cx.fillRect(x+mc,y-2,1,1);cx.fillStyle='#fff3c8';cx.fillRect(x+mc,y-3,1,1)}
+  else if(sh===3){cx.fillRect(x+mc,y-1,1,1)}
+  G.rows.forEach((row,j)=>{
+    for(let i=0;i<w;i++){const ch=row[i];if(ch==='.')continue;cx.fillStyle=ch==='f'?'#10181b':col;cx.fillRect(x+i,y+j,1,1)}
+    if(G.spread&&row[0]==='b'&&j<h-1){cx.fillStyle=col;cx.fillRect(x-1,y+j,1,1);cx.fillRect(x+w,y+j,1,1)}
+  });
+  const ld=lookDir(c,t);cx.fillStyle=(sl||blink)?col:near?'#fff':'#10181b';
+  G.ec.forEach(e=>{const ex=Math.max(0,Math.min(w-1,e+ld));cx.fillRect(x+ex,y+er,1,1);if(G.big)cx.fillRect(x+ex,y+er-1,1,1)});
+  if(c.fw&&!sl){const pu=c.fw===3?er-1:er;G.ec.forEach(e=>{cx.fillStyle='#fff';cx.fillRect(x+e,y+er-1,1,2);cx.fillStyle='#10181b';cx.fillRect(x+e,y+pu,1,1)})}
+  else if(near&&!sl){cx.fillStyle='#10181b';G.ec.forEach(e=>cx.fillRect(x+e,y+er+1,1,1))}
   if(!sl){
     const my=y+er+1;
     cx.fillStyle='#10181b';
-    if(sick){cx.fillRect(x+2,my,1,1)}
-    else if(c.joy>.7){cx.fillRect(x+1,my,1,1);cx.fillRect(x+3,my,1,1);if(!kid)cx.fillRect(x+2,my+1,1,1)}
-    else if(c.joy<.3){cx.fillRect(x+2,my,1,1);if(c.joy<.15){cx.fillStyle='#9ec1ff';cx.fillRect(x+1,y+er+1,1,1)}}
-    if(c.joy>.85){cx.fillStyle='#ff8c98';cx.globalAlpha=.8;cx.fillRect(x,my,1,1);cx.fillRect(x+4,my,1,1);cx.globalAlpha=1}
+    if(sick){cx.fillRect(x+mc,my,1,1)}
+    else if(c.joy>.7){cx.fillRect(x+mc-1,my,1,1);cx.fillRect(x+mc+1,my,1,1);if(!kid)cx.fillRect(x+mc,my+1,1,1)}
+    else if(c.joy<.3){cx.fillRect(x+mc,my,1,1);if(c.joy<.15){cx.fillStyle='#9ec1ff';cx.fillRect(x+G.ec[0],y+er+1,1,1)}}
+    if(c.joy>.85){cx.fillStyle='#ff8c98';cx.globalAlpha=.8;cx.fillRect(x,my,1,1);cx.fillRect(x+w-1,my,1,1);cx.globalAlpha=1}
   }
-  if(c.clean<.35){cx.fillStyle='#4a3a22';cx.fillRect(x+3,y+h-2,1,1);cx.fillRect(x+1,y+h-3,1,1);if(c.clean<.15)cx.fillRect(x-1,y+h-2,1,1)}
+  if(c.clean<.35){cx.fillStyle='#4a3a22';cx.fillRect(x+w-2,y+h-2,1,1);cx.fillRect(x+1,y+h-3,1,1);if(c.clean<.15)cx.fillRect(x-1,y+h-2,1,1)}
   const mk=c.job==='gov'?'#ffc96b':c.job==='priest'?'#b496ff':c.job==='doctor'?'#ff8a8a':c.age>=ELDER?'#d8d8d8':null;
-  if(mk){cx.fillStyle=mk;cx.fillRect(x+1,y-1,3,1);if(c.job==='doctor')cx.fillRect(x+2,y-2,1,3)}
-  if(wet){cx.fillStyle=mix('#0f2a3a','#3b8bb0',l);cx.globalAlpha=.88;cx.fillRect(x-1,Math.round(c.y),7,2);cx.fillStyle='#e8f6ff';cx.globalAlpha=.7;const rp=Math.floor(t*3+c.id)%3;cx.fillRect(x-1+rp,Math.round(c.y)+1,1,1);cx.fillRect(x+4-rp,Math.round(c.y)+1,1,1);cx.globalAlpha=1}
-  if(c.zf&&c.state==='hold'){const dr=lakeToward(c.x,c.y,1),s=dr.x>=c.x?1:-1,hx=x+2+s*2,hy=y+h-3,bb=Math.round(Math.sin(t*2+c.id));cx.fillStyle='#8a6a3a';cx.fillRect(hx,hy-1,1,1);cx.fillRect(hx+s,hy-2,1,1);cx.fillRect(hx+2*s,hy-3,1,1);cx.fillRect(hx+3*s,hy-4,1,1);cx.fillStyle='#e8f0f4';cx.globalAlpha=.7;cx.fillRect(hx+3*s,hy-3,1,3+bb);cx.fillStyle='#ff8a8a';cx.globalAlpha=1;cx.fillRect(hx+3*s,hy+1+bb,1,1)}
-  if(c.zb&&!sl){const sw=Math.floor(t*7+c.id)%2,hx=x+(c.face>0?5:-2);cx.fillStyle='#b58a4a';cx.fillRect(hx,y+h-5+sw,1,3);cx.fillStyle='#9aa7ab';cx.fillRect(hx-(c.face>0?0:1),y+h-5+sw,2,1)}
-  if(c.carry){cx.fillStyle=RES[c.carry]?RES[c.carry].c:'#ffc96b';cx.fillRect(x+4,y+h-3,2,2)}
-  if(sl){cx.fillStyle='#bcd0ff';cx.globalAlpha=.5+.5*Math.sin(t*2+c.id);cx.fillRect(x+4,y-2-(Math.floor(t+c.id)%2),1,1);cx.globalAlpha=1}
-  if(ui.sel===c.id){const bo=Math.round(Math.sin(t*6)),ry=Math.round(c.y);cx.fillStyle='#ffc96b';cx.fillRect(x,y-8+bo,5,1);cx.fillRect(x+1,y-7+bo,3,1);cx.fillRect(x+2,y-6+bo,1,1);cx.fillStyle='#fff';cx.globalAlpha=.8;cx.fillRect(x-1,ry+2,7,1);cx.fillRect(x,ry+3,5,1);cx.globalAlpha=1}
-  if(!sl&&(!big||ui.sel===c.id))drawEm(c,x+2,y);
+  if(mk){cx.fillStyle=mk;cx.fillRect(x+mc-1,y-1,3,1);if(c.job==='doctor')cx.fillRect(x+mc,y-2,1,3)}
+  if(wet){cx.fillStyle=mix('#0f2a3a','#3b8bb0',l);cx.globalAlpha=.88;cx.fillRect(x-1,Math.round(c.y),w+2,2);cx.fillStyle='#e8f6ff';cx.globalAlpha=.7;const rp=Math.floor(t*3+c.id)%3;cx.fillRect(x-1+rp,Math.round(c.y)+1,1,1);cx.fillRect(x+w-1-rp,Math.round(c.y)+1,1,1);cx.globalAlpha=1}
+  if(c.zf&&c.state==='hold'){const dr=lakeToward(c.x,c.y,1),s=dr.x>=c.x?1:-1,hx=x+mc+s*2,hy=y+h-3,bb=Math.round(Math.sin(t*2+c.id));cx.fillStyle='#8a6a3a';cx.fillRect(hx,hy-1,1,1);cx.fillRect(hx+s,hy-2,1,1);cx.fillRect(hx+2*s,hy-3,1,1);cx.fillRect(hx+3*s,hy-4,1,1);cx.fillStyle='#e8f0f4';cx.globalAlpha=.7;cx.fillRect(hx+3*s,hy-3,1,3+bb);cx.fillStyle='#ff8a8a';cx.globalAlpha=1;cx.fillRect(hx+3*s,hy+1+bb,1,1)}
+  if(c.zb&&!sl){const sw=Math.floor(t*7+c.id)%2,hx=x+(c.face>0?w:-2);cx.fillStyle='#b58a4a';cx.fillRect(hx,y+h-5+sw,1,3);cx.fillStyle='#9aa7ab';cx.fillRect(hx-(c.face>0?0:1),y+h-5+sw,2,1)}
+  if(c.carry){cx.fillStyle=RES[c.carry]?RES[c.carry].c:'#ffc96b';cx.fillRect(x+w-1,y+h-3,2,2)}
+  if(sl){cx.fillStyle='#bcd0ff';cx.globalAlpha=.5+.5*Math.sin(t*2+c.id);cx.fillRect(x+w-1,y-2-(Math.floor(t+c.id)%2),1,1);cx.globalAlpha=1}
+  if(ui.sel===c.id){const bo=Math.round(Math.sin(t*6)),ry=Math.round(c.y);cx.fillStyle='#ffc96b';cx.fillRect(x+mc-2,y-8+bo,5,1);cx.fillRect(x+mc-1,y-7+bo,3,1);cx.fillRect(x+mc,y-6+bo,1,1);cx.fillStyle='#fff';cx.globalAlpha=.8;cx.fillRect(x+mc-3,ry+2,7,1);cx.fillRect(x+mc-2,ry+3,5,1);cx.globalAlpha=1}
+  if(!sl&&(!big||ui.sel===c.id))drawEm(c,x+mc,y);
 }
 function drawB(b,t){
   const x=Math.round(b.x),y=Math.round(b.y);
@@ -2338,7 +2358,7 @@ function render(t){
   S.cr.forEach(c=>{if(c.x>=ex0&&c.x<=ex1&&c.y>=ey0&&c.y<=ey1)ents.push(c)});
   ents.sort((a,b)=>a.y-b.y);
   ents.forEach(e=>e.lex?drawCreature(e,t,l):e.k?drawNode(e,t):drawB(e,t));
-  drawFog(t);if(typeof drawSplash==='function')drawSplash(t);if(ui.build&&BUILD[ui.build]&&BUILD[ui.build].shore)drawShoreHint(t);
+  drawSocialLayer(t,vx,vy);drawFog(t);if(typeof drawSplash==='function')drawSplash(t);if(ui.build&&BUILD[ui.build]&&BUILD[ui.build].shore)drawShoreHint(t);
   if(ui.build&&ui.pend){const f=FOOT[ui.build]||5;cx.globalAlpha=.65;drawB({t:ui.build,x:Math.round(ui.pend.x),y:Math.round(ui.pend.y)},t);cx.globalAlpha=.9;cx.fillStyle=ui.pendOk?'#9bf0b0':'#ff6a6a';const gx=Math.round(ui.pend.x),gy=Math.round(ui.pend.y);cx.fillRect(gx-f,gy+4,2*f+1,1);cx.fillRect(gx-f,gy-3,2*f+1,1);cx.globalAlpha=1}
   drawWeather(t,l,vx,vy);
   if(night){cx.fillStyle='#0a1020';cx.globalAlpha=.22;cx.fillRect(vx,vy,VW,VH);cx.globalAlpha=1}
@@ -2392,7 +2412,7 @@ function meaning(k){
 function renderPanels(tab){
   if(tab==='log'&&ui.dirtyLog){
     ui.dirtyLog=false;
-    $('logList').innerHTML=S.log.map(e=>'<li'+(e.e?' class="e"':'')+'><small>Day '+e.d+'</small>'+esc(e.t)+'</li>').join('');
+    $('logList').innerHTML=logHtml();$('logF').innerHTML=logChips();
   }
   if(tab==='words'){
     $('wordRows').innerHTML=Object.keys(S.concepts).map(k=>{const d=dominant(k);
@@ -2407,6 +2427,7 @@ function renderPanels(tab){
   }
   if(tab==='signs'){const h=signsHtml();if(h!==ui.gsig){ui.gsig=h;$('p-signs').innerHTML=h}}
   if(tab==='book'){const h=bookHtml();if(h!==ui.bsig){ui.bsig=h;$('p-book').innerHTML=h}}
+  if(tab==='census'){const h=censusHtml();if(h!==ui.csig){ui.csig=h;$('p-census').innerHTML=h}}
   if(tab==='society'){const h=societyHtml();if(h!==ui.ssig){ui.ssig=h;$('p-society').innerHTML=h}}
   if(tab==='mirror'){const h=mirrorHtml();if(h!==ui.msig){ui.msig=h;$('p-mirror').innerHTML=h}}
   if(tab==='works'){const h=worksHtml();if(h!==ui.wsig){ui.wsig=h;$('p-works').innerHTML=h}}
@@ -2417,9 +2438,10 @@ let tab='log';
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   tab=b.dataset.t;
   document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));
-  ['log','words','customs','signs','society','book','mirror','works','build'].forEach(n=>$('p-'+n).hidden=n!==tab);
+  ['log','words','customs','signs','society','census','book','mirror','works','build'].forEach(n=>$('p-'+n).hidden=n!==tab);
   ui.dirtyLog=true;renderPanels(tab);
 });
+$('logF').onclick=e=>{const b=e.target.closest('button[data-lf]');if(!b)return;ui.logF=b.dataset.lf;ui.dirtyLog=true;renderPanels('log')};
 $('buildGrid').onclick=e=>{
   const b=e.target.closest('button[data-b]');if(!b||b.disabled)return;
   ui.build=ui.build===b.dataset.b?null:b.dataset.b;ui.pend=null;ui.sel=0;ui.selB=0;inspect();
@@ -2435,12 +2457,15 @@ function inspect(){
   const html='<h3>'+esc(c.name)+'</h3><div>'+(L?'Wants to cross over.':'Wants to stay and build.')+(c.sick>0?' Sick.':'')+'</div>'
    +(()=>{const sp=c.spouse?byId(c.spouse):null,kd=c.kids.map(byId).filter(Boolean).map(k=>k.name);return '<div class="mono">Age '+Math.floor(c.age/RD)+' of 90 days · '+(JOBNAME[c.job||'']||'')+' · '+(c.fam?'House of '+esc(c.fam)+' · ':'')+(sp?'Married to '+esc(sp.name):'Unmarried')+(kd.length?' · Children: '+esc(kd.join(', ')):'')+' · Faith '+Math.round(c.faith*100)+'%</div>'})()
    +'<div class="mono">'+esc(traitWords(c))+' · likes '+FOODS[c.pf||'berry'].n+'</div>'
-   +'<div class="bars"><div>Fed'+bar(c.food)+'</div><div>Rested'+bar(c.energy)+'</div><div>Watered'+bar(c.water)+'</div><div>Happy'+bar(c.joy)+'</div><div>Health'+bar(c.hp)+'</div><div>Clean'+bar(c.clean)+'</div><div>Play'+bar(c.fun)+'</div><div>Company'+bar(c.soc)+'</div></div>'
+   +'<div class="mono">No. '+c.id+' · '+(c.gen?'Generation '+c.gen:'First generation')+' · feels '+feelWord(c)+(c.grp&&groupOf(c.grp)?' · '+esc(groupOf(c.grp).n):'')+'</div>'
+   +'<div class="bars"><div>Fed'+bar(c.food)+'</div><div>Rested'+bar(c.energy)+'</div><div>Watered'+bar(c.water)+'</div><div>Happy'+bar(c.joy)+'</div><div>Health'+bar(c.hp)+'</div><div>Clean'+bar(c.clean)+'</div><div>Play'+bar(c.fun)+'</div><div>Company'+bar(c.soc)+'</div>'+(c.sf!==undefined?'<div>Safe'+bar(c.sf)+'</div><div>Comfy'+bar(c.cm)+'</div>':'')+(c.age>=ADULT&&c.rd!==undefined?'<div>Family'+bar(Math.min(1,c.rd))+'</div>':'')+'</div>'
+   +(c.ge?'<details class="gn"'+(ui.genOpen?' open':'')+'><summary>Genes and temperament</summary><div class="bars">'+GENE_LABEL.map((n,i)=>'<div>'+n+bar(c.ge[i])+'</div>').join('')+'</div><div class="bars">'+PX_LABEL.map(p=>'<div>'+p[1]+bar(c.px?c.px[p[0]]:0)+'</div>').join('')+'</div></details>':'')
+   +(c.mem?'<details class="gn mn"'+(ui.minOpen?' open':'')+'><summary>Memories, habits and ties</summary>'+[memLines(c),habitLines(c),relLines(c)].map(a=>a.map(t=>'<div class="mono">'+esc(t)+'</div>').join('')).join('')+(historyText(c)?'<div class="mono">Lately: '+esc(historyText(c))+'</div>':'')+(memLines(c).length||historyText(c)||habitLines(c).length||relLines(c).length?'':'<div class="mono">Nothing has stuck with them yet.</div>')+'</details>':'')
    +'<div class="mono">'+esc(c.name)+' '+opinText(c)+'. '+esc(memText(c))+'</div>'
    +(bondText(c)?'<div class="mono">'+esc(bondText(c))+'</div>':'')
    +(L?'<div>Pull toward the other side<div class="bar hope"><i style="width:'+Math.round(c.hope*100)+'%"></i></div></div>':'')
    +'<div class="mono">Says: '+esc(w||'nothing yet')+'</div>'
-   +'<div class="acts"><button data-a="feed"'+(S.foodStock<1?' disabled':'')+'>Feed</button><button data-a="wash">Wash</button><button data-a="pet">Pet</button><button data-a="play">Play</button>'+(L?'<button data-a="stay">Ask them to stay</button>'+(win&&c.hope>.5?'<button data-a="open">Open the way</button>':''):'')
+   +'<div class="acts"><button data-a="feed"'+(S.foodStock<1?' disabled':'')+'>Feed</button><button data-a="wash">Wash</button><button data-a="pet">Pet</button><button data-a="play">Play</button><button data-a="follow">'+(ui.follow===c.id?'Stop following':'Follow')+'</button><button data-a="protect"'+(S.glow<8?' disabled':'')+'>Protect (8)</button>'+(L?'<button data-a="stay">Ask them to stay</button>'+(win&&c.hope>.5?'<button data-a="open">Open the way</button>':''):'')
    +(c.sick>0?'<button data-a="tend"'+(S.glow<5?' disabled':'')+'>Tend to them (5 glow)</button>':'')
    +(c.age>=ADULT&&!S.book&&hasChurch()?'<button data-a="book">Entrust the Book</button>':'')
    +'<button class="danger'+(ui.killC===c.id?' on':'')+'" data-a="kill"'+(S.cr.length<=1?' disabled':'')+'>'+(ui.killC===c.id?'Really kill?':'Kill')+'</button>'
@@ -2449,7 +2474,7 @@ function inspect(){
   if(html!==ui.isig){ui.isig=html;el.innerHTML=html}
   quickBar(c);
 }
-$('inspect').addEventListener('toggle',e=>{if(e.target.classList&&e.target.classList.contains('more'))ui.moreOpen=e.target.open},true);
+$('inspect').addEventListener('toggle',e=>{const k=e.target.classList;if(!k)return;if(k.contains('more'))ui.moreOpen=e.target.open;else if(k.contains('mn'))ui.minOpen=e.target.open;else if(k.contains('gn'))ui.genOpen=e.target.open},true);
 function inspAct(e){
   const b=e.target.closest('button[data-a]');if(!b||b.disabled)return;
   const a=b.dataset.a;
@@ -2457,6 +2482,8 @@ function inspAct(e){
   if(a==='bclose'){ui.selB=0;ui.killB=0;ui.isig='';inspect();return}
   if(a==='demolish'){const bb=S.b.find(x=>x.id===ui.selB);if(bb){if(ui.killB===bb.id)demolish(bb);else ui.killB=bb.id}ui.isig='';inspect();return}
   const c=S.cr.find(x=>x.id===ui.sel);if(!c)return;
+  if(a==='protect'){const r=protectAt(c.x,c.y,20,8,8);if(r)flashFood(r);ui.isig='';inspect();return}
+  if(a==='follow'){ui.follow=ui.follow===c.id?0:c.id;if(ui.follow)camTo(c.x,c.y);ui.isig='';inspect();return}
   if(a==='kill'){ui.sacC=0;if(ui.killC===c.id){ui.killC=0;killC(c)}else ui.killC=c.id}
   else if(a==='sac'){ui.killC=0;if(ui.sacC===c.id){ui.sacC=0;sacrifice(c)}else ui.sacC=c.id}
   else{ui.killC=0;ui.sacC=0;if(a==='press')pressWork(c);else if(a==='stay')askStay(c);else if(a==='open'){c.leaving=true;pl('opened')}else if(a==='tend')tend(c);else if(a==='book')entrust(c.id);else careAct(c,a)}
@@ -2476,7 +2503,7 @@ cv.addEventListener('pointermove',e=>{
   if(!drag||e.pointerId!==drag.id)return;
   const r=cv.getBoundingClientRect(),dx=e.clientX-drag.x,dy=e.clientY-drag.y;
   if(!drag.moved&&Math.hypot(dx,dy)>7)drag.moved=true;
-  if(drag.moved)camSet(drag.cx-dx/r.width*VW,drag.cy-dy/r.height*VH,true);
+  if(drag.moved){if(ui.follow){ui.follow=0;ui.isig=''}camSet(drag.cx-dx/r.width*VW,drag.cy-dy/r.height*VH,true)}
 });
 function endDrag(e,cancel){
   if(!drag||e.pointerId!==drag.id)return;
@@ -2487,6 +2514,7 @@ cv.addEventListener('pointerup',e=>endDrag(e,false));
 cv.addEventListener('pointercancel',e=>endDrag(e,true));
 function worldTap(e){
   const p=worldPos(e);
+  if(ui.protect){ui.protect=false;const r=protectAt(p.x,p.y,26,12,12);if(r)flashFood(r);updateMeters();return}
   if(ui.build){
     const f=FOOT[ui.build]||5,why=canBuild(ui.build);
     ui.pend={x:p.x,y:p.y};ui.pendOk=!why&&spotFree(p.x,p.y,f,ui.build);
@@ -2500,6 +2528,7 @@ function worldTap(e){
   ui.sel=0;ui.selB=0;ui.killC=0;inspect();
   if(S.foodStock>=1&&p.y>GY+2){S.foodStock-=1;{const hn=nearest(S.cr.filter(o=>o.food<.7),p);spawnFood(p.x,p.y,hn&&dist(hn,p)<50?hn.pf:null,'you')}pl('tapFed');habitTap(p);S.cr.forEach(o=>{if(o.food<.7&&R()<.6&&o.state!=='sleep')o.t=0})}
 }
+$('bProt').onclick=()=>{ui.protect=!ui.protect;if(ui.protect){ui.build=null;ui.pend=null;setMode()}updateMeters()};
 $('bSing').onclick=()=>{
   if(S.time-S.lastSing<20)return;
   S.lastSing=S.time;
@@ -2561,7 +2590,7 @@ function societyHtml(){
 $('p-society').onclick=e=>{
   const b=e.target.closest('button[data-s]');if(!b||b.disabled)return;
   const a=b.dataset.s;
-  if(a==='bless')bless();else if(a==='code')toggleCode(b.dataset.k);else if(a==='strike')strikeLaw(b.dataset.k);
+  if(a==='terr')ui.terr=!ui.terr;else if(a==='bless')bless();else if(a==='code')toggleCode(b.dataset.k);else if(a==='strike')strikeLaw(b.dataset.k);
   ui.ssig='';renderPanels('society');
 };
 
@@ -2805,6 +2834,7 @@ function camSet(x,y,instant){
 }
 function camTo(wx,wy,instant){camSet(wx-VW/2,wy-VH/2,instant)}
 function camStep(dt){
+  if(ui.follow){const fc=byId(ui.follow);if(fc&&ui.sel===ui.follow)camTo(fc.x,fc.y);else ui.follow=0}
   const k=Math.min(1,dt*9);
   cam.x+=(cam.tx-cam.x)*k;cam.y+=(cam.ty-cam.y)*k;
   if(Math.abs(cam.tx-cam.x)<.1)cam.x=cam.tx;
@@ -3431,7 +3461,7 @@ async function unpackSave(code){
 }
 async function importSave(json,o){
   ui.noSave=true;
-  try{localStorage.setItem(KEY,json)}catch(e){}
+  lsSet(SLOTS[activeSlot()],wrapSave(json));lsDel(SLOTS[activeSlot()]+'.prev');
   try{if(dbDoc)await dbDoc.set({json,t:o.t||Date.now()})}catch(e){}
   location.reload();
 }
@@ -3491,7 +3521,7 @@ function paceBirth(quiet){
   S.cr.forEach(a=>{
     if(!a.spouse||a.id>a.spouse||!ok(a))return;
     const b=byId(a.spouse);if(!b||!ok(b))return;
-    const k=a.kids.length+R();
+    const k=a.kids.length*.3-(a.rd||0)+R()*.1;
     if(k<bk){bk=k;best=[a,b]}
   });
   if(best){born(best[0],best[1]);return 'born'}
@@ -3513,12 +3543,1134 @@ function paceTick(dt,off){
 
 /* Anything the simulation keeps outside S that would make two runs from one seed differ is reset here. */
 function resetSim(){
-  fid=1;_cc={x:OX+120,y:OY+95,t:-9};econT=0;rebuildOB();
+  fid=1;_cc={x:OX+120,y:OY+95,t:-9};econT=0;_hm.t=-9;_hm.n=-1;rebuildOB();
   ui.lt=ui.st=ui.ck=ui.bdt=0;ui.tick=0;
-  for(const k in EM)delete EM[k];for(const k in PETT)delete PETT[k];SPL.length=0;splLast=0;
+  for(const k in SIGV)delete SIGV[k];for(const k in EM)delete EM[k];for(const k in PETT)delete PETT[k];SPL.length=0;splLast=0;
 }
 
-const KEY='dimlings.v1';
+/* Neighbor index: creatures bucketed by 32px cell, rebuilt each life tick. "Who is within 60px?" costs a handful of cells
+   instead of a scan of the whole colony. Positions can be a couple of seconds stale, so queries pad the radius and re-check exact distance. */
+const NBC=32,NBX=Math.ceil(W/NBC),NBY=Math.ceil(H/NBC);
+let NBG=[];
+function buildNB(){
+  NBG=new Array(NBX*NBY);
+  for(let i=0;i<S.cr.length;i++){
+    const c=S.cr[i],cx=Math.min(NBX-1,Math.max(0,c.x/NBC|0)),cy=Math.min(NBY-1,Math.max(0,c.y/NBC|0)),k=cy*NBX+cx;
+    (NBG[k]||(NBG[k]=[])).push(c);
+  }
+}
+function nearby(c,r,tight){
+  const out=[],pad=r+(tight||24),x0=Math.max(0,(c.x-pad)/NBC|0),x1=Math.min(NBX-1,(c.x+pad)/NBC|0),y0=Math.max(0,(c.y-pad)/NBC|0),y1=Math.min(NBY-1,(c.y+pad)/NBC|0);
+  for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const g=NBG[y*NBX+x];if(g)for(let i=0;i<g.length;i++)out.push(g[i])}
+  return out;
+}
+
+/* ---------- Saves v2: slots, checksums, a fallback copy, numbered upgrade steps ---------- */
+const SLOTS=['dimlings.v1','dimlings.s2','dimlings.s3']; // slot 1 keeps the original key so existing colonies load untouched
+function fnv(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(16).padStart(8,'0')}
+function wrapSave(json){return 'DS2:'+fnv(json)+':'+json}
+function unwrapSave(raw){
+  if(!raw)return null;
+  if(raw.slice(0,4)==='DS2:'){const i=raw.indexOf(':',4),sum=raw.slice(4,i),json=raw.slice(i+1);return fnv(json)===sum?{json}:{bad:1}}
+  return {json:raw,legacy:1}; // saves from before checksums are plain JSON
+}
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v);return true}catch(e){return false}}
+function lsDel(k){try{localStorage.removeItem(k)}catch(e){}}
+function activeSlot(){const n=+lsGet('dimlings.slot');return n>=0&&n<SLOTS.length?n:0}
+/* Newest good copy of a slot: the main save if its checksum and contents are sound, else the previous one. */
+function readSlot(i){
+  const key=SLOTS[i];
+  for(const [k,restored] of [[key,false],[key+'.prev',true]]){
+    const raw=lsGet(k);if(!raw)continue;
+    const u=unwrapSave(raw);
+    if(u&&u.json){const o=loadStr(u.json);if(o)return {o,json:u.json,restored}}
+  }
+  return null;
+}
+/* Writing keeps the last verified save as ".prev" (refreshed at most every 90 s), so a failed or damaged write never costs the colony. */
+function writeSlot(i,json){
+  const key=SLOTS[i],now=Date.now(),cur=lsGet(key);
+  if(cur&&json.length<1500000&&now-(ui.prevAt||0)>90000){
+    const u=unwrapSave(cur);
+    if(u&&u.json&&loadStr(u.json)){if(!lsSet(key+'.prev',cur))lsDel(key+'.prev');ui.prevAt=now}
+  }
+  return lsSet(key,wrapSave(json));
+}
+const MIG=[]; // {to:version, fn:S=>void}: run in order on a loaded save older than `to`. Version 2 is the long-standing upgrades inside boot().
+const SVN=()=>MIG.length?MIG[MIG.length-1].to:2;
+function runMigrations(from){MIG.forEach(m=>{if(m.to>from)m.fn(S)});S.sv=SVN()}
+
+/* ---------- Speed: the world can run at 10x or 100x so generations can actually pass ---------- */
+const SPEEDS={1:0,10:.5,100:2.5}; // fixed step size per speed, so a seed gives the same result however fast the screen draws
+function advance(dt){
+  const sp=ui.speed||1;
+  if(sp===1){step(dt);return}
+  ui.acc=(ui.acc||0)+dt*sp;const h=SPEEDS[sp],t0=performance.now();let n=0;
+  while(ui.acc>=h&&n<600){step(h);ui.acc-=h;n++;if(n%6===0&&performance.now()-t0>14)break}
+  if(ui.acc>h*80)ui.acc=h*80; // a slow device drops the surplus instead of spiralling
+}
+function fastForward(simSec,sp){const h=SPEEDS[sp]||.5;for(let t=0;t<simSec;t+=h)step(h)}
+function setSpeed(sp){
+  ui.speed=sp;ui.acc=0;
+  document.querySelectorAll('#spd button').forEach(b=>b.classList.toggle('on',+b.dataset.s===sp));
+}
+
+/* ---------- Colony slots and lifespan (the panel under "Back up or move your colony") ---------- */
+const LIFE_CHOICES=[[90,'90 days (the usual life)'],[30,'30 days'],[7,'7 days'],[2,'2 days'],[.5,'12 hours']];
+function slotInfo(i){
+  if(i===ui.slot&&S)return {pop:S.cr.length,day:S.day+1,life:S.lifeDays||90,live:true,exp:!!S.exp};
+  const r=readSlot(i);return r?{pop:r.o.cr.length,day:(r.o.day|0)+1,life:r.o.lifeDays||90,restored:r.restored,exp:!!r.o.exp}:null;
+}
+function renderSlots(){
+  const box=$('slots');if(!box)return;box.textContent='';
+  for(let i=0;i<SLOTS.length;i++){
+    const inf=slotInfo(i),row=document.createElement('div');row.className='slotrow'+(i===ui.slot?' cur':'');
+    const t=document.createElement('span');
+    t.textContent=(inf&&inf.exp?'Experiment ':'Colony ')+(i+1)+' · '+(inf?inf.pop+' Dimlings, day '+inf.day+', life '+(inf.life>=1?inf.life+' days':'12 hours')+(i===ui.slot?' · playing':''):'empty');
+    row.appendChild(t);
+    if(i!==ui.slot&&inf){const b=document.createElement('button');b.textContent='Play';b.onclick=()=>switchSlot(i);row.appendChild(b)}
+    const n=document.createElement('button');n.textContent=inf?'New colony here…':'Start a colony…';n.onclick=()=>openNewColony(i,inf);row.appendChild(n);
+    box.appendChild(row);
+  }
+  const f=$('newCol');if(f&&!ui.newSlot)f.hidden=true;
+}
+function switchSlot(i){
+  if(S)saveAll(true);
+  lsSet('dimlings.slot',String(i));ui.noSave=true;location.reload();
+}
+function openNewColony(i,inf){
+  ui.newSlot=i;ui.newSure=0;const f=$('newCol');f.hidden=false;
+  fillExpOpts();$('newKind').value='';$('expOpts').hidden=true;
+  const sel=$('newLife');if(!sel.options.length)LIFE_CHOICES.forEach(([d,l])=>{const o=document.createElement('option');o.value=d;o.textContent=l;sel.appendChild(o)});
+  $('newHead').textContent='New colony in slot '+(i+1)+(inf?' (this replaces the colony there)':'');
+  $('newGo').textContent=inf?'Replace it and begin':'Begin';$('newMsg').textContent='Shorter lives mean faster generations. Pair it with 10x or 100x speed to watch a family line change.';
+}
+function beginNew(){
+  const i=ui.newSlot,inf=slotInfo(i);
+  if(inf&&!ui.newSure){ui.newSure=1;$('newGo').textContent='Tap again: this deletes colony '+(i+1);return}
+  if(S&&i!==ui.slot)saveAll(true);
+  SLOTS[i]&&(lsDel(SLOTS[i]),lsDel(SLOTS[i]+'.prev'));
+  lsSet('dimlings.new',JSON.stringify({slot:i,life:+$('newLife').value||90,exp:$('newKind').value==='exp'?{mut:+$('expMut').value||1,pres:$('expPres').value,pop:+$('expPop').value||3}:null}));
+  lsSet('dimlings.slot',String(i));ui.noSave=true;location.reload();
+}
+function fillExpOpts(){
+  [['expMut',EXP_MUT],['expPres',EXP_PRES],['expPop',EXP_POP]].forEach(([id,L])=>{const s=$(id);if(s.options.length)return;L.forEach(([v,l])=>{const o=document.createElement('option');o.value=v;o.textContent=l;s.appendChild(o)})});
+}
+if(typeof document!=='undefined'&&document.getElementById('spd')){
+  $('newKind').onchange=()=>{$('expOpts').hidden=$('newKind').value!=='exp'};
+  document.querySelectorAll('#spd button').forEach(b=>{b.onclick=()=>setSpeed(+b.dataset.s)});
+  $('newGo').onclick=beginNew;$('newNo').onclick=()=>{ui.newSlot=null;$('newCol').hidden=true};
+  $('move').addEventListener('toggle',()=>{if($('move').open)renderSlots()});
+}
+
+/* ---------- Genes: every Dimling carries twelve inherited traits that shape its body and its life ----------
+   They are mixed from both parents with occasional mutation, they decide what the body looks like, how fast it walks, how much it
+   needs to eat, how well it shrugs off sickness, and (in later systems) how quickly it learns and how readily it signals. */
+const GENES=['size','width','eyes','crest','speed','efficiency','curiosity','sociability','temperament','tolerance','learning','signal'];
+const G={size:0,width:1,eyes:2,crest:3,speed:4,eff:5,cur:6,soc:7,temp:8,tol:9,learn:10,sig:11};
+const GENE_LABEL=['Size','Build','Eyes','Crest','Speed','Frugality','Curiosity','Sociability','Temper','Hardiness','Learning','Signalling'];
+const PX_LABEL=[['agg','Aggression'],['play','Playfulness'],['ind','Independence'],['coop','Cooperation'],['terr','Territorial']];
+const r2=v=>Math.round(v*100)/100;
+function founderGenome(){return GENES.map(()=>r2(clamp(.5+(R()+R()+R()-1.5)*.55,0,1)))}
+function childGenome(a,b){
+  const mu=S.mut||1;
+  return GENES.map((_,i)=>{
+    const w=R(),v=a[i]*w+b[i]*(1-w),m=R();
+    return r2(clamp(v+(m<.1*mu?(R()-.5)*.6:(R()-.5)*.08),0,1));
+  });
+}
+/* Existing Dimlings get a genome read off what they already are, so nobody changes: traits and head-piece map straight in,
+   the rest is fixed by a hash of their id (always the same for the same Dimling). */
+function deriveGenome(c){
+  const tr=c.tr||{},h=k=>rh(c.id*13.7+k*7.3);
+  return GENES.map((g,i)=>r2(clamp(
+    g==='curiosity'?(tr.curious!==undefined?tr.curious:h(i)):
+    g==='sociability'?(tr.social!==undefined?tr.social:h(i)):
+    g==='temperament'?(tr.kind!==undefined?1-tr.kind:h(i)):
+    g==='crest'?[.15,.42,.67,.9][c.sh||0]:
+    g==='tolerance'?.35+h(i)*.5:h(i),0,1)));
+}
+const crestOf=v=>v<.3?0:v<.55?1:v<.8?2:3;
+function derivePx(c){
+  const g=c.ge,tr=c.tr||{},h=k=>(rh(c.id*5.1+k)-.5)*.16;
+  return {
+    agg:r2(clamp(g[G.temp]*.65+(1-(tr.kind||.5))*.25+h(1)+.05,0,1)),
+    play:r2(clamp(g[G.cur]*.35+g[G.soc]*.3+(tr.bold||.5)*.2+h(2)+.05,0,1)),
+    ind:r2(clamp(1-g[G.soc]*.55+(tr.bold||.5)*.25+h(3)-.05,0,1)),
+    coop:r2(clamp((tr.kind||.5)*.45+g[G.soc]*.3+(1-g[G.temp])*.2+h(4),0,1)),
+    terr:r2(clamp(g[G.temp]*.4+(tr.greedy||.5)*.3+(1-g[G.soc])*.2+h(5),0,1))
+  };
+}
+function initGenes(c,pa,pb){
+  c.ge=pa&&pa.ge?(pb&&pb.ge?childGenome(pa.ge,pb.ge):childGenome(pa.ge,pa.ge)):founderGenome();
+  c.gen=pa?Math.max(pa.gen||0,pb?pb.gen||0:0)+1:0;
+  if(pa&&pa.ge){ // a newborn's temperament starts between its inheritance and its genes
+    const t=c.tr,g=c.ge;
+    t.curious=clamp(t.curious*.6+g[G.cur]*.4,0,1);t.social=clamp(t.social*.6+g[G.soc]*.4,0,1);t.kind=clamp(t.kind*.6+(1-g[G.temp])*.4,0,1);
+  }
+  c.sh=crestOf(c.ge[G.crest]);c.px=derivePx(c);
+}
+const spdF=c=>c.ge?.8+c.ge[G.speed]*.45:1;
+const drainF=c=>c.ge?(1.25-.5*c.ge[G.eff])*(.9+.2*c.ge[G.size]):1;
+const tolF=c=>c.ge?1.4-.8*c.ge[G.tol]:1;
+function genDiversity(){
+  const a=S.cr.filter(c=>c.ge);if(a.length<2)return 0;
+  const n=Math.min(200,a.length*(a.length-1)/2);let s=0;
+  for(let k=0;k<n;k++){
+    const i=Math.floor(R()*a.length);let j=Math.floor(R()*(a.length-1));if(j>=i)j++;
+    let d=0;for(let q=0;q<12;q++)d+=Math.abs(a[i].ge[q]-a[j].ge[q]);s+=d/12;
+  }
+  return r2(s/n);
+}
+/* Upgrade step 3: genomes, generation numbers and the new personality axes for a colony that has none. */
+MIG.push({to:3,fn:()=>{
+  S.cr.forEach(c=>{if(!c.ge){c.ge=deriveGenome(c);c.px=derivePx(c);c.sh=crestOf(c.ge[G.crest])}});
+  const by={};S.cr.forEach(c=>by[c.id]=c);
+  S.cr.slice().sort((a,b)=>a.id-b.id).forEach(c=>{if(c.gen===undefined){const ps=(c.par||[]).map(i=>by[i]).filter(Boolean);c.gen=ps.length?Math.max(...ps.map(p=>p.gen||0))+1:(c.par&&c.par.length?1:0)}});
+}});
+
+/* ---------- Bodies: drawn from the genes ---------- */
+const BODYC={};
+function bodyOf(c,kid,sq){
+  const g=c.ge||(c.ge=deriveGenome(c));
+  const w=kid?(g[G.width]>.72?6:5):(g[G.width]<.38?5:g[G.width]<.72?6:7);
+  const n=kid?(g[G.size]<.5?3:4):(g[G.size]<.33?4:g[G.size]<.7?5:6);
+  const eyes=g[G.eyes]<.4?0:g[G.eyes]<.7?1:g[G.eyes]<.88?2:3,sqk=sq||0;
+  const key=w+'|'+n+'|'+eyes+'|'+(kid?1:0)+'|'+sqk;
+  if(BODYC[key])return BODYC[key];
+  const mc=Math.floor(w/2),bd='b'.repeat(w),cap='.'+'b'.repeat(w-2)+'.';
+  let rows=[];
+  for(let i=0;i<n;i++)rows.push(i===0||i===n-1?cap:bd);
+  let er=n>=5||(!kid&&n>=4&&false)?2:1;if(kid)er=1;
+  if(sqk===1&&rows.length>3){rows.splice(1,1);er=Math.max(1,er-1)}      // squash: one row shorter, body spreads sideways
+  else if(sqk===-1){rows.splice(1,0,bd);er+=1}                          // stretch: one row taller
+  const feet='.'.repeat(w).split('');feet[1]='f';feet[w-2]='f';rows.push(feet.join(''));
+  const ec=eyes===0?[1,w-2]:eyes===1?[mc-1,mc]:eyes===2?[mc]:w>=7?[1,mc,w-2]:[mc-1,mc];
+  return BODYC[key]={w,h:rows.length,rows,er,ec,mc,big:eyes===2,sqk,spread:sqk===1};
+}
+const ANIM={};
+/* Squash and stretch: a crouch before setting off, a stretch as the stride lifts, a squash as it lands. */
+function squashOf(c,t){
+  if(c.state==='sleep')return 0;
+  const a=ANIM[c.id]||(ANIM[c.id]={pw:0,t0:-9});
+  if(c.walk&&!a.pw)a.t0=t;a.pw=c.walk?1:0;
+  if(c.walk){const e=t-a.t0;if(e<.14)return 1;if(e<.24)return -1;const s=Math.sin(t*10+c.id);return s>.82?-1:s<-.82?1:0}
+  if(c.state==='dance'||c.state==='play'){const s=Math.sin(t*8+c.id);return s>.7?-1:s<-.8?1:0}
+  return 0;
+}
+/* Eyes glance toward the nearest Dimling close by (one pixel is all a face this small has). */
+function lookDir(c,t){
+  if(c.state==='sleep'||c.fw)return 0;
+  if(S.cr.length>150&&ui.sel!==c.id&&((Math.floor(t*2)+c.id)%6))return (ANIM[c.id]||{}).ld||0;
+  const a=ANIM[c.id]||(ANIM[c.id]={pw:0,t0:-9});
+  let best=null,bd=48*48;
+  const nb=nearby(c,48);for(let i=0;i<nb.length;i++){const o=nb[i];if(o===c)continue;const d=(o.x-c.x)*(o.x-c.x)+(o.y-c.y)*(o.y-c.y);if(d<bd){bd=d;best=o}}
+  a.ld=best&&Math.abs(best.x-c.x)>5?(best.x>c.x?1:-1):0;
+  return a.ld;
+}
+
+/* ---------- Phase 4: more needs, perception, memory and learning ----------
+   Three new needs sit beside the old ones. Safety falls when something frightens or hurts a Dimling and recovers near home and family.
+   Comfort follows weather, shelter, crowding and rest. Reproductive drive builds up while a Dimling is well and settled, and a couple's shared
+   drive is what brings a child (the 200-second floor in p3o stays as a safety net, but picks the couple whose drive is closest).
+   Each Dimling perceives the others around it, scores the things it could do, and picks one. It remembers the places where good and bad
+   things happened to it (with decay and a cap), and learns from how each choice turned out: how fast depends on its Learning gene. */
+const MEMCAP=10,MEMTAU=2400;
+const MEMN={food:'food',hand:'your hand',water:'water',wash:'a wash',play:'play',joy:'a good moment',safe:'safety',hurt:'pain',sick:'sickness',fright:'a fright',loss:'a loss'};
+const ACTN={gather:'went back to their band',sig_warn:'ran from a warning',sig_call:'answered a call',sig_food:'followed a food call',sig_help:'went to help after a plea',safe:'went looking for safety',shelter:'went in out of the weather',mate:'went to be with their partner',court:'went to meet someone',friend:'sought out a friend',forage:'went back to where food had been',revisit:'went back to a place that felt good',help:'went to help someone',routine:'went about their day'};
+const memW=m=>Math.exp(-(S.time-m[4])/MEMTAU);
+function remember(c,k,x,y,v){
+  const L=c.mem||(c.mem=[]),lr=.55+(c.ge?c.ge[G.learn]*.8:.3);
+  for(let i=0;i<L.length;i++){const m=L[i];
+    if(m[0]===k&&Math.abs(m[1]-x)<18&&Math.abs(m[2]-y)<14){m[3]=r2(clamp(m[3]*memW(m)+v*lr,-1,1));m[1]=Math.round((m[1]+x)/2);m[2]=Math.round((m[2]+y)/2);m[4]=Math.round(S.time);return}}
+  L.push([k,Math.round(x),Math.round(y),r2(clamp(v*lr,-1,1)),Math.round(S.time)]);
+  if(L.length>MEMCAP){let lo=0,lv=1e9;L.forEach((m,i)=>{const s=Math.abs(m[3])*memW(m);if(s<lv){lv=s;lo=i}});L.splice(lo,1)}
+}
+function placeScore(c,x,y){let s=0;const L=c.mem;if(!L)return 0;for(let i=0;i<L.length;i++){const m=L[i],d=Math.hypot(m[1]-x,(m[2]-y)*1.3);if(d<42)s+=m[3]*memW(m)*(1-d/42)}return s}
+function bestMem(c,ks){let b=null,bs=.12;const L=c.mem;if(!L)return null;for(let i=0;i<L.length;i++){const m=L[i];if(ks.indexOf(m[0])<0||m[3]<=0)continue;const s=m[3]*memW(m);if(s>bs){bs=s;b=m}}return b}
+function memWander(c){let best=null,bs=-1e9;for(let i=0;i<3;i++){const p=wanderPt(c),s=placeScore(c,p.x,p.y)+R()*.3-(dangerAt(p.x,p.y)?1.5:0);if(s>bs){bs=s;best=p}}return best}
+function placeName(x,y){
+  if(Math.hypot(x-PX,(y-PY)*1.4)<26)return 'the pond';
+  if(inLake(x,y,1.2))return 'the lake';
+  let nb=null,nd=26;S.b.forEach(b=>{const d=Math.hypot(b.x-x,b.y-y);if(d<nd){nd=d;nb=b}});
+  if(nb)return 'the '+BUILD[nb.t].n.toLowerCase();
+  if((S.graves||[]).some(g=>Math.hypot(g.x-x,g.y-y)<14))return 'a grave';
+  if(y>H-24)return 'the bottom edge of the world';
+  return 'the open moss';
+}
+
+function initNeeds(c){c.sf=clamp(.6+(c.op||0)*.1,0,1);c.cm=.6;c.q=c.q||{};c.mem=c.mem||[];c.hist=c.hist||[]}
+const wellbeing=c=>clamp((c.joy+Math.min(c.food,c.water)+(c.sf===undefined?.6:c.sf)+(c.cm===undefined?.6:c.cm))/4,0,1)*(c.sick>0?.5:1);
+const needMood=c=>c.sf===undefined?0:(c.sf>.35?.015:-.12)+(c.cm>.35?.015:-.1);
+let climateComfort=c=>0; // the climate system (Phase 7) fills this in
+const _hm={t:-9,n:-1,L:[]};
+function homesNow(){const k=(S.time/3)|0;if(_hm.t!==k||_hm.n!==S.b.length){_hm.t=k;_hm.n=S.b.length;_hm.L=S.b.filter(b=>b.t==='hut'||b.t==='house')}return _hm.L}
+function sheltered(c){const L=homesNow();for(let i=0;i<L.length;i++){const b=L[i];if(Math.abs(b.x-c.x)<22&&Math.abs(b.y-c.y)<18)return b}return null}
+function nearestHome(c,r){let b=null,bd=r;homesNow().forEach(h=>{const d=Math.hypot(h.x-c.x,h.y-c.y);if(d<bd){bd=d;b=h}});return b}
+
+/* what is around me: friends, family, partner, someone sick, someone I fear, and who might make a good partner */
+const PCA=new WeakMap(); // last look around, per Dimling (not saved)
+function perceive(c,fresh){
+  const hit=PCA.get(c);if(hit&&!fresh&&S.time-hit.t<Math.min(15,2.5*Math.max(1,S.cr.length/120)))return hit.o;
+  const pr=34+(c.ge?c.ge[G.eyes]*26:10),o={n:0,fr:null,fs:-1e9,rv:null,thr:0,kin:null,sp:null,sick:null,mate:null,ms:-1e9,pr},ad=c.age>=ADULT,L=nearby(c,pr,6);
+  const wantMate=ad&&!c.spouse&&(c.rd||0)>.4&&c.age<LIFE*.85;let seen=0,mates=0;
+  for(let i=0;i<L.length;i++){
+    const x=L[i];if(x===c)continue;
+    const dx=x.x-c.x,dy=x.y-c.y;if(dx>pr||dx<-pr||dy>pr||dy<-pr)continue;
+    const d=Math.hypot(dx,dy);if(d>pr)continue;o.n++;
+    if(++seen>36)continue; // attention is limited: in a crowd they only really notice the nearest few dozen
+    const r=relOf(c,x),near=1-d/pr;
+    if(x.id===c.spouse)o.sp=x;
+    else if(c.par.includes(x.id)||c.kids.includes(x.id)){if(!o.kin||d<dist(o.kin,c))o.kin=x}
+    const rxv=c.rx&&c.rx[x.id];
+    if(r>20){const s=r*.02+near+(rxv?rxv[0]*.003:0);if(s>o.fs){o.fs=s;o.fr=x}}
+    if(x.sick>0&&(!o.sick||d<dist(o.sick,c)))o.sick=x;
+    if(x.px&&r<=-20){o.thr=Math.max(o.thr,x.px.agg*near*(r<=-50?1.4:1));if(!o.rv)o.rv=x}
+    if(rxv&&rxv[3]>=40&&x.px){o.thr=Math.max(o.thr,((x.px.agg||.4)*.5+rxv[3]/100*.7)*near);if(!o.rv)o.rv=x}
+    if(c.grp&&x.grp){const tt=territoryThreat(c,x);if(tt){o.thr=Math.max(o.thr,tt*(.6+near*.4));if(!o.rv)o.rv=x}}
+    if(x.sick>0&&c.ge&&c.ge[G.tol]<.5)o.thr=Math.max(o.thr,.22*near);
+    if(wantMate&&mates<10&&!x.spouse&&x.age>=ADULT&&x.age<LIFE*.85&&x.tr&&r>-30&&!kin(c,x)){mates++;const s=compat(c,x)*1.5+r*.01+near*.2;if(s>o.ms){o.ms=s;o.mate=x}}
+  }
+  c.thr=r2(o.thr);c.nn=o.n;if(o.rv){c.tpx=Math.round(o.rv.x);c.tpy=Math.round(o.rv.y)}else c.tpx=undefined;
+  PCA.set(c,{t:S.time,o});
+  return o;
+}
+
+function needsUpdate(c,dt){
+  if(c.sf===undefined)initNeeds(c);
+  c.nA=(c.nA||0)+dt;
+  if((c.nT=(c.nT===undefined?R()*2:c.nT)-dt)>0)return;
+  const d=c.nA;c.nA=0;c.nT=(1.6+R()*.8)*Math.max(1,S.cr.length/120);
+  const ge=c.ge||[],P=perceive(c,true),hm=sheltered(c),wx=S.weather,zn=zoneAt(c);
+  if(c.rd===undefined)c.rd=c.age>=ADULT?r2(rnd(.15,.5)):0;
+  // safety: frightened quickly, calmed slowly
+  const ts=.64-(c.sick>0?.18:0)-(S.gloom||0)*.35-(S.blight>0?.06:0)-(S.storm>0&&!hm?.22:0)-P.thr*.5+(hm?.14:0)+(P.kin?.1:0)+(P.sp?.1:0)+(c.op||0)*.05+(zn?(zn.k==='safe'?.2:-.28):0);
+  c.sf=r2(clamp(c.sf+(ts-c.sf)*Math.min(1,d*(ts>c.sf?.035:.07)),0,1));
+  // comfort: weather, shelter, dirt, tiredness, crowding, and (later) temperature
+  const bad=wx==='rain'||wx==='heat'||S.storm>0||S.cold>0;
+  const tc=.62-(bad?(hm?.06:.24):0)+(hm?(bad?.3:.1):0)-(c.clean<.3?.14:0)-(c.energy<.25?.12:0)-Math.max(0,(P.n-10)/22)*.3*(1-(ge[G.soc]||.5)*.6)+climateComfort(c)+(zn&&zn.k==='safe'?.08:0);
+  c.cm=r2(clamp(c.cm+(tc-c.cm)*Math.min(1,d*.04),0,1));
+  climateTickC(c,d);if(zn)zoneTickC(c,d,P,zn,hm);
+  // a single adult's drive builds slowly while they are well (a couple's is advanced by driveTick)
+  if(c.age>=ADULT&&c.age<LIFE*.85&&!c.spouse)c.rd=r2(Math.min(1,c.rd+d/900*wellbeing(c)));
+  // memories: anything that suddenly raised or lowered their mood or health is remembered where it happened
+  const dj=c.joy-(c.lj===undefined?c.joy:c.lj),dh=c.hp-(c.lh===undefined?c.hp:c.lh);c.lj=r2(c.joy);c.lh=r2(c.hp);
+  if(dj>.07)remember(c,'joy',c.x,c.y,Math.min(1,dj*4));
+  else if(dj<-.07||dh<-.04)remember(c,'hurt',c.x,c.y,-Math.min(1,(-dj+(-dh)*2)*3));
+  if(c.sick>0){if(!c.ws){c.ws=1;remember(c,'sick',c.x,c.y,-.5)}}else c.ws=0;
+  if(c.sw&&S.time-c.sw.t>5)sigLearn(c);
+  if(c.state!=='sleep')signalCheck(c,P);
+}
+
+/* a couple's shared drive; returns true when a child is due */
+function driveTick(a,b,dt){
+  const w=(wellbeing(a)+wellbeing(b))/2,starving=Math.min(a.food,b.food,a.water,b.water)<.25;
+  const m=(.35+1.3*w)*(.7+.6*clamp(compat(a,b),0,1))*(starving?.3:1)*((a.sick>0||b.sick>0)?.4:1)*(1+1.6*clamp((14-S.cr.length)/12,0,1))*(code('wed')?1.25:1)*fitF(a,b); // small colonies are eager: a healthy first couple beats the 200 s floor
+  a.rd=(a.rd||0)+dt/600*m;b.rd=a.rd;
+  if(a.rd>=1){a.rd=b.rd=0;return true}
+  return false;
+}
+
+/* ---- choosing what to do ---- */
+const qv=(c,k)=>c.q?(c.q[k]||0)-(c.q.routine||0):0;
+function learnStep(c){
+  const a=c.a0;if(!a||S.time-a[4]<3)return;
+  const ge=c.ge||[],lr=.06+.22*(ge[G.learn]===undefined?.4:ge[G.learn]);
+  const r=clamp(((c.joy-a[1])*1.5+(c.hp-a[2])*3+((c.sf||0)-a[3])*.6)*3,-1,1);
+  c.q=c.q||{};c.q[a[0]]=r2(clamp((c.q[a[0]]||0)+(r-(c.q[a[0]]||0))*lr,-1,1));
+  c.a0=null;
+}
+function chose(c,k){
+  c.a0=[k,r2(c.joy),r2(c.hp),r2(c.sf||0),Math.round(S.time*10)/10];
+  if(k==='routine')return;
+  const h=c.hist||(c.hist=[]);h.push([k,Math.round(S.time)]);if(h.length>6)h.shift();
+}
+function decide(c){
+  if(c.sf===undefined)initNeeds(c);
+  learnStep(c);
+  const P=perceive(c),ge=c.ge||[],px=c.px||{},ad=c.age>=ADULT;
+  let best=null,bs=0;
+  const add=(k,s,f)=>{s+=qv(c,k)*.5+R()*.15;if(s>bs){bs=s;best={k,f}}};
+  // safety
+  const ns=(1-c.sf)*1.5+P.thr*1.1;
+  if(ns>.55){
+    let t=P.sp||P.kin,pt=null;
+    if(t)pt={x:t.x+rnd(-5,5),y:t.y+rnd(-3,3)};
+    else{const m=bestMem(c,['safe']);if(m)pt={x:m[1],y:m[2]};else{const h=nearestHome(c,150);if(h)pt={x:h.x+rnd(-4,4),y:h.y+6};else if(P.rv){const dx=c.x-P.rv.x,dy=c.y-P.rv.y,d=Math.hypot(dx,dy)||1;pt={x:c.x+dx/d*34,y:c.y+dy/d*20}}}}
+    if(pt)add('safe',ns,()=>{go(c,pt.x,pt.y);c.state='wander';c.t=10;if(P.thr>.3)emote(c,'sweat',1.8)});
+  }
+  // comfort / shelter
+  const nc=(1-c.cm)*1.3;
+  if(nc>.5){
+    const h=nearestHome(c,150);
+    if(h)add('shelter',nc,()=>{go(c,h.x+rnd(-3,3),h.y+5);c.state='wander';c.t=10});
+  }
+  // family: stay close to a partner, or court someone
+  if(ad&&c.age<LIFE*.85&&c.rd>.45&&c.joy>.4&&c.food>.4&&c.sick<=0){
+    const sc=(c.rd-.3)*1.3+(c.joy>.6?.1:0);
+    if(c.spouse){const sp=byId(c.spouse);if(sp&&dist(sp,c)>16)add('mate',sc,()=>{c.tid=sp.id;go(c,sp.x+rnd(-4,4),sp.y+rnd(-2,2));c.state='wander';c.t=10})}
+    else if(P.mate)add('court',sc+P.ms*.3,()=>{c.court=P.mate.id;c.tid=P.mate.id;go(c,P.mate.x+rnd(-5,5),P.mate.y+rnd(-3,3));c.state='wander';c.t=10});
+  }
+  // company
+  if(P.fr&&c.soc<.55){
+    const sc=(1-c.soc)*(.5+(ge[G.soc]===undefined?.5:ge[G.soc])*.9)*(1-(px.ind||.4)*.6)+.12;
+    if(sc>.35)add('friend',sc,()=>{c.tid=P.fr.id;go(c,P.fr.x+rnd(-4,4),P.fr.y+rnd(-2,2));c.state='wander';c.t=9});
+  }
+  // go back to where food was found (or where your hand fed them)
+  if(c.food<.6){
+    const m=bestMem(c,['food','hand']);
+    if(m&&Math.hypot(m[1]-c.x,m[2]-c.y)>22)add('forage',(.6-c.food)*1.6*Math.min(1,m[3]*memW(m)*2),()=>{go(c,m[1]+rnd(-4,4),m[2]+rnd(-3,3));c.state='wander';c.t=12});
+  }
+  // go back somewhere that once felt good
+  if(c.joy<.5){
+    const m=bestMem(c,['joy','play','wash']);
+    if(m&&Math.hypot(m[1]-c.x,m[2]-c.y)>22)add('revisit',(.5-c.joy)*1.3*Math.min(1,m[3]*memW(m)*2),()=>{go(c,m[1]+rnd(-4,4),m[2]+rnd(-3,3));c.state='wander';c.t=12});
+  }
+  // a kind one sees a sick neighbor
+  if((px.coop||0)>.5&&P.sick&&c.food>.4&&c.sf>.4&&c.sick<=0)add('help',((px.coop||0)-.35)*1.1+.1,()=>{c.tid=P.sick.id;go(c,P.sick.x+rnd(-3,3),P.sick.y+rnd(-2,2));c.state='wander';c.t=10});
+  groupOption(c,P,add);
+  if(!best||bs<.55){chose(c,'routine');return false}
+  c.act=best.k;chose(c,best.k);best.f();return true;
+}
+function actArrive(c,k){
+  c.act='';
+  if(k==='safe'){c.sf=r2(clamp(c.sf+.22,0,1));remember(c,'safe',c.x,c.y,.5);if(R()<.4)emote(c,'sparkle',1.8)}
+  else if(k==='shelter'){c.cm=r2(clamp(c.cm+.3,0,1));c.joy=clamp(c.joy+.02,0,1);remember(c,'safe',c.x,c.y,.3)}
+  else if(k==='mate'||k==='court'){
+    const sp=byId(c.tid);
+    if(sp&&dist(sp,c)<24){
+      bond(c,sp,k==='mate'?2:4);c.soc=clamp(c.soc+.2,0,1);c.joy=clamp(c.joy+.05,0,1);emote(c,'heart',2.2);
+      if(k==='mate')c.rd=sp.rd=Math.min(1.2,(c.rd||0)+.04*compat(c,sp));
+      if(R()<.3)sayAny(c,['kin','friend']);
+    }else if(k==='court')c.court=0;
+  }else if(k==='friend'){
+    const o=byId(c.tid);if(o&&dist(o,c)<24){talk(c,o);bond(c,o,2)}
+  }else if(k==='forage'){
+    const f=S.foods.find(x=>Math.hypot(x.x-c.x,x.y-c.y)<26);
+    if(f){c.tid=f.id;go(c,f.x,f.y);c.state='toFood';c.t=8;return true}
+    remember(c,'food',c.x,c.y,-.5);remember(c,'hand',c.x,c.y,-.4);emote(c,'q',2); // nothing here: they learn the spot is empty
+  }else if(k==='revisit'){
+    c.joy=clamp(c.joy+.04,0,1);remember(c,'joy',c.x,c.y,.2);
+  }else if(k.indexOf('sig_')===0){sigArrive(c,k.slice(4))
+  }else if(k==='gather'){c.soc=clamp(c.soc+.12,0,1);c.sf=r2(clamp((c.sf||.5)+.08,0,1));const m=nearby(c,30,6).find(o=>o!==c&&o.grp===c.grp);if(m){bond(c,m,2);if(R()<.4)talk(c,m)}
+  }else if(k==='help'){
+    const o=byId(c.tid);
+    if(o&&dist(o,c)<20&&o.sick>0){o.hp=Math.min(1,o.hp+.04);o.joy=clamp(o.joy+.06,0,1);o.sf=r2(clamp((o.sf||.5)+.1,0,1));bond(c,o,4);emote(c,'heart',2);pl('helped')}
+  }
+  c.state='idle';c.t=rnd(2,4);return true;
+}
+
+/* ---- for the inspector ---- */
+function memLines(c){
+  const L=(c.mem||[]).map(m=>({m,s:Math.abs(m[3])*memW(m)})).filter(x=>x.s>.05).sort((a,b)=>b.s-a.s).slice(0,4);
+  return L.map(x=>{const m=x.m,w=memW(m),fade=w>.6?'':w>.25?' (fading)':' (faint)';
+    return (m[3]>0?'Fondly remembers ':'Remembers ')+MEMN[m[0]]+' at '+placeName(m[1],m[2])+fade+'.'});
+}
+const HABN={safe:'looking for safety',shelter:'getting in out of the weather',mate:'staying near their partner',court:'meeting someone new',friend:'seeking out friends',forage:'going back to where food was',revisit:'going back to happy places',help:'helping the sick'};
+function habitLines(c){
+  const q=c.q||{},base=q.routine||0,out=[];
+  Object.keys(q).filter(k=>k!=='routine'&&HABN[k]&&Math.abs(q[k]-base)>.12).sort((a,b)=>Math.abs(q[b]-base)-Math.abs(q[a]-base)).slice(0,2)
+    .forEach(k=>out.push(q[k]>base?'Has found that '+HABN[k]+' is worth the trouble.':'Has learned to be wary of '+HABN[k]+'.'));
+  return out;
+}
+function historyText(c){
+  const h=c.hist||[];if(!h.length)return '';
+  return h.slice().reverse().slice(0,4).map(e=>{const a=Math.max(0,Math.round((S.time-e[1])/60));return (ACTN[e[0]]||e[0])+' ('+(a<1?'just now':a+' min ago')+')'}).join(' · ');
+}
+
+/* Upgrade step 4: the new needs, the shared drive (from the old child timer), and empty memories. */
+MIG.push({to:4,fn:()=>{
+  S.cr.forEach(c=>{initNeeds(c);if(c.age<ADULT)c.rd=0;else if(c.spouse&&c.kidT>0)c.rd=r2(clamp(1-c.kidT/720,0,.9))});
+}});
+
+/* ---------- Phase 5: signals, richer relationships, bands and territories ----------
+   Signals are the first thing they say without words: a shake, a hop, a colored ring and a small glyph over the sender. Each kind means something
+   to the sender (danger, come here, it is all right, food here, help) but nobody is born knowing it. A listener answers with a chance that depends
+   on how much it trusts the sender and on how that kind of signal has turned out for it before, so the meanings are learned and differ between Dimlings.
+   Relationships have four dimensions (trust, familiarity, cooperation, conflict) beside the old friend/rival score. Mutual friends settle into
+   bands that keep a home ground; strangers on that ground are noticed. */
+const SIGK={
+  warn:{n:'a warning',m:'danger',col:'#ff7a7a',g:'bang'},
+  call:{n:'a call',m:'come here',col:'#ffd36a',g:'note'},
+  calm:{n:'a soothing hum',m:"it's all right",col:'#8fd0ff',g:'sparkle'},
+  food:{n:'a food call',m:'food here',col:'#9be58f',g:'food'},
+  help:{n:'a plea',m:'someone needs help',col:'#e0a8ff',g:'drop'}
+};
+const SIGV={}; // who is signalling right now (drawing only, never saved)
+
+/* ---- relationship dimensions: rx[otherId] = [trust, familiarity, cooperation, conflict], each 0..100 ---- */
+const rxOf=(a,b)=>(a.rx&&a.rx[b.id])||null;
+function dimUpdate(a,b,d){
+  [[a,b],[b,a]].forEach(p=>{
+    const x=p[0],y=p[1],m=x.rx||(x.rx={}),v=m[y.id]||(m[y.id]=[10,0,0,0]);
+    v[1]=Math.min(100,v[1]+2+Math.abs(d)*.25);
+    if(d>=0){v[0]=Math.min(100,v[0]+d*.8);v[2]=Math.min(100,v[2]+d*.35);v[3]=Math.max(0,v[3]-d*.15)}
+    else{v[3]=Math.min(100,v[3]-d*.8);v[0]=Math.max(0,v[0]+d*.5)}
+    for(let i=0;i<4;i++)v[i]=Math.round(v[i]);
+    const ks=Object.keys(m);
+    if(ks.length>16){let lo=null,lv=1e9;ks.forEach(k=>{if(+k===y.id)return;const q=m[k],s=q[1]+q[0]+q[3];if(s<lv){lv=s;lo=k}});if(lo)delete m[lo]}
+  });
+}
+{const _b=bond;bond=function(a,b,d){_b(a,b,d);if(a!==b&&a.tr&&b.tr)dimUpdate(a,b,d)};ui.hooks.bond=bond}
+function relLines(c){
+  if(!c.rx)return [];
+  return Object.keys(c.rx).map(k=>({o:byId(+k),v:c.rx[k]})).filter(x=>x.o&&x.v[1]>=8).sort((a,b)=>b.v[1]-a.v[1]).slice(0,3).map(x=>{
+    const v=x.v,w=[];
+    w.push(v[0]>=65?'trusts them':v[0]>=35?'gets on with them':v[3]>=40?'does not trust them':'is unsure of them');
+    if(v[1]>=60)w.push('knows them well');if(v[2]>=45)w.push('works well with them');if(v[3]>=35)w.push('often clashes with them');
+    return x.o.name+': '+w.join(', ')+'.';
+  });
+}
+
+/* ---- signals ---- */
+function signalCheck(c,P){
+  if((c.sgT||0)>S.time||c.state==='sleep'||c.age<ADULT*.5||S.hush>S.time||!P.n)return;
+  const g=c.ge?c.ge[G.sig]:.5,px=c.px||{};let k='',cd=25;
+  if((P.thr>.35||(S.storm>0&&!sheltered(c)&&c.sf<.4))&&R()<.4+g*.4){k='warn';cd=30}
+  else if((c.sick>0||c.hp<.4||c.food<.15)&&R()<.35+g*.3){k='help';cd=40}
+  else if(P.sp&&P.sp.sf!==undefined&&P.sp.sf<.3&&(px.coop||.4)>.4&&R()<.5){k='calm';cd=30}
+  else if(c.food>.75&&P.n>0&&(px.coop||.5)>.45&&R()<.35+g*.3){k='food';cd=35}
+  else if(c.soc<.3&&R()<.2+g*.35){k='call';cd=45}
+  if(!k)return;
+  c.sgT=S.time+cd*(1.3-g*.6)*Math.max(1,S.cr.length/150); // in a big colony signals would never stop: they thin out
+  sendSig(c,k);
+}
+function sendSig(c,kind){
+  const rng=44+(c.ge?c.ge[G.sig]*22:8),L=nearby(c,rng,6);let n=0,heard=0;
+  for(let i=0;i<L.length;i++){
+    const o=L[i];if(o===c||o.state==='sleep'||o.age<ADULT*.4)continue;
+    const d=Math.hypot(o.x-c.x,o.y-c.y);if(d>rng)continue;
+    if(kind==='food'&&!(o.food<.45))continue;
+    n++;if(hear(o,c,kind))heard++;
+    if(n>=14)break; // only so many can take it in at once
+  }
+  if(kind==='food'&&!n){c.sgT=S.time+8;return false}
+  SIGV[c.id]={k:kind,t:S.time};emote(c,SIGK[kind].g,2);
+  const sc=S.sigc||(S.sigc={}),a=sc[kind]||(sc[kind]=[0,0,0]);a[0]++;a[1]+=heard;
+  if(!(S.sigFirst&&S.sigFirst[kind])){S.sigFirst=S.sigFirst||{};S.sigFirst[kind]=1;if(S.cr.length>=4)addLog(c.name+' made '+SIGK[kind].n+' without a word: '+(kind==='warn'?'a sharp shake':kind==='call'?'a hop and a wave':kind==='calm'?'a slow sway':kind==='food'?'a bright bob':'a trembling')+'. Nobody knew yet what it meant.',false,'social')}
+  return true;
+}
+function hear(o,c,kind){
+  const w=(o.sg&&o.sg[kind])||0,rx=rxOf(o,c),tr=(rx?rx[0]:10)/100,kn=(kin(o,c)||o.spouse===c.id)?.2:0,ge=o.ge||[];
+  const p=clamp(.12+w*.5+tr*.35+kn+(ge[G.sig]===undefined?.5:ge[G.sig])*.1,.03,.95);
+  if(R()>p)return false;
+  const co=(o.px&&o.px.coop)||.4;
+  if(kind==='help'&&co<.4&&!kn&&tr<.5)return false; // not everyone comes
+  o.sw={k:kind,j:o.joy,h:o.hp,s:o.sf===undefined?.5:o.sf,t:S.time};chose(o,'sig_'+kind);
+  if(kind==='warn'){
+    o.sf=r2(clamp((o.sf||.6)-.06,0,1));emote(o,'bang',1.4);
+    let pt=null;
+    if(S.storm>0){const h=nearestHome(o,150);if(h)pt={x:h.x+rnd(-3,3),y:h.y+5}}
+    if(!pt&&c.tpx!==undefined){const dx=o.x-c.tpx,dy=o.y-c.tpy,d=Math.hypot(dx,dy)||1;pt={x:o.x+dx/d*30,y:o.y+dy/d*16}}
+    if(!pt){const dx=o.x-c.x,dy=o.y-c.y,d=Math.hypot(dx,dy)||1;pt={x:o.x+dx/d*24,y:o.y+dy/d*12}}
+    o.act='sig_warn';go(o,pt.x,pt.y);o.state='wander';o.t=8;
+  }else if(kind==='call'){o.act='sig_call';o.tid=c.id;go(o,c.x+rnd(-5,5),c.y+rnd(-3,3));o.state='wander';o.t=9}
+  else if(kind==='food'){o.act='sig_food';o.tid=c.id;go(o,c.x+rnd(-4,4),c.y+rnd(-2,2));o.state='wander';o.t=10}
+  else if(kind==='help'){o.act='sig_help';o.tid=c.id;go(o,c.x+rnd(-3,3),c.y+rnd(-2,2));o.state='wander';o.t=10}
+  else if(kind==='calm'){o.sf=r2(clamp((o.sf||.6)+.1,0,1));o.joy=clamp(o.joy+.02,0,1);emote(o,'sparkle',1.6)}
+  return true;
+}
+function sigArrive(o,kind){
+  const s=byId(o.tid);
+  if(kind==='call'&&s&&dist(s,o)<24){bond(o,s,2);o.soc=clamp(o.soc+.15,0,1);s.soc=clamp(s.soc+.15,0,1);if(R()<.4)talk(o,s)}
+  else if(kind==='food'&&s&&dist(s,o)<24&&s.food>.5){s.food=clamp(s.food-.12,0,1);o.food=clamp(o.food+.25,0,1);o.joy=clamp(o.joy+.06,0,1);bond(s,o,3);remember(o,'food',o.x,o.y,.3);emote(o,'heart',2);pl('shared')}
+  else if(kind==='help'&&s&&dist(s,o)<22){s.hp=Math.min(1,s.hp+.05);if(s.sick>0)s.sick=Math.max(0,s.sick-10);s.joy=clamp(s.joy+.06,0,1);s.sf=r2(clamp((s.sf||.5)+.1,0,1));bond(o,s,4);emote(o,'heart',1.8);pl('helped')}
+}
+function sigLearn(c){
+  const s=c.sw;c.sw=null;if(!s)return;
+  const lr=.1+.25*(c.ge?c.ge[G.learn]:.4),sf=c.sf===undefined?.5:c.sf;
+  let r=(c.joy-s.j)*1.5+(c.hp-s.h)*3+(sf-s.s)*.6;
+  if(s.k==='warn')r=(c.hp-s.h)*3+.08; // heeding a warning pays off if you were not hurt
+  r=clamp(r*3,-1,1);
+  c.sg=c.sg||{};const v=c.sg[s.k]||0;c.sg[s.k]=r2(clamp(v+(r-v)*lr,-1,1));
+  const a=(S.sigc||(S.sigc={}))[s.k];if(a&&r>0)a[2]++;
+}
+function sigMeaning(k){ // how much of the colony has learned to answer this kind of signal
+  let n=0,t=0,u=0;const L=S.cr.length>300?S.cr.filter((_,i)=>i%Math.ceil(S.cr.length/300)===0):S.cr;
+  L.forEach(c=>{if(c.age<ADULT*.4)return;n++;const v=(c.sg&&c.sg[k])||0;t+=v;if(v>.25)u++});
+  return {share:n?u/n:0,avg:n?t/n:0};
+}
+function signalsHtml(){
+  const sc=S.sigc||{},ks=Object.keys(SIGK);
+  if(!ks.some(k=>sc[k]))return '<h4>Signals</h4><div class="dim">They have not started signalling yet. It begins with a shake or a hop when something is wrong.</div>';
+  let h='<h4>Signals</h4><div class="dim" style="margin-bottom:6px">Before words, they signal. Nobody is born knowing what each one means.</div>';
+  h+=ks.filter(k=>sc[k]).map(k=>{
+    const m=sigMeaning(k),a=sc[k],st=m.share>.45?'understood by most':m.share>.2?'being learned':m.share>.06?'a few have caught on':'not understood yet';
+    return '<div class="cust"><b><span style="color:'+SIGK[k].col+'">●</span> '+SIGK[k].n+'</b> <small class="dim">sent '+a[0]+' times</small><div class="mono">'+(m.share>.2?'Seems to mean: '+SIGK[k].m+'. ':'')+st.charAt(0).toUpperCase()+st.slice(1)+'.</div></div>';
+  }).join('');
+  return h;
+}
+
+/* ---- bands and territories ---- */
+const BANDCOL=['#ffb86b','#7fd1ff','#c59bff','#8ee88e','#ff8fa3','#f2e66b','#6fe0c8','#ff9a6b'];
+function groupOf(id){return S.groups&&S.groups.find(g=>g.id===id)}
+function groupTick(){
+  const n=S.cr.length;S.groups=S.groups||[];
+  if(n<6){if(S.groups.length){S.groups=[];S.cr.forEach(c=>{c.grp=0})}return}
+  const idx=new Map(),par=S.cr.map((_,i)=>i);S.cr.forEach((c,i)=>idx.set(c.id,i));
+  const f=i=>{while(par[i]!==i){par[i]=par[par[i]];i=par[i]}return i};
+  S.cr.forEach((c,i)=>{if(!c.rel||c.age<ADULT*.5)return;for(const k in c.rel){if(c.rel[k]>=40){const j=idx.get(+k);if(j!==undefined){const o=S.cr[j];if(o.rel&&o.rel[c.id]>=30)par[f(i)]=f(j)}}}});
+  const comps=new Map();S.cr.forEach((c,i)=>{const r=f(i);(comps.get(r)||comps.set(r,[]).get(r)).push(c)});
+  const list=[...comps.values()].filter(m=>m.length>=3).sort((a,b)=>b.length-a.length).slice(0,12);
+  const old=S.groups,keep=[],claimed=new Set();
+  list.forEach(m=>{
+    const cnt={};m.forEach(c=>{if(c.grp)cnt[c.grp]=(cnt[c.grp]||0)+1});
+    let gid=0,bc=0;for(const k in cnt)if(cnt[k]>bc&&!claimed.has(+k)){bc=cnt[k];gid=+k}
+    let g=gid&&bc*2>=m.length?old.find(x=>x.id===gid):null;
+    const ax=m.reduce((s,c)=>s+c.x,0)/m.length,ay=m.reduce((s,c)=>s+c.y,0)/m.length;
+    if(!g){
+      S.gn=(S.gn||0)+1;
+      const lead=m.slice().sort((a,b)=>(b.st||0)-(a.st||0)||a.id-b.id)[0];
+      g={id:S.gn,n:lead.name+"'s band",hx:ax,hy:ay,col:S.gn%BANDCOL.length,d:S.day+1,k:m.length};
+      addLog(m.length+' of them have grown close and keep together now. They call themselves '+g.n+'.',false,'social');
+      if(ui.hooks.discover)ui.hooks.discover('band');
+    }
+    claimed.add(g.id);g.k=m.length;g.hx=g.hx*.7+ax*.3;g.hy=g.hy*.7+ay*.3;g.r=clamp(18+Math.sqrt(m.length)*6,24,70);
+    m.forEach(c=>{c.grp=g.id});keep.push(g);
+  });
+  old.forEach(g=>{if(!claimed.has(g.id))addLog(g.n+' drifted apart.',false,'social')});
+  const ids=new Set(keep.map(g=>g.id));S.cr.forEach(c=>{if(c.grp&&!ids.has(c.grp))c.grp=0;});
+  // anyone who is not in a component loses their band
+  const inMembers=new Set();list.forEach(m=>m.forEach(c=>inMembers.add(c.id)));S.cr.forEach(c=>{if(c.grp&&!inMembers.has(c.id))c.grp=0});
+  S.groups=keep;
+}
+const inTerritory=(g,x)=>g&&Math.hypot(x.x-g.hx,(x.y-g.hy)*1.4)<(g.r||30);
+function territoryThreat(c,x){ // a stranger standing on my band's ground
+  if(!c.grp||!x.grp||c.grp===x.grp||!c.px)return 0;
+  const g=groupOf(c.grp);if(!g||!inTerritory(g,x))return 0;
+  const t=c.px.terr||.4;if(t<.45)return 0;
+  S.gdisp=S.gdisp||{};const key=Math.min(c.grp,x.grp)+'-'+Math.max(c.grp,x.grp);
+  S.gdisp[key]=(S.gdisp[key]||0)+.15;
+  if(S.gdisp[key]>=6&&!(S.grival&&S.grival[key])){
+    S.grival=S.grival||{};S.grival[key]=1;const o=groupOf(x.grp);
+    if(o)addLog(g.n+' and '+o.n+' now keep to their own ground. Crossing it is noticed.',false,'social');
+  }
+  return .22+(t-.4)*.5;
+}
+/* what a band member might do: drift back to their ground when they have wandered off */
+function groupOption(c,P,add){
+  if(!c.grp)return;const g=groupOf(c.grp);if(!g)return;
+  const d=Math.hypot(c.x-g.hx,(c.y-g.hy)*1.4);
+  if(d>(g.r||30)*1.3){
+    const sc=(d/(g.r||30)-1)*.25+(1-c.soc)*.4+((c.px&&c.px.terr)||.4)*.3-.05;
+    if(sc>.3)add('gather',sc,()=>{go(c,g.hx+rnd(-g.r*.6,g.r*.6),g.hy+rnd(-g.r*.3,g.r*.3));c.state='wander';c.t=10});
+  }
+}
+function groupsHtml(){
+  const G2=S.groups||[];
+  if(!G2.length)return '<h4>Bands</h4><div class="dim">Nobody has formed a band yet. Friends who stay close for long enough will.</div>';
+  let h='<h4>Bands</h4><div class="dim" style="margin-bottom:6px">Mutual friends settle together on a patch of ground. Strangers on it are noticed.</div>';
+  h+=G2.map(g=>'<div class="cust"><b><span style="color:'+BANDCOL[g.col%BANDCOL.length]+'">●</span> '+esc(g.n)+'</b> <small class="dim">'+g.k+' members, since day '+g.d+'</small></div>').join('');
+  const riv=Object.keys(S.grival||{}).length;
+  if(riv)h+='<div class="mono">'+riv+' pair'+(riv>1?'s':'')+' of bands keep to their own ground.</div>';
+  h+='<div class="acts" style="margin:8px 0"><button data-s="terr">'+(ui.terr?'Hide territories':'Show territories')+'</button></div>';
+  return h;
+}
+function drawSocialLayer(t,vx,vy){
+  drawZones(t,vx,vy);
+  // signals: a ring that grows from the sender, in the color of the kind
+  for(const id in SIGV){
+    const s=SIGV[id],a=S.time-s.t;if(a>1.6){delete SIGV[id];continue}
+    const c=byId(+id);if(!c||c.x<vx-30||c.x>vx+VW+30||c.y<vy-30||c.y>vy+VH+30)continue;
+    const r=3+a*14,al=(1-a/1.6)*.8,n=Math.max(10,Math.round(r*1.6));
+    cx.fillStyle=SIGK[s.k].col;cx.globalAlpha=al;
+    for(let i=0;i<n;i++){const an=i/n*6.283;cx.fillRect(Math.round(c.x+Math.cos(an)*r),Math.round(c.y-3+Math.sin(an)*r*.5),1,1)}
+    cx.globalAlpha=1;
+  }
+  if(ui.terr&&S.groups)S.groups.forEach(g=>{
+    if(g.hx<vx-80||g.hx>vx+VW+80||g.hy<vy-60||g.hy>vy+VH+60)return;
+    cx.fillStyle=BANDCOL[g.col%BANDCOL.length];cx.globalAlpha=.55;const r=g.r||30,n=Math.round(r*1.4);
+    for(let i=0;i<n;i+=2){const an=i/n*6.283;cx.fillRect(Math.round(g.hx+Math.cos(an)*r),Math.round(g.hy+Math.sin(an)*r*.71),1,1)}
+    cx.globalAlpha=.12;cx.fillRect(Math.round(g.hx)-1,Math.round(g.hy)-1,3,3);cx.globalAlpha=1;
+  });
+}
+/* the body language itself: a shake for a warning, a hop for a call, a sway for a hum */
+function sigBody(c,t){
+  const s=SIGV[c.id];if(!s)return 0;const a=S.time-s.t;if(a>1.4)return 0;
+  if(s.k==='warn'||s.k==='help')return ((t*34|0)%2)?1:-1;
+  if(s.k==='calm')return Math.round(Math.sin(t*3));
+  return 0;
+}
+const sigHop=(c,t)=>{const s=SIGV[c.id];if(!s)return 0;const a=S.time-s.t;if(a>1.4||(s.k!=='call'&&s.k!=='food'))return 0;return Math.round(Math.abs(Math.sin(t*9))*2)};
+
+/* hooks into the thinking code and the Society panel */
+{const _g=gatherTick;gatherTick=function(){_g();groupTick()}}
+{const _s=societyHtml;societyHtml=function(){return _s()+groupsHtml()+signalsHtml()}}
+
+MIG.push({to:5,fn:()=>{S.groups=S.groups||[];S.sigc=S.sigc||{};S.cr.forEach(c=>{c.rx=c.rx||{};c.sg=c.sg||{}})}});
+
+/* ---------- Phase 6: evolution, lineages, the census and discoveries ----------
+   Hard seasons favour some bodies: in a famine the frugal have more children, in a plague the hardy do, in a crowd the sociable do.
+   Over generations the colony's average genes drift, and the census draws that drift. Rare new traits are logged as mutations. Family
+   lines are tracked until they end. Discoveries are quiet one-time findings the colony makes about itself. The log can be filtered. */
+const HIST_DT=120,HIST_CAP=240;
+const PRESS={
+  famine:{n:'famine',t:'Food is short. The frugal are doing better than the rest.'},
+  plague:{n:'sickness',t:'Sickness is going round. The hardy are having more children.'},
+  crowd:{n:'crowding',t:'It is crowded. The sociable are coping better.'},
+  cold:{n:'the cold',t:'It is cold. The larger ones are keeping warm more easily.'}
+};
+function pressures(){
+  const n=S.cr.length,out={};
+  if(S.blight>0||(n>=6&&S.granary<Math.max(3,n*.12)&&S.foods.length<2))out.famine=1;
+  let sick=0,crowd=0;S.cr.forEach(c=>{if(c.sick>0)sick++;crowd+=c.nn||0});
+  if(n>=8&&sick/n>=.12)out.plague=Math.min(1,sick/n*4);
+  if(n>=40&&crowd/n>=14)out.crowd=Math.min(1,(crowd/n-12)/12);
+  if(typeof coldNow==='function'&&coldNow())out.cold=1;
+  return out;
+}
+function fitF(a,b){
+  const P=S.prs;if(!P)return 1;let f=1;
+  const g=(c,i)=>c.ge?c.ge[i]:.5,m=i=>(g(a,i)+g(b,i))/2;
+  if(P.famine)f*=1+(m(G.eff)-.5)*.9;
+  if(P.plague)f*=1+(m(G.tol)-.5)*.9*P.plague;
+  if(P.crowd)f*=1+(m(G.soc)-.5)*.6*P.crowd;
+  if(P.cold)f*=1+(m(G.size)-.5)*.7;
+  return clamp(f,.5,1.6);
+}
+function pressureLog(){
+  const now=pressures(),was=S.prs||{};
+  Object.keys(now).forEach(k=>{if(!was[k]&&(S.pressAt||{})[k]!==S.day)addLog(PRESS[k].t,false,'mutation')});
+  S.pressAt=S.pressAt||{};Object.keys(now).forEach(k=>{S.pressAt[k]=S.day});
+  S.prs=now;
+}
+
+/* ---- mutations ---- */
+function mutCheck(c,a,b){
+  if(!c.ge||!a.ge||!b.ge)return;
+  let best=-1,bd=0;
+  GENES.forEach((_,i)=>{const lo=Math.min(a.ge[i],b.ge[i]),hi=Math.max(a.ge[i],b.ge[i]),d=c.ge[i]<lo?lo-c.ge[i]:c.ge[i]>hi?c.ge[i]-hi:0;if(d>bd){bd=d;best=i}});
+  if(bd>.12){
+    c.mu=best+1;S.mutN=(S.mutN||0)+1;
+    if(S.time-(S.mutLog===undefined?-999:S.mutLog)>90){S.mutLog=S.time;addLog(c.name+' was born with '+(c.ge[best]>(a.ge[best]+b.ge[best])/2?'unusually strong ':'unusually weak ')+GENE_LABEL[best].toLowerCase()+'. Neither parent had it.',false,'mutation')}
+  }
+  if(c.hue!==a.hue&&c.hue!==b.hue){
+    c.mu=c.mu||13;S.hueMut=(S.hueMut||0)+1;
+    addLog(c.name+' was born a colour neither parent had.',false,'mutation');
+  }
+}
+
+/* ---- lineages ---- */
+function famTick(){
+  const F=S.fams||(S.fams={}),alive={};
+  S.cr.forEach(c=>{const k=c.fam||c.name,a=alive[k]||(alive[k]={n:0,g:0});a.n++;a.g=Math.max(a.g,c.gen||0)});
+  for(const k in alive){
+    const f=F[k]||(F[k]={d:S.day+1,pk:0,n:0,g:0,x:0});
+    f.n=alive[k].n;f.pk=Math.max(f.pk,f.n);f.g=Math.max(f.g,alive[k].g);f.x=0;
+  }
+  for(const k in F){
+    if(alive[k])continue;
+    if(F[k].pk<2){delete F[k];continue}
+    if(!F[k].x){F[k].x=S.day+1;F[k].n=0;S.extinct=(S.extinct||0)+1;addLog('The '+k+' line has ended. Nobody carries the name now.',true,'death')}
+  }
+  const ks=Object.keys(F);
+  if(ks.length>40)ks.filter(k=>F[k].x).sort((a,b)=>F[a].pk-F[b].pk).slice(0,ks.length-40).forEach(k=>delete F[k]);
+}
+
+/* ---- history samples ---- */
+function maxGen(){let m=0;S.cr.forEach(c=>{if((c.gen||0)>m)m=c.gen||0});return m}
+function sample(){
+  const H=S.hist||(S.hist=[]),n=S.cr.length,avg=i=>n?S.cr.reduce((s,c)=>s+(c.ge?c.ge[i]:.5),0)/n:0;
+  H.push([Math.round(S.time/60),n,S.born||0,S.deaths||0,r2(avg(G.eff)),r2(avg(G.tol)),r2(avg(G.soc)),r2(avg(G.size)),r2(genDiversity()),maxGen()]);
+  if(H.length>HIST_CAP)H.shift();
+  famTick();
+}
+function evoTick(dt){
+  S.hT=(S.hT||0)+dt;S.pT=(S.pT||0)+dt;
+  if(S.pT>=10){S.pT=0;pressureLog();discTick()}
+  if(S.hT>=HIST_DT){S.hT=0;sample()}
+}
+{const _l=lifeTick;lifeTick=function(dt,off){_l(dt,off);evoTick(dt)}}
+
+/* ---- discoveries ---- */
+const DISC=[
+  {k:'band',n:'A band',x:'Some of them have grown so close that they move as one group.',h:'Friendship might harden into something larger.',t:()=>(S.groups||[]).length>0},
+  {k:'signal',n:'Body language',x:'They have started to signal each other without words.',h:'Something might happen before there are words for it.',t:()=>Object.keys(S.sigc||{}).length>0},
+  {k:'understood',n:'Understanding',x:'A signal is now understood by most of those who see it.',h:'Meaning has to be learned.',t:()=>Object.keys(SIGK).some(k=>(S.sigc||{})[k]&&sigMeaning(k).share>.3)},
+  {k:'mutation',n:'Something new',x:'A child was born with a trait neither parent had.',h:'Children are not always copies.',t:()=>(S.mutN||0)>0||(S.hueMut||0)>0},
+  {k:'colour',n:'A new colour',x:'A child was born a colour neither parent had.',h:'',t:()=>(S.hueMut||0)>0},
+  {k:'share',n:'Sharing',x:'One of them gave food to another without being asked.',h:'Hunger and kindness can meet.',t:()=>((S.pl||{}).shared||0)>0},
+  {k:'help',n:'Help',x:'One of them went to a sick neighbour and stayed.',h:'Someone might notice when another is unwell.',t:()=>((S.pl||{}).helped||0)>0},
+  {k:'scar',n:'A scar',x:'Someone refuses to go near the place where they were hurt.',h:'They might remember where it hurt.',t:()=>S.cr.some(c=>(c.mem||[]).some(m=>m[3]<-.5&&memW(m)>.3))},
+  {k:'habit',n:'A habit',x:'Someone has learned that one way of acting works better than the rest.',h:'Repeating what works.',t:()=>S.cr.some(c=>c.q&&Object.keys(c.q).some(k=>k!=='routine'&&Math.abs(c.q[k]-(c.q.routine||0))>.4))},
+  {k:'grand',n:'Three generations',x:'A grandparent, a parent and a child are alive at the same time.',h:'Families need time.',t:()=>{const M=new Map(S.cr.map(c=>[c.id,c]));return S.cr.some(c=>c.par&&c.par.some(p=>{const q=M.get(p);return q&&q.par&&q.par.some(g=>M.get(g))}))}},
+  {k:'rival',n:'Borders',x:'Two bands now keep to their own ground.',h:'Friends and strangers are not the same.',t:()=>Object.keys(S.grival||{}).length>0},
+  {k:'extinct',n:'A line ends',x:'A family line has died out.',h:'Not every line lasts.',t:()=>(S.extinct||0)>0},
+  {k:'diverse',n:'No two alike',x:'The colony is no longer made of near-copies.',h:'Over generations they drift apart.',t:()=>S.cr.length>=12&&genDiversity()>.3},
+  {k:'adapt',n:'Adaptation',x:'The colony has changed with its hard seasons: its average traits have moved.',h:'Hard seasons favour some bodies.',t:()=>{const H=S.hist||[];if(H.length<4)return false;const a=H[0],b=H[H.length-1];return Math.abs(b[4]-a[4])>.05||Math.abs(b[5]-a[5])>.05||Math.abs(b[6]-a[6])>.05}}
+];
+const DISCI={};DISC.forEach(d=>{DISCI[d.k]=d});
+function discover(k){
+  const d=DISCI[k];if(!d)return false;S.disc=S.disc||{};if(S.disc[k])return false;
+  S.disc[k]=S.day+1;S.culture+=3;S.glow+=3;
+  addLog('Discovery: '+d.n+'. '+d.x,false,'discovery');
+  return true;
+}
+function discTick(){
+  if(S.cr.length<3)return;
+  S.disc=S.disc||{};
+  for(let i=0;i<DISC.length;i++){const d=DISC[i];if(!S.disc[d.k]&&d.t())discover(d.k)}
+}
+ui.hooks.discover=discover;
+
+/* ---- the log, filtered ---- */
+const LOGF=[['all','All'],['birth','Births'],['death','Deaths'],['rel','Relationships'],['discovery','Discoveries'],['mutation','Mutations'],['social','Social'],['mile','Milestones']];
+function logCat(t){
+  if(/^Discovery:/.test(t))return 'discovery';
+  if(/^Population \d+/.test(t)||/milestone/i.test(t))return 'mile';
+  if(/was born|were born|new light|came into the world|a child|hatch|newborn/i.test(t))return 'birth';
+  if(/\bdied\b|\bdies\b|killed|lived out|passed away|did not wake|faded|buried|grave|\bgone\b|sacrific|line has ended|starved/i.test(t))return 'death';
+  if(/married|joined hands|wedding|friends|friendship|cannot stand|rival|quarrel|argued|fell out|partner|in love/i.test(t))return 'rel';
+  if(/band|signal|gathered|taught|sang|council|law|feast|church|prayer|customs?|word for|new word|drifted apart/i.test(t))return 'social';
+  return '';
+}
+function logHtml(){
+  const f=ui.logF||'all';
+  const L=S.log.filter(e=>f==='all'||(e.c||logCat(e.t))===f);
+  return '<li class="none">'.slice(0,0)+(L.length?L.map(e=>'<li'+(e.e?' class="e"':'')+'><small>Day '+e.d+'</small>'+esc(e.t)+'</li>').join(''):'<li class="dim">Nothing of that kind has happened yet.</li>');
+}
+function logChips(){
+  const f=ui.logF||'all',cnt={};S.log.forEach(e=>{const c=e.c||logCat(e.t);cnt[c]=(cnt[c]||0)+1});
+  return LOGF.map(p=>'<button data-lf="'+p[0]+'"'+(p[0]===f?' class="on"':'')+'>'+p[1]+(p[0]!=='all'&&cnt[p[0]]?' <small>'+cnt[p[0]]+'</small>':'')+'</button>').join('');
+}
+
+/* ---- the census ---- */
+function spark(vals,w,h,col,lo,hi){
+  if(vals.length<2)return '';
+  lo=lo===undefined?Math.min(...vals):lo;hi=hi===undefined?Math.max(...vals):hi;if(hi-lo<1e-6){hi=lo+1}
+  const pts=vals.map((v,i)=>(i/(vals.length-1)*w).toFixed(1)+','+(h-2-(v-lo)/(hi-lo)*(h-4)).toFixed(1));
+  return '<svg viewBox="0 0 '+w+' '+h+'" width="100%" height="'+h+'" preserveAspectRatio="none" aria-hidden="true"><polyline points="'+pts.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="1.5" vector-effect="non-scaling-stroke"/></svg>';
+}
+function censusHtml(){
+  const n=S.cr.length,H=S.hist||[],P=S.prs||{};
+  let h='<div class="mono">Now '+n+' · born '+(S.born||0)+' · died '+(S.deaths||0)+' · peak '+(S.peak||n)+' · generation '+maxGen()+' · variety '+Math.round(genDiversity()*100)+'%</div>';
+  h+='<h4>Population</h4>';
+  if(H.length>=2){
+    const pops=H.map(r=>r[1]);
+    h+='<div class="chart">'+spark(pops,300,80,'var(--moss)',0)+'</div><div class="mono dim">Last '+Math.max(1,H[H.length-1][0]-H[0][0])+' minutes, from '+Math.min(...pops)+' to '+Math.max(...pops)+'.</div>';
+  }else h+='<div class="dim">The census takes a count every two minutes. Check back soon.</div>';
+  h+='<h4>Pressure</h4>';
+  const pk=Object.keys(P);
+  h+=pk.length?pk.map(k=>'<div>'+esc(PRESS[k].t)+'</div>').join(''):'<div class="dim">Nothing is pressing on them right now.</div>';
+  h+='<h4>What they are becoming</h4>';
+  if(H.length>=2){
+    const rows=[['Frugality',4,G.eff],['Hardiness',5,G.tol],['Sociability',6,G.soc],['Size',7,G.size]];
+    h+=rows.map(r=>{const v=H.map(x=>x[r[1]]),d=v[v.length-1]-v[0];
+      return '<div class="trend"><span>'+r[0]+'</span><div>'+spark(v,120,22,'var(--glow)',0,1)+'</div><b>'+Math.round(v[v.length-1]*100)+'%</b><small class="dim">'+(Math.abs(d)<.02?'steady':(d>0?'up ':'down ')+Math.round(Math.abs(d)*100))+'</small></div>'}).join('');
+  }else h+='<div class="dim">Needs a few counts to show a trend.</div>';
+  const gens={};S.cr.forEach(c=>{const g=Math.min(8,c.gen||0);gens[g]=(gens[g]||0)+1});
+  const gk=Object.keys(gens).map(Number).sort((a,b)=>a-b),mx=Math.max(1,...gk.map(k=>gens[k]));
+  h+='<h4>Generations alive</h4>'+gk.map(k=>'<div class="gbar"><span>'+(k===0?'First':k===8?'8+':'Gen '+k)+'</span><i style="width:'+Math.max(2,Math.round(gens[k]/mx*100))+'%"></i><b>'+gens[k]+'</b></div>').join('');
+  const F=S.fams||{},fk=Object.keys(F).filter(k=>F[k].pk>=2).sort((a,b)=>(F[b].x?0:1)-(F[a].x?0:1)||F[b].n-F[a].n||F[b].pk-F[a].pk);
+  h+='<h4>Family lines</h4>';
+  h+=fk.length?fk.slice(0,12).map(k=>{const f=F[k];return '<div class="cust'+(f.x?' locked':'')+'"><b>'+esc(k)+'</b> <small class="dim">'+(f.x?'ended on day '+f.x+' · ':'')+'since day '+f.d+' · '+(f.x?'':f.n+' alive · ')+'peak '+f.pk+' · '+(f.g?f.g+' generation'+(f.g>1?'s':''):'founders')+'</small></div>'}).join(''):'<div class="dim">Family lines appear once a couple has children.</div>';
+  const got=DISC.filter(d=>(S.disc||{})[d.k]);
+  h+='<h4>Discoveries '+got.length+' of '+DISC.length+'</h4>';
+  h+=DISC.map(d=>{const day=(S.disc||{})[d.k];return day?'<div class="cust"><b>'+esc(d.n)+'</b> <small class="dim">day '+day+'</small><div>'+esc(d.x)+'</div></div>':'<div class="cust locked"><b>???</b><div>'+esc(d.h||'Not yet.')+'</div></div>'}).join('');
+  return h;
+}
+
+MIG.push({to:6,fn:()=>{S.hist=S.hist||[];S.fams=S.fams||{};S.disc=S.disc||{};S.prs={};}});
+
+/* ---------- Phase 7: climate, zones, the Protect tool and experiment colonies ----------
+   Temperature is continuous: it follows the time of day, a slow season, the weather and the cold that comes when the fires run out. Each Dimling has
+   a comfortable temperature (the larger ones like it a little cooler), shelter softens extremes, and real extremes hurt the unsheltered.
+   Zones are places the colony treats specially: danger zones (where lightning struck or sickness started) frighten and hurt and are avoided and warned
+   about, and safe zones are made by the Big One's Protect tool. An experiment is a separate colony with its own rules, to watch evolution without risk. */
+const TEMPW={clear:0,cloud:-.03,rain:-.08,heat:.24,fog:-.04};
+function tempTarget(){
+  const day=Math.cos((phase()-.4)*6.2832)*.12,season=Math.sin(S.day/18*6.2832)*.08;
+  return clamp(.5+day+season+(TEMPW[S.weather]||0)-(S.storm>0?.08:0)-(S.cold>0?Math.min(3,S.cold)*.04+.04:0)-(S.exp&&S.exp.pres==='cold'?.14:0),.04,.96);
+}
+function climateTick(dt){
+  if(S.temp===undefined)S.temp=tempTarget();
+  S.temp=Math.round((S.temp+(tempTarget()-S.temp)*Math.min(1,dt*.04))*1000)/1000;
+}
+function coldNow(){return (S.temp!==undefined&&S.temp<.3)||S.cold>0}
+const tempWord=t=>t<.2?'freezing':t<.33?'cold':t<.45?'cool':t<.6?'mild':t<.72?'warm':'hot';
+const idealT=c=>.52-((c.ge?c.ge[G.size]:.5)-.5)*.2;
+function tempAt(c){
+  let t=S.temp===undefined?.5:S.temp;
+  if(sheltered(c))t+=(.52-t)*.55;
+  const z=zoneAt(c);if(z&&z.k==='safe')t+=(.52-t)*.25;
+  return t;
+}
+climateComfort=function(c){
+  const dev=Math.abs(tempAt(c)-idealT(c)),tol=c.ge?c.ge[G.tol]:.5;
+  return -Math.max(0,dev-.12-tol*.06)*1.8;
+};
+function feelWord(c){const d=tempAt(c)-idealT(c);return d<-.3?'freezing':d<-.12?'cold':d>.3?'scorching':d>.12?'hot':'comfortable'}
+function climateTickC(c,d){ // real extremes hurt anyone who is out in them
+  const dev=Math.abs(tempAt(c)-idealT(c)),tol=c.ge?c.ge[G.tol]:.5;
+  if(dev>.3)c.hp=Math.max(0,c.hp-.0025*d*(1-tol*.5));
+}
+
+/* ---- zones ---- */
+function addZone(k,x,y,r,mins){
+  const Z=S.zones||(S.zones=[]);
+  S.zn=(S.zn||0)+1;Z.push({id:S.zn,k,x:Math.round(x),y:Math.round(y),r,t0:Math.round(S.time),t1:Math.round(S.time+mins*60)});
+  if(Z.length>24)Z.splice(0,Z.length-24);
+}
+function zoneAt(c){
+  const Z=S.zones;if(!Z||!Z.length)return null;let d=null;
+  for(let i=0;i<Z.length;i++){const z=Z[i];if(S.time>z.t1)continue;if(Math.hypot(c.x-z.x,(c.y-z.y)*1.4)<z.r){if(z.k==='safe')return z;d=d||z}}
+  return d;
+}
+function dangerAt(x,y){const Z=S.zones;if(!Z)return false;for(let i=0;i<Z.length;i++){const z=Z[i];if(z.k==='danger'&&S.time<=z.t1&&Math.hypot(x-z.x,(y-z.y)*1.4)<z.r+6)return true}return false}
+function zoneTickC(c,d,P,zn,hm){
+  if(zn.k==='danger'){
+    if(!hm)c.hp=Math.max(0,c.hp-.004*d);
+    P.thr=Math.max(P.thr,.4);c.thr=Math.max(c.thr||0,.4);c.tpx=zn.x;c.tpy=zn.y; // they know to get out, and tell the others
+  }
+}
+function zoneGlobal(){
+  const Z=S.zones;if(!Z||!Z.length)return;
+  const keep=Z.filter(z=>S.time<=z.t1+30);if(keep.length!==Z.length)S.zones=keep;
+}
+function activeProtect(){return (S.zones||[]).filter(z=>z.k==='safe'&&S.time<=z.t1)}
+function protectAt(x,y,r,mins,cost){
+  if(S.glow<cost)return 'You do not have enough glow.';
+  if(S.time-(S.protAt===undefined?-999:S.protAt)<10)return 'Wait a moment before protecting another place.';
+  const act=activeProtect();
+  if(act.length>=3){const old=act.sort((a,b)=>a.t1-b.t1)[0];old.t1=Math.round(S.time)-1}
+  S.glow-=cost;S.protAt=Math.round(S.time);
+  addZone('safe',x,y,r,mins);
+  S.cr.forEach(c=>{if(Math.hypot(c.x-x,(c.y-y)*1.4)<r){c.sf=r2(clamp((c.sf||.6)+.25,0,1));c.joy=clamp(c.joy+.04,0,1);if(c.op!==undefined)opin(c,.01)}});
+  pl('protect');addLog('You made this place safe. Those near it feel it, though nobody knows how.',false,'social');
+  if(ui.hooks.discover)ui.hooks.discover('zone');
+  return '';
+}
+
+function drawZones(t,vx,vy){
+  const Z=S.zones;if(!Z)return;
+  Z.forEach(z=>{
+    if(S.time>z.t1||z.x<vx-80||z.x>vx+VW+80||z.y<vy-60||z.y>vy+VH+60)return;
+    const left=Math.min(1,(z.t1-S.time)/30),pulse=.5+.5*Math.sin(t*2+z.id),r=z.r,ry=Math.round(r*.71),safe=z.k==='safe';
+    cx.fillStyle=safe?'#8ee8a0':'#ff6a6a';
+    cx.globalAlpha=(.07+.05*pulse)*left; // soft wash first, so the ring reads against grass
+    for(let dy=-ry;dy<=ry;dy++){const hw=Math.round(r*Math.sqrt(Math.max(0,1-(dy*dy)/(ry*ry))));cx.fillRect(z.x-hw,z.y+dy,hw*2,1)}
+    const n=Math.round(r*3.8);cx.globalAlpha=(.5+.3*pulse)*left;
+    for(let i=0;i<n;i++){const an=i/n*6.283;if(!safe&&((i+Math.floor(t*6))&3)===0)continue; // danger flickers
+      cx.fillRect(Math.round(z.x+Math.cos(an)*r),Math.round(z.y+Math.sin(an)*ry),1,1)}
+    cx.globalAlpha=.8*left;
+    for(let k=0;k<4;k++){ // motes: safe ones drift up like warm sparks, danger ones jitter
+      const ph=(t*.35+k*.25+z.id*.13)%1,mx=z.x+Math.sin(t*.9+k*1.7+z.id)*r*.6;
+      const my=safe?z.y+ry*.5-ph*ry*1.1:z.y+Math.sin(t*3+k*2)*ry*.5;
+      cx.globalAlpha=(safe?Math.sin(ph*3.14):.5+.4*Math.sin(t*8+k))*left*.9;
+      cx.fillRect(Math.round(mx),Math.round(my),1,safe?2:1);
+    }
+    cx.globalAlpha=1;
+  });
+}
+/* ---- experiments ---- */
+const EXP_MUT=[[1,'Normal mutation'],[3,'Mutation ×3'],[8,'Mutation ×8']];
+const EXP_PRES=[['','No special pressure'],['famine','Famine favours the frugal'],['plague','Plague favours the hardy'],['cold','Cold favours the large']];
+const EXP_POP=[[3,'Start with 3'],[12,'Start with 12'],[30,'Start with 30']];
+function setupExperiment(o){
+  S.exp={mut:+o.mut||1,pres:o.pres||'',pop:+o.pop||3};S.mut=S.exp.mut;
+  for(let i=S.cr.length;i<S.exp.pop;i++){const c=mkC(OX+110+rnd(-30,30),OY+95+rnd(-12,12));c.age=ADULT+LD*rnd(0,2);c.grown=true;S.cr.push(c)}
+  addLog('This is an experiment. It is its own colony: nothing here touches your real one. '+(S.exp.pres?PRESS[S.exp.pres].t:'There is no special pressure.'),true);
+}
+function expLabel(){
+  if(!S.exp)return '';
+  return 'Experiment · '+(S.exp.mut>1?'mutation ×'+S.exp.mut+' · ':'')+(S.exp.pres?PRESS[S.exp.pres].n+' · ':'')+'separate from your real colony';
+}
+function slotGenes(o){
+  const a=o.cr.filter(c=>c.ge);if(!a.length)return null;
+  const m=i=>Math.round(a.reduce((s,c)=>s+c.ge[i],0)/a.length*100);
+  let g=0;a.forEach(c=>{g=Math.max(g,c.gen||0)});
+  return {n:o.cr.length,eff:m(G.eff),tol:m(G.tol),soc:m(G.soc),size:m(G.size),gen:g,day:(o.day|0)+1};
+}
+function compareHtml(){
+  if(typeof readSlot!=='function')return '';
+  const rows=[];
+  for(let i=0;i<SLOTS.length;i++){
+    let g=null,exp=false;
+    if(i===ui.slot&&S){g=slotGenes(S);exp=!!S.exp}
+    else{const r=readSlot(i);if(r&&r.o&&r.o.cr){g=slotGenes(r.o);exp=!!r.o.exp}}
+    if(g)rows.push('<tr><td>'+(exp?'Experiment':'Colony')+' '+(i+1)+(i===ui.slot?' (here)':'')+'</td><td>'+g.n+'</td><td>'+g.gen+'</td><td>'+g.eff+'</td><td>'+g.tol+'</td><td>'+g.soc+'</td><td>'+g.size+'</td></tr>');
+  }
+  if(rows.length<2)return '';
+  return '<h4>Compare colonies</h4><div class="dim" style="margin-bottom:6px">Average genes (%) in each colony, as last saved. Only the colony you are in is running.</div><div style="overflow-x:auto"><table class="cmp"><tr><th></th><th>Pop</th><th>Gen</th><th>Frug</th><th>Hard</th><th>Soc</th><th>Size</th></tr>'+rows.join('')+'</table></div>';
+}
+{const _c=censusHtml;censusHtml=function(){return (S.exp?'<div class="mono" style="color:var(--eerie)">'+esc(expLabel())+'</div>':'')+_c()+compareHtml()}}
+{const _p=pressures;pressures=function(){const o=_p();if(S.exp&&S.exp.pres)o[S.exp.pres]=1;return o}}
+
+/* ---- hooks ---- */
+{const _l=lifeTick;lifeTick=function(dt,off){_l(dt,off);climateTick(dt);zoneGlobal()}}
+DISC.push(
+  {k:'zone',n:'A safe place',x:'You made a place safe, and they felt it.',h:'Power can be used gently.',t:()=>false},
+  {k:'danger',n:'A place to avoid',x:'Something frightening happened somewhere, and now they keep away from it.',h:'Where a bad thing happens, they remember.',t:()=>(S.zones||[]).some(z=>z.k==='danger')},
+  {k:'cold',n:'The cold',x:'It got cold enough that they had to huddle together and find shelter.',h:'Weather is not only rain.',t:()=>S.cr.length>=4&&S.temp!==undefined&&S.temp<.26},
+  {k:'expt',n:'An experiment',x:'You started a colony with its own rules, to see what would happen.',h:'A colony does not have to be real.',t:()=>!!S.exp}
+);
+DISC.forEach(d=>{DISCI[d.k]=d});
+
+MIG.push({to:7,fn:()=>{S.zones=S.zones||[];if(S.temp===undefined)S.temp=tempTarget()}});
+
+/* ---------- Phase 7: sound ----------
+   Everything you hear is synthesized live with WebAudio (oscillators and noise): there are no recordings. Nothing starts until the first tap, because
+   browsers do not allow it and because a game should not make noise before you ask. There is a low drone that bends with dread, wind, rain that
+   follows the weather, a few cues for births, deaths, discoveries and warnings, and tiny speech blips for creatures you can see. Volume is saved. If the
+   browser has no WebAudio, or anything throws, sound quietly stays off and the game goes on. Sound never touches the seeded simulation (Math.random only). */
+const Snd={ctx:null,m:null,vol:50,mute:false,hold:0,t:0,last:{},win:[],blipT:0,ut:0,rain:null,wind:null,drone:null,d1:null,d2:null,broken:false,nz:null,nightT:0};
+Snd.has=()=>!Snd.broken&&(typeof AudioContext!=='undefined'||typeof webkitAudioContext!=='undefined');
+Snd.level=()=>Snd.mute||Snd.vol<=0?0:Math.pow(Snd.vol/100,2)*.7;
+Snd.load=function(){
+  const s=lsGet('dimlings.vol');if(!s)return;
+  const a=String(s).split(',');const v=parseInt(a[0],10);
+  if(v>=0&&v<=100)Snd.vol=v;Snd.mute=a[1]==='1';
+};
+Snd.save=function(){lsSet('dimlings.vol',Snd.vol+','+(Snd.mute?1:0))};
+Snd.unlock=function(){
+  if(!Snd.has())return false;
+  try{
+    if(Snd.ctx){if(Snd.ctx.state!=='running'&&Snd.ctx.resume)Snd.ctx.resume();return true}
+    const AC=typeof AudioContext!=='undefined'?AudioContext:webkitAudioContext,x=new AC();
+    Snd.ctx=x;Snd.ut=(typeof performance!=='undefined'?performance.now():0);
+    const m=x.createGain();m.gain.value=0;m.connect(x.destination);Snd.m=m;
+    // noise: two seconds, looped, shared by rain, wind and thunder
+    const n=Math.max(1,Math.floor(x.sampleRate*2)),buf=x.createBuffer(1,n,x.sampleRate),ch=buf.getChannelData(0);
+    for(let i=0;i<n;i++)ch[i]=Math.random()*2-1;
+    Snd.nz=buf;
+    const loop=()=>{const s=x.createBufferSource();s.buffer=buf;s.loop=true;return s};
+    const rs=loop(),rf=x.createBiquadFilter(),rg=x.createGain();rf.type='highpass';rf.frequency.value=1100;rg.gain.value=0;rs.connect(rf);rf.connect(rg);rg.connect(m);rs.start();Snd.rain=rg;
+    const ws=loop(),wf=x.createBiquadFilter(),wg=x.createGain();wf.type='lowpass';wf.frequency.value=420;wg.gain.value=0;ws.connect(wf);wf.connect(wg);wg.connect(m);ws.start();Snd.wind=wg;
+    const dg=x.createGain();dg.gain.value=0;dg.connect(m);Snd.drone=dg;
+    const d1=x.createOscillator(),d2=x.createOscillator(),d3=x.createOscillator(),lf=x.createOscillator(),lg=x.createGain();
+    d1.type='sine';d1.frequency.value=55;d2.type='sine';d2.frequency.value=55.6;d3.type='triangle';d3.frequency.value=82.4;
+    const f3=x.createGain();f3.gain.value=.35;d3.connect(f3);f3.connect(dg);d1.connect(dg);d2.connect(dg);
+    lf.type='sine';lf.frequency.value=.07;lg.gain.value=.012;lf.connect(lg);lg.connect(dg.gain);
+    d1.start();d2.start();d3.start();lf.start();Snd.d1=d1;Snd.d2=d2;
+    m.gain.setTargetAtTime(Snd.level(),x.currentTime,.6);
+    if(x.state==='suspended'&&x.resume)x.resume();
+    Snd.paint();
+    return true;
+  }catch(e){Snd.broken=true;Snd.ctx=null;Snd.m=null;Snd.paint();return false}
+};
+Snd.gesture=function(){
+  if(Snd.ctx&&Snd.ctx.state==='running')return;
+  const had=!!Snd.ctx;Snd.unlock();
+  if(!had&&Snd.ctx)Snd.paint();
+};
+Snd.apply=function(){if(Snd.ctx&&Snd.m){try{Snd.m.gain.setTargetAtTime(Snd.level(),Snd.ctx.currentTime,.12)}catch(e){}}};
+Snd.setVol=function(v){Snd.vol=clamp(Math.round(+v||0),0,100);if(Snd.vol>0)Snd.mute=false;Snd.save();Snd.apply();Snd.paint()};
+Snd.setMute=function(m){Snd.mute=!!m;if(!Snd.mute&&Snd.vol<=0)Snd.vol=50;Snd.save();Snd.apply();Snd.paint()};
+Snd.vis=function(){
+  const x=Snd.ctx;if(!x)return;
+  try{if(document.hidden){if(x.state==='running'&&x.suspend)x.suspend()}else if(x.state!=='running'&&x.resume)x.resume()}catch(e){}
+};
+Snd.inView=c=>typeof cam!=='undefined'&&typeof VW!=='undefined'&&c.x>cam.x-10&&c.x<cam.x+VW+10&&c.y>cam.y-10&&c.y<cam.y+VH+10;
+
+/* ---- the ambient layers follow the world, a few times a second ---- */
+Snd.tick=function(dt){
+  if(!Snd.ctx||(Snd.t+=dt)<.4)return;Snd.t=0;
+  const x=Snd.ctx;if(x.state!=='running'||!S)return;
+  try{
+    const now=x.currentTime,ph=phase(),night=Math.max(0,Math.min(1,Math.cos((ph-.9)*6.2832)*1.3));
+    const rain=S.storm>0?1:S.weather==='rain'?.6:0,dread=clamp((S.gloom||0)+Math.min(.5,(S.attn||0)/120),0,1);
+    Snd.m.gain.setTargetAtTime(Snd.level(),now,.25);
+    Snd.rain.gain.setTargetAtTime(rain*.2,now,.8);
+    Snd.wind.gain.setTargetAtTime(.012+(S.weather==='cloud'||S.weather==='fog'?.03:0)+(S.storm>0?.09:0)+night*.006,now,1.5);
+    Snd.drone.gain.setTargetAtTime(.04+dread*.035+night*.012,now,2);
+    Snd.d1.frequency.setTargetAtTime(night>.5?49:55,now,3);
+    Snd.d2.frequency.setTargetAtTime((night>.5?49.6:55.6)+dread*2.4,now,3);
+    if(night>.5&&S.weather!=='rain'&&!(S.storm>0)&&Snd.level()>0&&(ui.speed||1)<=1&&Math.random()<.22&&now-Snd.nightT>1.6){
+      Snd.nightT=now;const f=3500+Math.random()*700;Snd.tone(f,0,.05,'sine',.006);Snd.tone(f,.09,.05,'sine',.006);Snd.tone(f*1.01,.18,.05,'sine',.005);
+    }
+  }catch(e){}
+};
+
+/* ---- one voice: a tone with an envelope that frees itself when it ends ---- */
+Snd.tone=function(f,at,dur,type,gain,to,att){
+  const x=Snd.ctx;if(!x||!Snd.m)return;
+  const t=x.currentTime+at,o=x.createOscillator(),g=x.createGain();
+  o.type=type||'sine';o.frequency.setValueAtTime(f,t);if(to)o.frequency.exponentialRampToValueAtTime(to,t+dur);
+  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(gain,t+(att||.012));g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g);g.connect(Snd.m);o.start(t);o.stop(t+dur+.05);
+  o.onended=()=>{try{o.disconnect();g.disconnect()}catch(e){}};
+};
+Snd.rumble=function(dur,gain,f){
+  const x=Snd.ctx;if(!x||!Snd.nz)return;
+  const t=x.currentTime,s=x.createBufferSource(),lp=x.createBiquadFilter(),g=x.createGain();
+  s.buffer=Snd.nz;lp.type='lowpass';lp.frequency.value=f||170;
+  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(gain,t+.08);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  s.connect(lp);lp.connect(g);g.connect(Snd.m);s.start(t);s.stop(t+dur+.05);
+  s.onended=()=>{try{s.disconnect();lp.disconnect();g.disconnect()}catch(e){}};
+};
+const SND_CUES={
+  birth(){Snd.tone(659.25,0,.38,'triangle',.07);Snd.tone(880,.11,.55,'triangle',.07)},
+  death(){Snd.tone(220,0,1.3,'sine',.06,164.8);Snd.tone(110,0,1.7,'sine',.04)},
+  discovery(){Snd.tone(880,0,1.5,'sine',.06);Snd.tone(2429,0,.8,'sine',.02);Snd.tone(4752,0,.4,'sine',.01)},
+  mutation(){[1200,1500,1900].forEach((f,i)=>Snd.tone(f,i*.07,.35,'sine',.03,f*1.5))},
+  mile(){[523.25,659.25,783.99,1046.5].forEach((f,i)=>Snd.tone(f,i*.09,.5,'triangle',.06))},
+  eerie(){Snd.tone(73.4,0,3.6,'sine',.05,null,1.4);Snd.tone(77.8,0,3.6,'sine',.04,null,1.6)},
+  warn(){Snd.tone(988,0,.09,'triangle',.05);Snd.tone(988,.14,.09,'triangle',.05)},
+  call(){Snd.tone(600,0,.18,'sine',.05,1000);Snd.tone(650,.22,.18,'sine',.04,1050)},
+  calm(){Snd.tone(330,0,.7,'sine',.04,294,.1)},
+  food(){Snd.tone(784,0,.09,'triangle',.05);Snd.tone(988,.1,.12,'triangle',.05)},
+  protect(){Snd.tone(261.6,0,1.3,'sine',.04,null,.15);Snd.tone(329.6,.05,1.3,'sine',.035,null,.15);Snd.tone(392,.1,1.3,'sine',.03,null,.15)},
+  thunder(){Snd.rumble(2.4,.22,170);Snd.tone(46,0,1.8,'sine',.09,38)},
+  sign(){Snd.tone(520,0,.14,'triangle',.04)}
+};
+const SND_GAP={birth:1,death:1.5,discovery:2,mutation:2,mile:3,eerie:6,warn:.6,call:.6,calm:1.5,food:1,protect:1,thunder:4,sign:.3};
+Snd.cue=function(kind,force){
+  const x=Snd.ctx,f=SND_CUES[kind];if(!x||!f)return false;
+  try{
+    if(!force){
+      if(Snd.hold||Snd.mute||Snd.vol<=0||x.state!=='running'||(typeof ui!=='undefined'&&(ui.speed||1)>1))return false;
+      const now=x.currentTime;
+      if(now-(Snd.last[kind]===undefined?-99:Snd.last[kind])<(SND_GAP[kind]||1))return false;
+      Snd.win=Snd.win.filter(t=>now-t<3);if(Snd.win.length>=4)return false; // never a wall of cues in a crowd
+      Snd.win.push(now);Snd.last[kind]=now;
+    }
+    f();return true;
+  }catch(e){return false}
+};
+Snd.say=function(c,w){
+  const x=Snd.ctx;if(!x||Snd.hold||Snd.mute||Snd.vol<=0||x.state!=='running'||(ui.speed||1)>1||!Snd.inView(c))return;
+  const now=x.currentTime;if(now-Snd.blipT<.11)return;Snd.blipT=now;
+  try{
+    const s=String(w||'a'),base=260+((c.id*53)%9)*38,n=Math.min(3,Math.max(1,Math.ceil(s.length/3)));
+    for(let i=0;i<n;i++){const ch=s.charCodeAt((i*2)%s.length)||97;Snd.tone(base*(1+((ch%7)-3)*.07),i*.07,.07,'triangle',.016)}
+  }catch(e){}
+};
+Snd.log=function(cat,eerie){
+  if(!Snd.ctx||Snd.hold)return;
+  if(cat==='birth'||cat==='death'||cat==='discovery'||cat==='mutation'||cat==='mile')Snd.cue(cat);
+  else if(eerie)Snd.cue('eerie');
+};
+Snd.sig=function(c,kind){if(Snd.ctx&&Snd.inView(c)&&SND_CUES[kind])Snd.cue(kind)};
+
+/* ---- hooks: the game keeps working exactly as before; sound only listens ---- */
+{const _a=addLog;addLog=function(t,e,c){_a(t,e,c);try{Snd.log(c,e)}catch(x){}}}
+{const _c=catchUp;catchUp=function(){Snd.hold++;try{return _c.apply(this,arguments)}finally{Snd.hold--}}}
+{const _s=sendSig;sendSig=function(c,kind){const r=_s(c,kind);if(r)Snd.sig(c,kind);return r}}
+{const _b=ui.hooks.bubble;ui.hooks.bubble=function(c,w,k){if(_b)_b(c,w,k);Snd.say(c,w)}}
+{const _e=badEvent;badEvent=function(k){const o=_e.apply(this,arguments);if(k==='storm')Snd.cue('thunder');return o}}
+{const _g=sendSign;sendSign=function(){const t=S.signAt,o=_g.apply(this,arguments);if(S.signAt!==t)Snd.cue('sign');return o}}
+{const _p=protectAt;protectAt=function(){const r=_p.apply(this,arguments);if(r==='')Snd.cue('protect');return r}}
+
+/* ---- controls ---- */
+Snd.paint=function(){
+  const b=$('bSnd'),v=$('sndVol'),m=$('sndMute'),n=$('sndNote'),p=$('sndPct'),has=Snd.has(),off=!has||Snd.mute||Snd.vol<=0;
+  if(b){b.disabled=!has;b.classList.toggle('off',off);b.textContent=off?'♪×':'♪';b.setAttribute('aria-label',off?'Sound is off. Tap to turn it on.':'Sound is on. Tap to mute.');b.title=off?'Sound off':'Sound on'}
+  if(v){v.disabled=!has;v.value=Snd.vol}
+  if(p)p.textContent=Snd.vol+'%';
+  if(m){m.disabled=!has;m.textContent=Snd.mute||Snd.vol<=0?'Unmute':'Mute'}
+  if($('sndTest'))$('sndTest').disabled=!has;
+  if(n)n.textContent=!has?'This browser cannot make sound, so the colony stays quiet.':Snd.mute||Snd.vol<=0?'Sound is muted.':Snd.ctx?'Sound is on. Everything you hear is made live; there are no recordings.':'Sound begins after your first tap on the screen. Everything you hear is made live; there are no recordings.';
+};
+Snd.load();
+['pointerup','touchend','click','keydown'].forEach(k=>document.addEventListener(k,Snd.gesture,{passive:true}));
+document.addEventListener('visibilitychange',Snd.vis);
+$('bSnd').onclick=()=>{Snd.setMute(!(Snd.mute||Snd.vol<=0))};
+$('sndVol').oninput=e=>{Snd.unlock();Snd.setVol(e.target.value)};
+$('sndMute').onclick=()=>{Snd.setMute(!(Snd.mute||Snd.vol<=0))};
+$('sndTest').onclick=()=>{Snd.unlock();if(Snd.mute||Snd.vol<=0)Snd.setMute(false);Snd.cue('birth',true);Snd.paint()};
+Snd.paint();
+
 let dbDoc=null,lastDb=0,dbBusy=false,hiddenAt=0,buildSig='';
 async function initDb(){
   try{
@@ -3535,12 +4687,11 @@ async function initDb(){
 }
 async function saveAll(force){
   if(ui.noSave)return;
-  const str=ser();let lsOk=true;
-  try{localStorage.setItem(KEY,str)}catch(e){lsOk=false}
+  const str=ser();const lsOk=writeSlot(ui.slot||0,str);
   if(!lsOk&&!dbDoc)$('saveNote').textContent='This browser is refusing to save. Your colony will be lost if you close the page.';
-  if(dbDoc&&!dbBusy&&(force||Date.now()-lastDb>60000)){
+  if(dbDoc&&(ui.slot||0)===0&&!dbBusy&&(force||Date.now()-lastDb>60000)){
     dbBusy=true;lastDb=Date.now();
-    try{await dbDoc.set({json:str,t:S.t});$('saveNote').textContent='Saved to your account. Your colony keeps living between visits.'}catch(e){}
+    try{await dbDoc.set({json:str,t:S.t,sum:fnv(str)});$('saveNote').textContent='Saved to your account. Your colony keeps living between visits.'}catch(e){}
     dbBusy=false;
   }
 }
@@ -3552,10 +4703,12 @@ function updateMeters(){
   $('foodN').textContent=Math.floor(S.foodStock);
   $('split').textContent='Stayers '+S.cr.filter(c=>c.want==='stay').length+' · Leavers '+S.cr.filter(c=>c.want==='leave').length+(S.left?' · Gone '+S.left:'')+(S.deaths?' · Lost '+S.deaths:'')+' · Mood '+Math.round(S.cr.reduce((a,c)=>a+c.joy,0)/S.cr.length*100)+'% · Pond '+Math.round(S.pond*100)+'% · Food '+Math.floor(S.granary)+' · Faith '+Math.round(S.cr.reduce((a,c)=>a+c.faith,0)/S.cr.length*100)+'%';
   const p=phase(),per=p<.1?'dawn':p<.6?'day':p<.75?'dusk':p<.95?'night':'dawn';
-  $('clock').textContent='Day '+(S.day+1)+' · '+per+' · '+['stirring','gathering','devoted','attentive'][tier()]+(S.feast?' · Feast':'')+(S.weather!=='clear'?' · '+WEATHER[S.weather].n:'');
+  $('clock').textContent='Day '+(S.day+1)+' · '+per+' · '+['stirring','gathering','devoted','attentive'][tier()]+(S.feast?' · Feast':'')+(ui.speed>1?' · ×'+ui.speed:'')+(S.weather!=='clear'?' · '+WEATHER[S.weather].n:'')+(tempWord(S.temp===undefined?.5:S.temp)!=='mild'?' · '+tempWord(S.temp):'');
   $('vig').style.opacity=(S.attn*.8).toFixed(2);
   const sb=document.querySelector('nav button[data-t="signs"]');if(sb)sb.textContent=S.petition?'Signs •':'Signs';
   $('bSing').disabled=S.time-S.lastSing<20;updateEyes();
+  $('bProt').disabled=!ui.protect&&(S.glow<12||S.time-(S.protAt===undefined?-999:S.protAt)<10);$('bProtT').textContent=ui.protect?'Tap where to protect':'Protect';
+  $('bProt').classList.toggle('on',!!ui.protect);$('expBar').hidden=!S.exp;if(S.exp)$('expBar').textContent=expLabel();
   const hz=[];if(S.blight>0)hz.push('Blight');if(S.storm>0)hz.push('Storm');const sk=S.cr.filter(c=>c.sick>0).length;if(sk)hz.push('Sick '+sk);
   $('haz').hidden=!hz.length;$('haz').textContent=hz.join(' · ');
   $('bHelp').hidden=!(S.blight>0);if(S.blight>0){$('bHelp').textContent='Clear the blight (15 glow)';$('bHelp').disabled=S.glow<15}
@@ -3564,7 +4717,7 @@ let last=performance.now(),uiT=0,miniT=0;
 function frame(now){
   const dt=Math.min(.25,(now-last)/1000);last=now;
   if(S&&!document.hidden){
-    step(dt);camStep(dt);skyTick(now);render(now/1000);uiT+=dt;miniT+=dt;
+    advance(dt);camStep(dt);skyTick(now);render(now/1000);Snd.tick(dt);uiT+=dt;miniT+=dt;
     if(miniT>.2){miniT=0;drawMini();updatePan()}
     if(uiT>.5){
       uiT=0;updateMeters();
@@ -3587,12 +4740,17 @@ document.addEventListener('visibilitychange',()=>{
 window.addEventListener('pagehide',()=>{if(S)saveAll(true)});
 setInterval(()=>{if(S&&!document.hidden)saveAll(false)},10000);
 (async function boot(){
-  let best=null;
-  try{best=loadStr(localStorage.getItem(KEY))}catch(e){}
+  let best=null,fresh=null;
+  try{fresh=JSON.parse(lsGet('dimlings.new')||'null')}catch(e){}
+  ui.slot=fresh?fresh.slot:activeSlot();
+  if(fresh)lsDel('dimlings.new');
+  const rs=fresh?null:readSlot(ui.slot);
+  if(rs){best=rs.o;if(rs.restored)ui.restoredNote=1}
   const remote=await Promise.race([initDb(),new Promise(r=>setTimeout(()=>r(null),2500))]);
-  if(remote&&remote.json){const r=loadStr(remote.json);if(r&&(!best||r.t>best.t))best=r}
-  newState();
+  if(!fresh&&ui.slot===0&&remote&&remote.json&&(!remote.sum||remote.sum===fnv(remote.json))){const r=loadStr(remote.json);if(r&&(!best||r.t>best.t))best=r}
+  newState();S.sv=SVN();if(fresh){S.lifeDays=fresh.life||90;S.log=S.log||[];if(fresh.exp)setupExperiment(fresh.exp)}
   if(best){
+    const from=best.sv||1;
     const def=S,scale=best.w!==240,oldLife=!best.lifeV,needShift=best.wv!==2,hadNodes=!!best.nodes;S=Object.assign(def,best);
     if(scale){S.cr.forEach(c=>{c.x*=2;c.y*=2;c.tx=c.x;c.ty=c.y});S.b.forEach(b=>{b.x*=2;b.y*=2});(S.foods||[]).forEach(f=>{f.x*=2;f.y*=2});S.w=240}
     if(needShift)migrateWorld(hadNodes);
@@ -3613,8 +4771,10 @@ setInterval(()=>{if(S&&!document.hidden)saveAll(false)},10000);
     S.cr.forEach((c,i)=>{if(!c.want){initFaith(c);if(i===0)c.want='stay';if(i===1)c.want='leave'}});
     if(!best.wnodes&&hadNodes){S.wnodes=0;addWorldNodes()}rebuildOB();
     if(best.cam&&best.wv===2)camSet(best.cam[0],best.cam[1],true);else centerOnColony(true);
+    setLifeDays(S.lifeDays||90);runMigrations(from);
+    if(ui.restoredNote)addLog('Your latest save could not be read, so the previous copy was restored. A little time may have been lost.');
     catchUp((Date.now()-best.t)/1000);onReturn((Date.now()-best.t)/1000);ui.hooks.nav();
-  }else{centerOnColony(true)}
+  }else{setLifeDays(S.lifeDays||90);centerOnColony(true)}
   ui.dirtyLog=true;updateMeters();renderPanels('log');
   requestAnimationFrame(frame);
 })();
